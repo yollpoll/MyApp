@@ -19,8 +19,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.Window;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.example.xlm.mydrawerdemo.adapter.RecyclerAdapter;
@@ -28,7 +30,7 @@ import com.example.xlm.mydrawerdemo.adapter.RecyclerAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends BaseActivity {
     private DrawerLayout drawerLayout;
     private ListView listView;
     private ActionBarDrawerToggle mDrawerToggle;
@@ -38,10 +40,11 @@ public class MainActivity extends ActionBarActivity {
     private Toolbar toolbar;
     private RecyclerAdapter adapter;
     private List<String> data=new ArrayList<>();
+    private RelativeLayout left_menu1,left_menu2,left_menu3;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main,menu);
+        getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
@@ -54,6 +57,14 @@ public class MainActivity extends ActionBarActivity {
         initData();
     }
     private void initView(){
+        //左边抽屉按钮
+        left_menu1= (RelativeLayout) findViewById(R.id.left_btn_layout1);
+        left_menu2= (RelativeLayout) findViewById(R.id.left_btn_layout2);
+        left_menu3= (RelativeLayout) findViewById(R.id.left_btn_layout3);
+        left_menu1.setOnClickListener(this);
+        left_menu2.setOnClickListener(this);
+        left_menu3.setOnClickListener(this);
+
         drawerLayout= (DrawerLayout) findViewById(R.id.dwawer);
         listView= (ListView) findViewById(R.id.left_drawer);
         swipeRefreshLayout= (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
@@ -74,7 +85,8 @@ public class MainActivity extends ActionBarActivity {
                         msg += "Click edit";
                         break;
                     case R.id.action_share:
-                        msg += "Click share";
+                        swipeRefreshLayout.setRefreshing(true);
+                        msg += "Click refresh";
                         break;
                     case R.id.action_settings:
                         msg += "Click setting";
@@ -95,12 +107,22 @@ public class MainActivity extends ActionBarActivity {
         adapter=new RecyclerAdapter(data,this);
 
         recyclerView.setLayoutManager(linearLayoutManager);
-        recyclerView.setHasFixedSize(true);
+        recyclerView.setHasFixedSize(false);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(adapter);
+        //设置刷新时颜色切换
+        swipeRefreshLayout.setColorSchemeResources(android.R.color.holo_red_light,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light, android.R.color.holo_blue_light);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
 
-        drawerLayout.setDrawerShadow(R.drawable.checked, GravityCompat.START);
-        drawerLayout.openDrawer(Gravity.LEFT);
+            }
+        });
+        //当drawer打开时，设置一个阴影覆盖在主要内容上面
+//        drawerLayout.setDrawerShadow(R.drawable.checked, GravityCompat.START);
+        //关联抽屉和toolbar
         mDrawerToggle=new ActionBarDrawerToggle(this,drawerLayout,toolbar,R.string.close,R.string.open){
         };
 
@@ -111,5 +133,21 @@ public class MainActivity extends ActionBarActivity {
             data.add("这是标题");
         }
         adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onClick(View v) {
+        super.onClick(v);
+        switch (v.getId()){
+            case R.id.left_btn_layout1:
+                Toast.makeText(this,"点击按钮1",Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.left_btn_layout2:
+                break;
+            case R.id.left_btn_layout3:
+                break;
+            default:
+                break;
+        }
     }
 }
