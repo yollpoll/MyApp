@@ -2,6 +2,7 @@ package com.example.xlm.mydrawerdemo;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Build;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -82,11 +83,13 @@ public class MainActivity extends BaseActivity {
                 String msg="";
                 switch (item.getItemId()){
                     case R.id.action_edit:
-                        msg += "Click edit";
+                        Intent intent=new Intent(MainActivity.this,NewArticle.class);
+                        startActivity(intent);
                         break;
                     case R.id.action_share:
                         swipeRefreshLayout.setRefreshing(true);
-                        msg += "Click refresh";
+//                        msg += "Click refresh";
+                        refresh();
                         break;
                     case R.id.action_settings:
                         msg += "Click setting";
@@ -117,7 +120,7 @@ public class MainActivity extends BaseActivity {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-
+                refresh();
             }
         });
         //当drawer打开时，设置一个阴影覆盖在主要内容上面
@@ -135,6 +138,10 @@ public class MainActivity extends BaseActivity {
         adapter.notifyDataSetChanged();
     }
 
+    private void refresh(){
+        swipeRefreshLayout.setRefreshing(false);
+        Toast.makeText(this,"刷新完成",Toast.LENGTH_SHORT).show();
+    }
     @Override
     public void onClick(View v) {
         super.onClick(v);
