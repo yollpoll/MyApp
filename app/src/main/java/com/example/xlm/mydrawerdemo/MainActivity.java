@@ -3,6 +3,9 @@ package com.example.xlm.mydrawerdemo;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.os.Build;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -27,6 +30,7 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.example.xlm.mydrawerdemo.adapter.RecyclerAdapter;
+import com.example.xlm.mydrawerdemo.fragment.NormalContentFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,13 +39,11 @@ public class MainActivity extends BaseActivity {
     private DrawerLayout drawerLayout;
     private ListView listView;
     private ActionBarDrawerToggle mDrawerToggle;
-    private SwipeRefreshLayout swipeRefreshLayout;
-    private RecyclerView recyclerView;
-    private LinearLayoutManager linearLayoutManager;
     private Toolbar toolbar;
-    private RecyclerAdapter adapter;
-    private List<String> data=new ArrayList<>();
     private RelativeLayout left_menu1,left_menu2,left_menu3;
+    private FragmentManager mFragmentManager;
+    private FragmentTransaction mFragmentTransaction;
+    private NormalContentFragment normalContentFragment;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -51,7 +53,6 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-//        requestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         initView();
@@ -68,8 +69,6 @@ public class MainActivity extends BaseActivity {
 
         drawerLayout= (DrawerLayout) findViewById(R.id.dwawer);
         listView= (ListView) findViewById(R.id.left_drawer);
-        swipeRefreshLayout= (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
-        recyclerView= (RecyclerView) findViewById(R.id.recyclerView);
         toolbar= (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
     }
@@ -77,6 +76,7 @@ public class MainActivity extends BaseActivity {
         toolbar.setTitle("MyDemo");
         //设置左边NavigationIcon按钮
         toolbar.setNavigationIcon(R.mipmap.icon_menu);
+        //Toorbar按钮点击事件
         Toolbar.OnMenuItemClickListener onMenuItemClickListener=new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
@@ -87,9 +87,8 @@ public class MainActivity extends BaseActivity {
                         startActivity(intent);
                         break;
                     case R.id.action_share:
-                        swipeRefreshLayout.setRefreshing(true);
-//                        msg += "Click refresh";
-                        refresh();
+//                        swipeRefreshLayout.setRefreshing(true);
+                        msg += "Click refresh";
                         break;
                     case R.id.action_settings:
                         msg += "Click setting";
@@ -101,47 +100,22 @@ public class MainActivity extends BaseActivity {
                 return true;
             }
         };
+        mFragmentManager=getFragmentManager();
+        mFragmentTransaction=mFragmentManager.beginTransaction();
+        normalContentFragment=new NormalContentFragment();
+        mFragmentTransaction.replace(R.id.framelayout_fragment,normalContentFragment);
+        mFragmentTransaction.commit();
         //菜单按钮点击事件
         toolbar.setOnMenuItemClickListener(onMenuItemClickListener);
 
-        linearLayoutManager=new LinearLayoutManager(this);
-        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-
-        adapter=new RecyclerAdapter(data,this);
-
-        recyclerView.setLayoutManager(linearLayoutManager);
-        recyclerView.setHasFixedSize(false);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setAdapter(adapter);
-        //设置刷新时颜色切换
-        swipeRefreshLayout.setColorSchemeResources(android.R.color.holo_red_light,
-                android.R.color.holo_green_light,
-                android.R.color.holo_orange_light, android.R.color.holo_blue_light);
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                refresh();
-            }
-        });
         //当drawer打开时，设置一个阴影覆盖在主要内容上面
 //        drawerLayout.setDrawerShadow(R.drawable.checked, GravityCompat.START);
         //关联抽屉和toolbar
         mDrawerToggle=new ActionBarDrawerToggle(this,drawerLayout,toolbar,R.string.close,R.string.open){
         };
 
-        getData();
-    }
-    private void getData(){
-        for(int i=0;i<40;i++){
-            data.add("这是标题");
-        }
-        adapter.notifyDataSetChanged();
     }
 
-    private void refresh(){
-        swipeRefreshLayout.setRefreshing(false);
-        Toast.makeText(this,"刷新完成",Toast.LENGTH_SHORT).show();
-    }
     @Override
     public void onClick(View v) {
         super.onClick(v);

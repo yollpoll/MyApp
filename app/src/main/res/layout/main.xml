@@ -14,7 +14,8 @@
         <RelativeLayout
             android:id="@+id/content_frame"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:visibility="gone">
 
             <android.support.v4.widget.SwipeRefreshLayout
                 android:id="@+id/swipeRefreshLayout"
@@ -28,7 +29,11 @@
                 </android.support.v7.widget.RecyclerView>
             </android.support.v4.widget.SwipeRefreshLayout>
         </RelativeLayout>
-
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/framelayout_fragment"
+            ></FrameLayout>
         <include
             layout="@layout/left_menu_list_layout"
             android:id="@+id/left_list_menu"
