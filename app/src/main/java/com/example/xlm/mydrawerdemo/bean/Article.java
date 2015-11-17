@@ -18,6 +18,9 @@ public class Article {
         this.commentContent = commentContent;
     }
 
+    public Article() {
+    }
+
     public String getId() {
         return id;
     }

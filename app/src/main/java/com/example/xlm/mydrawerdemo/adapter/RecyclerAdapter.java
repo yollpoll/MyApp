@@ -48,8 +48,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
             holder.content.setText(article.getContent());
             holder.time.setText(article.getTime());
             holder.id.setText(article.getId());
-            //TODO先用第一条评论写死
-            holder.comment.setText(article.getCommentContent().get(1));
+            //TODO先写死
+            holder.comment.setText("子评论");
             holder.item_layout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

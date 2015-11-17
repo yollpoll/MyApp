@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 
 import com.example.xlm.mydrawerdemo.R;
 import com.example.xlm.mydrawerdemo.adapter.RecyclerAdapter;
+import com.example.xlm.mydrawerdemo.base.BaseFragment;
 import com.example.xlm.mydrawerdemo.bean.Article;
 
 import java.util.ArrayList;
@@ -22,7 +23,7 @@ import java.util.List;
 /**
  * Created by xlm on 2015/11/16.
  */
-public class NormalContentFragment extends Fragment {
+public class NormalContentFragment extends BaseFragment {
     private View rootView;
     private RecyclerView mRecyclerView;
     private SwipeRefreshLayout mSwipRefreshLayout;
@@ -46,6 +47,7 @@ public class NormalContentFragment extends Fragment {
         }
         return rootView;
     }
+
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
@@ -78,14 +80,17 @@ public class NormalContentFragment extends Fragment {
 
             }
         });
-        getData();
-        Log.d("spq",data.size()+"");
+//        getData();
+    }
+    public void onEventMainThread(Article obj){
+        data.add(obj);
+        mAdapter.notifyDataSetChanged();
     }
     private void getData(){
         for(int i=0;i<10;i++){
             commentContentList.add("这是评论"+i);
         }
-        for(int i=0;i<40;i++){
+        for(int i=0;i<10;i++){
             Article article=new Article(i+"","这是内容"+i,"昨天",commentContentList);
             data.add(article);
         }
