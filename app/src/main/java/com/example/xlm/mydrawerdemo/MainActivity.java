@@ -70,12 +70,12 @@ public class MainActivity extends BaseActivity {
         drawerLayout= (DrawerLayout) findViewById(R.id.dwawer);
         listView= (ListView) findViewById(R.id.left_drawer);
         toolbar= (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
     }
     private void initData(){
-        toolbar.setTitle("MyDemo");
+        toolbar.setTitle("广场");
         //设置左边NavigationIcon按钮
         toolbar.setNavigationIcon(R.mipmap.icon_menu);
+        setSupportActionBar(toolbar);
         //Toorbar按钮点击事件
         Toolbar.OnMenuItemClickListener onMenuItemClickListener=new Toolbar.OnMenuItemClickListener() {
             @Override
@@ -113,7 +113,6 @@ public class MainActivity extends BaseActivity {
         //关联抽屉和toolbar
         mDrawerToggle=new ActionBarDrawerToggle(this,drawerLayout,toolbar,R.string.close,R.string.open){
         };
-
     }
 
     @Override

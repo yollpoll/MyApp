@@ -16,5 +16,34 @@
             android:minHeight="?attr/actionBarSize"
             android:navigationIcon="@mipmap/icon_menu"
             >
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                >
+                <RelativeLayout
+                    android:layout_width="40dp"
+                    android:layout_height="match_parent"
+                    android:id="@+id/head_btn_left"
+                    android:visibility="gone"
+                    >
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@mipmap/icon_back"
+                        android:layout_alignParentLeft="true"
+                        android:layout_centerInParent="true"
+                        />
+                </RelativeLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="title"
+                    android:id="@+id/tv_title"
+                    android:textSize="18sp"
+                    android:textColor="@color/white"
+                    android:layout_centerInParent="true"
+                    android:visibility="gone"
+                    />
+            </RelativeLayout>
         </android.support.v7.widget.Toolbar>
     </android.support.v7.widget.CardView>

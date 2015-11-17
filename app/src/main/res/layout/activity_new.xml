@@ -98,10 +98,9 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="Submit"
-                android:textStyle="bold"
                 android:textSize="20sp"
                 />
-            
+
         </com.example.xlm.mydrawerdemo.view.MaterialRippleLayout>
     </android.support.v7.widget.CardView>
 </LinearLayout>
