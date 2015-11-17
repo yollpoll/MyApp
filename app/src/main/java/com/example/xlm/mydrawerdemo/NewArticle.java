@@ -12,13 +12,13 @@ import android.widget.Toast;
 public class NewArticle extends BaseActivity {
     private Toolbar mToolbar;
     @Override
-    public void onCreate(Bundle savedInstanceState, PersistableBundle persistentState) {
-        super.onCreate(savedInstanceState, persistentState);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new);
         initView();
         initData();
-        Toast.makeText(this,"发帖",Toast.LENGTH_SHORT).show();
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);

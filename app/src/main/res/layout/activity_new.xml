@@ -30,19 +30,29 @@
                 android:layout_height="40dp"
                 android:hint="标题"
                 android:id="@+id/ed_title"
+                android:textColor="@color/black"
+                android:padding="5dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/edittext_shape"
                 />
             <EditText
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="match_parent"
                 android:hint="内容"
                 android:id="@+id/ed_content"
                 android:layout_below="@+id/ed_title"
                 android:layout_marginTop="10dp"
-                android:singleLine="false"
                 android:inputType="textMultiLine"
                 android:maxLines="10"
                 android:minLines="5"
+                android:gravity="left|top"
                 android:scrollbars="vertical"
+                android:textColor="@color/black"
+                android:background="@drawable/edittext_shape"
+                android:layout_margin="10dp"
+                android:padding="5dp"
                 />
         </RelativeLayout>
     </android.support.v7.widget.CardView>
@@ -56,20 +66,42 @@
         android:layout_marginLeft="20sp"
         android:layout_marginRight="20dp"
         >
-        <RelativeLayout
+        <!--<RelativeLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:background="@color/colorAccent"-->
+            <!-->-->
+            <!--<TextView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="Submit"-->
+                <!--android:layout_centerInParent="true"-->
+                <!--android:textStyle="bold"-->
+                <!--android:textSize="20sp"-->
+                <!--android:textColor="@color/white"-->
+                <!--/>-->
+        <!--</RelativeLayout>-->
+        <com.example.xlm.mydrawerdemo.view.MaterialRippleLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/colorAccent"
+            app:mrl_rippleOverlay="true"
+            app:mrl_rippleColor="#585858"
+            app:mrl_rippleAlpha="0.2"
+            app:mrl_rippleDelayClick="false"
+            app:mrl_rippleHover="true"
             >
-            <TextView
-                android:layout_width="wrap_content"
+            <Button
+                android:id="@+id/ripple_layout_1"
+                android:layout_width="match_parent"
+                android:background="@drawable/btn_selector"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:text="Submit"
-                android:layout_centerInParent="true"
                 android:textStyle="bold"
                 android:textSize="20sp"
-                android:textColor="@color/white"
                 />
-        </RelativeLayout>
+            
+        </com.example.xlm.mydrawerdemo.view.MaterialRippleLayout>
     </android.support.v7.widget.CardView>
 </LinearLayout>
