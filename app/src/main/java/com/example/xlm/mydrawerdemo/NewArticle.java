@@ -73,7 +73,7 @@ public class NewArticle extends BaseActivity {
                 if(edTitle.getText().toString().length()<=0){
                     Toast.makeText(NewArticle.this,"请输入标题",Toast.LENGTH_SHORT).show();
                     break;
-                }else if(edContent.getText().toString().length()<=5){
+                }else if(edContent.getText().toString().length()<5){
                     Toast.makeText(NewArticle.this,"字数最低不能低于5个子哦",Toast.LENGTH_SHORT).show();
                     break;
                 }
