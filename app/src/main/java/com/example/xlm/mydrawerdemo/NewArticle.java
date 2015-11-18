@@ -23,7 +23,7 @@ import de.greenrobot.event.EventBus;
  */
 public class NewArticle extends BaseActivity {
     private Toolbar mToolbar;
-    private RelativeLayout head_btn_left;
+    private RelativeLayout head_btn_left,layout_title;
     private TextView title;
     private Button btnSubmit;
     private EditText edTitle,edContent;
@@ -48,9 +48,11 @@ public class NewArticle extends BaseActivity {
         title= (TextView) findViewById(R.id.tv_title);
         edTitle= (EditText) findViewById(R.id.ed_title);
         edContent= (EditText) findViewById(R.id.ed_content);
+        layout_title= (RelativeLayout) findViewById(R.id.title_layout);
 
         btnSubmit.setOnClickListener(this);
         head_btn_left.setOnClickListener(this);
+        layout_title.setVisibility(View.VISIBLE);
         title.setVisibility(View.VISIBLE);
         head_btn_left.setVisibility(View.VISIBLE);
     }

@@ -54,9 +54,9 @@ public class MainActivity extends BaseActivity {
         toolbar= (Toolbar) findViewById(R.id.toolbar);
     }
     private void initData(){
-        toolbar.setTitle("广场");
         //设置左边NavigationIcon按钮
         toolbar.setNavigationIcon(R.mipmap.icon_menu);
+        toolbar.setTitle("广场");
         setSupportActionBar(toolbar);
         //Toorbar按钮点击事件
         Toolbar.OnMenuItemClickListener onMenuItemClickListener=new Toolbar.OnMenuItemClickListener() {

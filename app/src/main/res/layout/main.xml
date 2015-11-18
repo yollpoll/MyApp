@@ -3,37 +3,24 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <include layout="@layout/title_layout"
-        android:id="@+id/title"
-        ></include>
     <android.support.v4.widget.DrawerLayout
-        android:id="@+id/dwawer"
+        android:id="@+id/drawer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/title">
+        >
         <RelativeLayout
-            android:id="@+id/content_frame"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="gone">
-
-            <android.support.v4.widget.SwipeRefreshLayout
-                android:id="@+id/swipeRefreshLayout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/recyclerView"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@color/colorBackground">
-                </android.support.v7.widget.RecyclerView>
-            </android.support.v4.widget.SwipeRefreshLayout>
-        </RelativeLayout>
+            android:layout_height="match_parent">
+            <include layout="@layout/title_layout"
+                android:id="@+id/title"
+                ></include>
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/framelayout_fragment"
+            android:layout_below="@+id/title"
             ></FrameLayout>
+        </RelativeLayout>
         <include
             layout="@layout/left_menu_list_layout"
             android:id="@+id/left_list_menu"
