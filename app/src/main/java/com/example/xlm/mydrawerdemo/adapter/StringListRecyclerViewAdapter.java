@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.xlm.mydrawerdemo.R;
@@ -49,6 +50,12 @@ public class StringListRecyclerViewAdapter extends RecyclerView.Adapter<StringLi
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         String title=data.get(position);
+        holder.item.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
         if(title!=null){
             holder.title.setText(title);
         }
@@ -61,9 +68,11 @@ public class StringListRecyclerViewAdapter extends RecyclerView.Adapter<StringLi
 
     public static class ViewHolder extends RecyclerAdapter.ViewHolder{
         TextView title;
+        RelativeLayout item;
         public ViewHolder(View itemView) {
             super(itemView);
             title= (TextView) itemView.findViewById(R.id.tv_module);
+            item= (RelativeLayout) itemView.findViewById(R.id.item);
         }
     }
 }

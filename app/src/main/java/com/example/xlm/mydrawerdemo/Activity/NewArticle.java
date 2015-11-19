@@ -1,4 +1,4 @@
-package com.example.xlm.mydrawerdemo;
+package com.example.xlm.mydrawerdemo.Activity;
 
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -9,6 +9,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.xlm.mydrawerdemo.R;
 import com.example.xlm.mydrawerdemo.base.BaseActivity;
 import com.example.xlm.mydrawerdemo.bean.Article;
 

@@ -17,6 +17,7 @@ import com.example.xlm.mydrawerdemo.adapter.RecyclerAdapter;
 import com.example.xlm.mydrawerdemo.adapter.StringListRecyclerViewAdapter;
 import com.example.xlm.mydrawerdemo.base.BaseFragment;
 import com.example.xlm.mydrawerdemo.bean.Article;
+import com.example.xlm.mydrawerdemo.http.Port;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -118,5 +119,6 @@ public class NormalContentFragment extends BaseFragment {
             modules.add("板块"+i);
             moduleAdaprer.notifyDataSetChanged();
         }
+        String API= Port.GET_ForumList;
     }
 }

@@ -1,4 +1,4 @@
-package com.example.xlm.mydrawerdemo;
+package com.example.xlm.mydrawerdemo.Activity;
 
 import android.content.Intent;
 import android.app.FragmentManager;
@@ -14,8 +14,10 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.example.xlm.mydrawerdemo.R;
 import com.example.xlm.mydrawerdemo.base.BaseActivity;
 import com.example.xlm.mydrawerdemo.fragment.NormalContentFragment;
+import com.example.xlm.mydrawerdemo.utils.DrawerTools;
 
 public class MainActivity extends BaseActivity {
     private DrawerLayout drawerLayout;
