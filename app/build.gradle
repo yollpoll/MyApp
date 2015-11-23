@@ -1,5 +1,15 @@
 apply plugin: 'com.android.application'
-
+apply plugin: 'android-apt'
+configurations {
+    apt
+}
+// Configure the annotation processor and tell it where the manifest and the generated sources are.
+apt {
+    arguments {
+        androidManifestFile variant.outputs[0].processResources.manifestFile
+        resourcePackageName "de.company.android.app"
+    }
+}
 android {
     compileSdkVersion 23
     buildToolsVersion "23.0.1"
@@ -27,4 +37,8 @@ dependencies {
     compile 'com.android.support:cardview-v7:23.0.1'
     compile files('src/main/libs/eventbus-2.4.0.jar')
     compile files('libs/retrofit-2.0.0-beta2.jar')
+    apt 'org.androidannotations:androidannotations:3.2'
+    compile 'org.androidannotations:androidannotations-api:3.2'
+    compile files('libs/gson-2.2.4.jar')
+    compile files('libs/okhttp-1.0.2.jar')
 }
