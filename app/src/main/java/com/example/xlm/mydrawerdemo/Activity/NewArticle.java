@@ -82,7 +82,7 @@ public class NewArticle extends BaseActivity {
                 }
                 SimpleDateFormat simpleDateFormat=new SimpleDateFormat("yyyy-MM-dd HH:mm");
                 String time=simpleDateFormat.format(new Date());
-                Article article =new Article("spq",edContent.getText().toString(),time,new ArrayList<String>());
+                Article article =new Article();
                 eventBus.post(article);
                 this.finish();
                 break;

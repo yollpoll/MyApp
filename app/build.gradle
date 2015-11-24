@@ -39,6 +39,8 @@ dependencies {
     compile files('libs/retrofit-2.0.0-beta2.jar')
     apt 'org.androidannotations:androidannotations:3.2'
     compile 'org.androidannotations:androidannotations-api:3.2'
-    compile files('libs/gson-2.2.4.jar')
-    compile files('libs/okhttp-1.0.2.jar')
+    compile files('libs/gson-2.4.jar')
+    compile files('libs/okhttp-2.6.0.jar')
+    compile files('libs/converter-gson-2.0.0-beta2_.jar')
+    compile files('libs/okio-1.6.0.jar')
 }

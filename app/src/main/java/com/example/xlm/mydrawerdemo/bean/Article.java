@@ -7,18 +7,108 @@ import java.util.List;
  */
 public class Article {
     private String id;
+    private String img;//图片相对地址
+    private String ext;//图片后缀
+    private String now;//该串可视化发言时间
+    private String userid;//该串饼干
+    private String name;
+    private String email;
+    private String title;
     private String content;
-    private String time;
-    private List<String> commentContent;
+    private String admin;//是否红名
+    private String replayCount;
+    private List<reply> replys;
+    private class  reply{
+        private String id;
+        private String img;
+        private String ext;
+        private String now;
+        private String userid;
+        private String name;
+        private String email;
+        private String title;
+        private String content;
+        private String admin;
 
-    public Article(String id, String content, String time, List<String> commentContent) {
-        this.id = id;
-        this.content = content;
-        this.time = time;
-        this.commentContent = commentContent;
-    }
+        public String getId() {
+            return id;
+        }
 
-    public Article() {
+        public void setId(String id) {
+            this.id = id;
+        }
+
+        public String getImg() {
+            return img;
+        }
+
+        public void setImg(String img) {
+            this.img = img;
+        }
+
+        public String getExt() {
+            return ext;
+        }
+
+        public void setExt(String ext) {
+            this.ext = ext;
+        }
+
+        public String getNow() {
+            return now;
+        }
+
+        public void setNow(String now) {
+            this.now = now;
+        }
+
+        public String getUserid() {
+            return userid;
+        }
+
+        public void setUserid(String userid) {
+            this.userid = userid;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public String getEmail() {
+            return email;
+        }
+
+        public void setEmail(String email) {
+            this.email = email;
+        }
+
+        public String getTitle() {
+            return title;
+        }
+
+        public void setTitle(String title) {
+            this.title = title;
+        }
+
+        public String getContent() {
+            return content;
+        }
+
+        public void setContent(String content) {
+            this.content = content;
+        }
+
+        public String getAdmin() {
+            return admin;
+        }
+
+        public void setAdmin(String admin) {
+            this.admin = admin;
+        }
     }
 
     public String getId() {
@@ -29,6 +119,62 @@ public class Article {
         this.id = id;
     }
 
+    public String getImg() {
+        return img;
+    }
+
+    public void setImg(String img) {
+        this.img = img;
+    }
+
+    public String getExt() {
+        return ext;
+    }
+
+    public void setExt(String ext) {
+        this.ext = ext;
+    }
+
+    public String getNow() {
+        return now;
+    }
+
+    public void setNow(String now) {
+        this.now = now;
+    }
+
+    public String getUserid() {
+        return userid;
+    }
+
+    public void setUserid(String userid) {
+        this.userid = userid;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
     public String getContent() {
         return content;
     }
@@ -37,19 +183,47 @@ public class Article {
         this.content = content;
     }
 
-    public String getTime() {
-        return time;
+    public String getAdmin() {
+        return admin;
     }
 
-    public void setTime(String time) {
-        this.time = time;
+    public void setAdmin(String admin) {
+        this.admin = admin;
     }
 
-    public List<String> getCommentContent() {
-        return commentContent;
+    public String getReplayCount() {
+        return replayCount;
     }
 
-    public void setCommentContent(List<String> commentContent) {
-        this.commentContent = commentContent;
+    public void setReplayCount(String replayCount) {
+        this.replayCount = replayCount;
+    }
+
+    public List<reply> getReplys() {
+        return replys;
+    }
+
+    public void setReplys(List<reply> replys) {
+        this.replys = replys;
+    }
+
+    public Article(String id, String img, String ext, String now, String userid,
+                   String name, String email, String title, String content, String admin, String replayCount,
+                   List<reply> replys) {
+        this.id = id;
+        this.img = img;
+        this.ext = ext;
+        this.now = now;
+        this.userid = userid;
+        this.name = name;
+        this.email = email;
+        this.title = title;
+        this.content = content;
+        this.admin = admin;
+        this.replayCount = replayCount;
+        this.replys = replys;
+    }
+
+    public Article() {
     }
 }
