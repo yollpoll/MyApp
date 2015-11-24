@@ -9,6 +9,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.xlm.mydrawerdemo.R;
+import com.example.xlm.mydrawerdemo.bean.ChildFourm;
+import com.example.xlm.mydrawerdemo.bean.Form;
 
 import java.util.List;
 
@@ -16,19 +18,19 @@ import java.util.List;
  * Created by spq on 2015/11/18.
  */
 public class StringListRecyclerViewAdapter extends RecyclerView.Adapter<StringListRecyclerViewAdapter.ViewHolder> {
-    private List<String> data;
+    private List<ChildFourm> data;
     private Context context;
 
-    public StringListRecyclerViewAdapter(List<String> data, Context context) {
+    public StringListRecyclerViewAdapter(List<ChildFourm> data, Context context) {
         this.data = data;
         this.context = context;
     }
 
-    public List<String> getData() {
+    public List<ChildFourm> getData() {
         return data;
     }
 
-    public void setData(List<String> data) {
+    public void setData(List<ChildFourm> data) {
         this.data = data;
     }
 
@@ -49,7 +51,7 @@ public class StringListRecyclerViewAdapter extends RecyclerView.Adapter<StringLi
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        String title=data.get(position);
+        String title=data.get(position).getName();
         holder.item.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -2,6 +2,7 @@ package com.example.xlm.mydrawerdemo.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,9 +45,10 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Article article = data.get(position);
+        Log.i("spq","id");
         if (article != null) {
             holder.content.setText(article.getContent());
-            holder.time.setText(article.getTime());
+            holder.time.setText(article.getNow());
             holder.id.setText(article.getId());
             //TODO先写死
             holder.comment.setText("子评论");

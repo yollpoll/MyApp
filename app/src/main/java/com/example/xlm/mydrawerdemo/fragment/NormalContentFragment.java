@@ -1,6 +1,5 @@
 package com.example.xlm.mydrawerdemo.fragment;
 
-import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -12,15 +11,26 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.xlm.mydrawerdemo.API.ArticleService;
+import com.example.xlm.mydrawerdemo.API.FormListService;
 import com.example.xlm.mydrawerdemo.R;
 import com.example.xlm.mydrawerdemo.adapter.RecyclerAdapter;
 import com.example.xlm.mydrawerdemo.adapter.StringListRecyclerViewAdapter;
 import com.example.xlm.mydrawerdemo.base.BaseFragment;
 import com.example.xlm.mydrawerdemo.bean.Article;
+import com.example.xlm.mydrawerdemo.bean.ChildFourm;
+import com.example.xlm.mydrawerdemo.bean.Form;
+import com.example.xlm.mydrawerdemo.http.Httptools;
 import com.example.xlm.mydrawerdemo.http.Port;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit.Call;
+import retrofit.Callback;
+import retrofit.GsonConverterFactory;
+import retrofit.Response;
+import retrofit.Retrofit;
 
 /**
  * Created by xlm on 2015/11/16.
@@ -36,9 +46,10 @@ public class NormalContentFragment extends BaseFragment {
     //帖子内容
     private List<Article> data=new ArrayList<>();
     //右侧板块名
-    private List<String> modules=new ArrayList<>();
+    private List<ChildFourm> modules=new ArrayList<>();
     //帖子评论
     private List<String> commentContentList=new ArrayList<>();
+    private  Retrofit retrofit;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -69,6 +80,7 @@ public class NormalContentFragment extends BaseFragment {
 
     }
     private void initData(){
+        retrofit=Httptools.getInstance().getRetrofit();
         mLinearLayoutManager=new LinearLayoutManager(getActivity());
         mLinearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         moduleLayoutManager=new LinearLayoutManager(getActivity());
@@ -96,7 +108,7 @@ public class NormalContentFragment extends BaseFragment {
 
             }
         });
-        getData();
+//        getData();
         setModuleList();
     }
     public void onEventMainThread(Article obj){
@@ -104,21 +116,43 @@ public class NormalContentFragment extends BaseFragment {
         mAdapter.notifyDataSetChanged();
     }
     private void getData(){
-        for(int i=0;i<10;i++){
-            commentContentList.add("这是评论"+i);
-        }
-        for(int i=0;i<10;i++){
-            Article article=new Article(i+"","这是内容"+i,"昨天",commentContentList);
-            data.add(article);
-        }
-        mAdapter.notifyDataSetChanged();
+        ArticleService articleService=retrofit.create(ArticleService.class);
+        Call<List<Article>> articleCall=articleService.getArticleList("1",modules.get(0).getId());
+        articleCall.enqueue(new Callback<List<Article>>() {
+            @Override
+            public void onResponse(Response<List<Article>> response, Retrofit retrofit) {
+                data=response.body();
+                mAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onFailure(Throwable throwable) {
+
+            }
+        });
     }
     //设置板块列表
     private void setModuleList(){
-        for(int i=0;i<10;i++){
-            modules.add("板块"+i);
-            moduleAdaprer.notifyDataSetChanged();
-        }
-        String API= Port.GET_ForumList;
+        FormListService formList=retrofit.create(FormListService.class);
+        Call<List<Form>> formsCall=formList.getFormList();
+        formsCall.enqueue(new Callback<List<Form>>() {
+            @Override
+            public void onResponse(Response<List<Form>> response, Retrofit retrofit) {
+                List<Form> forms=response.body();
+                if(forms!=null){
+                    for(int i=0;i<forms.size();i++){
+                        modules.addAll(forms.get(i).getForums());
+                    }
+                }
+                moduleAdaprer.notifyDataSetChanged();
+                //设置正面内容
+                getData();
+            }
+
+            @Override
+            public void onFailure(Throwable throwable) {
+
+            }
+        });
     }
 }
