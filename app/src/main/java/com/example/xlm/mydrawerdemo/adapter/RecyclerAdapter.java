@@ -2,6 +2,9 @@ package com.example.xlm.mydrawerdemo.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
+import android.text.SpannableString;
+import android.text.Spanned;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,7 +14,11 @@ import android.widget.TextView;
 
 import com.example.xlm.mydrawerdemo.R;
 import com.example.xlm.mydrawerdemo.bean.Article;
+import com.example.xlm.mydrawerdemo.bean.reply;
+import com.example.xlm.mydrawerdemo.utils.Tools;
+import com.example.xlm.mydrawerdemo.view.SecretTextView;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.Inflater;
 
@@ -45,13 +52,21 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Article article = data.get(position);
-        Log.i("spq","id");
         if (article != null) {
-            holder.content.setText(article.getContent());
+            Spanned contentSpanned = Html.fromHtml(article.getContent());
+            holder.content.setText(contentSpanned);
             holder.time.setText(article.getNow());
             holder.id.setText(article.getId());
             //TODO先写死
-            holder.comment.setText("子评论");
+            if (article.getReplys().size() > 0) {
+//                Spanned childContentSpanned = Html.fromHtml(article.getReplys().get(0).getContent());
+//                holder.comment.setText(childContentSpanned);
+                List<Spanned> replySpanneds=new ArrayList<>();
+                for(reply r:article.getReplys()){
+                    replySpanneds.add(Html.fromHtml(r.getContent()));
+                }
+                Tools.changeText(holder.comment,replySpanneds);
+            }
             holder.item_layout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -60,14 +75,14 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
             });
         }
     }
-
     @Override
     public int getItemCount() {
         return data.size();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView content, id, comment, time;
+        TextView content, id, time;
+        SecretTextView comment;
         RelativeLayout item_layout;
 
         public ViewHolder(View itemView) {
@@ -75,7 +90,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
             content = (TextView) itemView.findViewById(R.id.tv_title);
             item_layout = (RelativeLayout) itemView.findViewById(R.id.item_recyclerview);
             id = (TextView) itemView.findViewById(R.id.tv_id);
-            comment = (TextView) itemView.findViewById(R.id.tv_comment);
+            comment = (SecretTextView) itemView.findViewById(R.id.tv_comment);
             time = (TextView) itemView.findViewById(R.id.tv_time);
         }
     }
