@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.xlm.mydrawerdemo.API.ArticleService;
 import com.example.xlm.mydrawerdemo.API.FormListService;
@@ -121,13 +122,14 @@ public class NormalContentFragment extends BaseFragment {
         articleCall.enqueue(new Callback<List<Article>>() {
             @Override
             public void onResponse(Response<List<Article>> response, Retrofit retrofit) {
-                data=response.body();
+                data.addAll(response.body());
                 mAdapter.notifyDataSetChanged();
+                Log.i("spq","size"+data.size());
             }
 
             @Override
             public void onFailure(Throwable throwable) {
-
+                Toast.makeText(getActivity(),"网络不通",Toast.LENGTH_SHORT).show();
             }
         });
     }

@@ -1,23 +1,19 @@
 package com.example.xlm.mydrawerdemo.bean;
 
-import java.util.List;
-
 /**
- * Created by spq on 2015/11/16.
+ * Created by xlm on 2015/11/25.
  */
-public class Article {
+public class reply {
     private String id;
-    private String img;//图片相对地址
-    private String ext;//图片后缀
-    private String now;//该串可视化发言时间
-    private String userid;//该串饼干
+    private String img;
+    private String ext;
+    private String now;
+    private String userid;
     private String name;
     private String email;
     private String title;
     private String content;
-    private String admin;//是否红名
-    private String replayCount;
-    private List<reply> replys;
+    private String admin;
 
     public String getId() {
         return id;
@@ -97,41 +93,5 @@ public class Article {
 
     public void setAdmin(String admin) {
         this.admin = admin;
-    }
-
-    public String getReplayCount() {
-        return replayCount;
-    }
-
-    public void setReplayCount(String replayCount) {
-        this.replayCount = replayCount;
-    }
-
-    public List<reply> getReplys() {
-        return replys;
-    }
-
-    public void setReplys(List<reply> replys) {
-        this.replys = replys;
-    }
-
-    public Article(String id, String img, String ext, String now, String userid,
-                   String name, String email, String title, String content, String admin, String replayCount,
-                   List<reply> replys) {
-        this.id = id;
-        this.img = img;
-        this.ext = ext;
-        this.now = now;
-        this.userid = userid;
-        this.name = name;
-        this.email = email;
-        this.title = title;
-        this.content = content;
-        this.admin = admin;
-        this.replayCount = replayCount;
-        this.replys = replys;
-    }
-
-    public Article() {
     }
 }

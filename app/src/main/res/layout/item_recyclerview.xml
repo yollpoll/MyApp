@@ -52,7 +52,7 @@
             android:layout_marginRight="10dp"
             android:textColor="@color/black"
             />
-        <TextView
+        <com.example.xlm.mydrawerdemo.view.SecretTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
@@ -61,7 +61,7 @@
             android:layout_below="@+id/tv_title"
             android:layout_marginLeft="10dp"
             android:textColor="@color/textGrey"
-            android:text="comment"
+            android:text=""
             android:id="@+id/tv_comment"
             android:singleLine="true"
             android:maxEms="20"
