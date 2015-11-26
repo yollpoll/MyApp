@@ -21,12 +21,21 @@ import java.util.List;
 public class StringListRecyclerViewAdapter extends RecyclerView.Adapter<StringListRecyclerViewAdapter.ViewHolder> {
     private List<ChildFourm> data;
     private Context context;
+    private onItemClickListener onItemClickListener;
 
     public StringListRecyclerViewAdapter(List<ChildFourm> data, Context context) {
         this.data = data;
         this.context = context;
     }
 
+    public void setOnItemClickListener(StringListRecyclerViewAdapter.onItemClickListener onItemClickListener) {
+        this.onItemClickListener = onItemClickListener;
+    }
+
+    public interface onItemClickListener{
+        void onItemClick(View view,int position);
+        void onItemLongClick(View view,int position);
+    }
     public List<ChildFourm> getData() {
         return data;
     }
@@ -51,12 +60,19 @@ public class StringListRecyclerViewAdapter extends RecyclerView.Adapter<StringLi
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(ViewHolder holder, final int position) {
         String title=data.get(position).getName();
         holder.item.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                onItemClickListener.onItemClick(v, position);
+            }
+        });
+        holder.item.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                onItemClickListener.onItemLongClick(v,position);
+                return false;
             }
         });
         if(title!=null){

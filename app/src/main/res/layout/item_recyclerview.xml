@@ -28,7 +28,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/tv_show_id"
-            android:id="@+id/tv_id"
+            android:id="@+id/tv_sender_id"
             android:layout_alignBaseline="@+id/tv_show_id"
             android:textColor="@android:color/holo_red_light"
             android:textSize="16sp"
@@ -45,14 +45,22 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="content"
+            android:id="@+id/tv_id"
+            android:text=""
+            android:layout_alignBaseline="@+id/tv_sender_id"
+            android:layout_centerHorizontal="true"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
             android:id="@+id/tv_title"
             android:layout_below="@+id/tv_show_id"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:textColor="@color/black"
             />
-        <com.example.xlm.mydrawerdemo.view.SecretTextView
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"

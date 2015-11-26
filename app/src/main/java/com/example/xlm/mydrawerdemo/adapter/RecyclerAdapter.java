@@ -55,12 +55,18 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         if (article != null) {
             Spanned contentSpanned = Html.fromHtml(article.getContent());
             holder.content.setText(contentSpanned);
-            holder.time.setText(article.getNow());
-            holder.id.setText(article.getId());
+            holder.time.setText(Tools.replaceTime(article.getNow()));
+            holder.id.setText("No."+article.getId());
+            if("0".equals(article.getAdmin())){
+                //黑名字
+                holder.sender.setTextColor(0xff818181);
+            }else if("1".equals(article.getAdmin())){
+                //红名
+                holder.sender.setTextColor(0xffff4444);
+            }
+            holder.sender.setText(article.getUserid());
             //TODO先写死
             if (article.getReplys().size() > 0) {
-//                Spanned childContentSpanned = Html.fromHtml(article.getReplys().get(0).getContent());
-//                holder.comment.setText(childContentSpanned);
                 List<Spanned> replySpanneds=new ArrayList<>();
                 for(reply r:article.getReplys()){
                     replySpanneds.add(Html.fromHtml(r.getContent()));
@@ -81,8 +87,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView content, id, time;
-        SecretTextView comment;
+        TextView content, id, time,sender,comment;
         RelativeLayout item_layout;
 
         public ViewHolder(View itemView) {
@@ -90,8 +95,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
             content = (TextView) itemView.findViewById(R.id.tv_title);
             item_layout = (RelativeLayout) itemView.findViewById(R.id.item_recyclerview);
             id = (TextView) itemView.findViewById(R.id.tv_id);
-            comment = (SecretTextView) itemView.findViewById(R.id.tv_comment);
+            comment = (TextView) itemView.findViewById(R.id.tv_comment);
             time = (TextView) itemView.findViewById(R.id.tv_time);
+            sender= (TextView) itemView.findViewById(R.id.tv_sender_id);
         }
     }
 }

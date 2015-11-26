@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.example.xlm.mydrawerdemo.R;
 import com.example.xlm.mydrawerdemo.base.BaseActivity;
+import com.example.xlm.mydrawerdemo.bean.ChangeTitleEvent;
 import com.example.xlm.mydrawerdemo.fragment.NormalContentFragment;
 import com.example.xlm.mydrawerdemo.utils.DrawerTools;
 
@@ -87,7 +88,7 @@ public class MainActivity extends BaseActivity {
         mFragmentManager=getFragmentManager();
         mFragmentTransaction=mFragmentManager.beginTransaction();
         normalContentFragment=new NormalContentFragment();
-        mFragmentTransaction.replace(R.id.framelayout_fragment,normalContentFragment);
+        mFragmentTransaction.replace(R.id.framelayout_fragment, normalContentFragment);
         mFragmentTransaction.commit();
         //菜单按钮点击事件
         toolbar.setOnMenuItemClickListener(onMenuItemClickListener);
@@ -113,5 +114,11 @@ public class MainActivity extends BaseActivity {
             default:
                 break;
         }
+    }
+    /*
+    修改标题
+     */
+    public void onEventMainThread(ChangeTitleEvent event){
+        toolbar.setTitle(event.getTitle());
     }
 }

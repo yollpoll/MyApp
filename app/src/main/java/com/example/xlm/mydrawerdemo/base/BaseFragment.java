@@ -9,7 +9,7 @@ import de.greenrobot.event.EventBus;
  * Created by xlm on 2015/11/17.
  */
 public class BaseFragment extends Fragment {
-    private EventBus eventBus;
+    protected EventBus eventBus;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
