@@ -72,8 +72,7 @@ public class MainActivity extends BaseActivity {
                         startActivity(intent);
                         break;
                     case R.id.action_share:
-//                        swipeRefreshLayout.setRefreshing(true);
-                        msg += "Click refresh";
+                        normalContentFragment.refresh();
                         break;
                     case R.id.action_settings:
                         msg += "Click setting";

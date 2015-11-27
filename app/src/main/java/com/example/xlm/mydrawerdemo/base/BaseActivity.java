@@ -3,6 +3,7 @@ package com.example.xlm.mydrawerdemo.base;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.example.xlm.mydrawerdemo.bean.Article;
@@ -12,7 +13,7 @@ import de.greenrobot.event.EventBus;
 /**
  * Created by xlm on 2015/11/13.
  */
-public class BaseActivity extends ActionBarActivity implements View.OnClickListener {
+public class BaseActivity extends AppCompatActivity implements View.OnClickListener {
     protected EventBus eventBus;
 
     @Override

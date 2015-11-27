@@ -117,8 +117,7 @@ public class NormalContentFragment extends BaseFragment {
         mSwipRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                page = 1;
-                getData(false);
+                refresh();
             }
         });
         mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -174,7 +173,11 @@ public class NormalContentFragment extends BaseFragment {
         page++;
         getData(true);
     }
-
+    public void refresh(){
+        mSwipRefreshLayout.setRefreshing(true);
+        page = 1;
+        getData(false);
+    }
     private void getData(final boolean isLoad) {
         ArticleService articleService = retrofit.create(ArticleService.class);
         Call<List<Article>> articleCall = articleService.getArticleList(page + "", formId);
