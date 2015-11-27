@@ -13,7 +13,7 @@ import de.greenrobot.event.EventBus;
  * Created by xlm on 2015/11/13.
  */
 public class BaseActivity extends ActionBarActivity implements View.OnClickListener {
-    private EventBus eventBus;
+    protected EventBus eventBus;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
