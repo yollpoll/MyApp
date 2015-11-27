@@ -67,7 +67,7 @@ public class Tools {
                     message.obj=changeTextObj;
                     mHandler.sendMessage(message);
                     try {
-                        Thread.sleep(10000);
+                        Thread.sleep(3000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                         Thread.currentThread().interrupt();
@@ -130,7 +130,6 @@ public class Tools {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        Log.i("spq","时间 "+returnStr);
         return returnStr;
     }
 }
