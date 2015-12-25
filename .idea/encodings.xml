@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project version="4">
-  <component name="Encoding">
-    <file url="file://$PROJECT_DIR$/app/libs/rxjava-1.0.10.jar" charset="GBK" />
-    <file url="file://$PROJECT_DIR$/app/src/main/java/com/example/xlm/mydrawerdemo/view/MaterialRippleLayout.java" charset="GBK" />
-    <file url="file://$PROJECT_DIR$/app/src/main/res/values/attributes.xml" charset="GBK" />
-    <file url="PROJECT" charset="UTF-8" />
-  </component>
-</project>
