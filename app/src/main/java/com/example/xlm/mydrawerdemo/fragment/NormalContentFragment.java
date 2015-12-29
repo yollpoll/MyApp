@@ -173,11 +173,13 @@ public class NormalContentFragment extends BaseFragment {
         page++;
         getData(true);
     }
-    public void refresh(){
+
+    public void refresh() {
         mSwipRefreshLayout.setRefreshing(true);
         page = 1;
         getData(false);
     }
+
     private void getData(final boolean isLoad) {
         ArticleService articleService = retrofit.create(ArticleService.class);
         Call<List<Article>> articleCall = articleService.getArticleList(page + "", formId);
@@ -186,7 +188,7 @@ public class NormalContentFragment extends BaseFragment {
             public void onResponse(Response<List<Article>> response, Retrofit retrofit) {
                 mSwipRefreshLayout.setRefreshing(false);
                 //是否是加载下一页,是就不清空
-                if(!isLoad){
+                if (!isLoad) {
                     data.clear();
                 }
                 data.addAll(response.body());

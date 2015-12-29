@@ -19,13 +19,14 @@ import com.example.xlm.mydrawerdemo.base.BaseActivity;
 import com.example.xlm.mydrawerdemo.bean.ChangeTitleEvent;
 import com.example.xlm.mydrawerdemo.fragment.NormalContentFragment;
 import com.example.xlm.mydrawerdemo.utils.DrawerTools;
+import com.example.xlm.mydrawerdemo.utils.ToastUtils;
 
 public class MainActivity extends BaseActivity {
     private DrawerLayout drawerLayout;
     private ListView listView;
     private ActionBarDrawerToggle mDrawerToggle;
     private Toolbar toolbar;
-    private RelativeLayout left_menu1,left_menu2,left_menu3;
+    private RelativeLayout left_menu1, left_menu2, left_menu3;
     private FragmentManager mFragmentManager;
     private FragmentTransaction mFragmentTransaction;
     private NormalContentFragment normalContentFragment;
@@ -43,32 +44,34 @@ public class MainActivity extends BaseActivity {
         initView();
         initData();
     }
-    private void initView(){
+
+    private void initView() {
         //左边抽屉按钮
-        left_menu1= (RelativeLayout) findViewById(R.id.left_btn_layout1);
-        left_menu2= (RelativeLayout) findViewById(R.id.left_btn_layout2);
-        left_menu3= (RelativeLayout) findViewById(R.id.left_btn_layout3);
+        left_menu1 = (RelativeLayout) findViewById(R.id.left_btn_layout1);
+        left_menu2 = (RelativeLayout) findViewById(R.id.left_btn_layout2);
+        left_menu3 = (RelativeLayout) findViewById(R.id.left_btn_layout3);
         left_menu1.setOnClickListener(this);
         left_menu2.setOnClickListener(this);
         left_menu3.setOnClickListener(this);
 
-        drawerLayout= (DrawerLayout) findViewById(R.id.dwawer);
-        listView= (ListView) findViewById(R.id.left_drawer);
-        toolbar= (Toolbar) findViewById(R.id.toolbar);
+        drawerLayout = (DrawerLayout) findViewById(R.id.dwawer);
+        listView = (ListView) findViewById(R.id.left_drawer);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
     }
-    private void initData(){
+
+    private void initData() {
         //设置左边NavigationIcon按钮
         toolbar.setNavigationIcon(R.mipmap.icon_menu);
         toolbar.setTitle("广场");
         setSupportActionBar(toolbar);
         //Toorbar按钮点击事件
-        Toolbar.OnMenuItemClickListener onMenuItemClickListener=new Toolbar.OnMenuItemClickListener() {
+        Toolbar.OnMenuItemClickListener onMenuItemClickListener = new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                String msg="";
-                switch (item.getItemId()){
+                String msg = "";
+                switch (item.getItemId()) {
                     case R.id.action_edit:
-                        Intent intent=new Intent(MainActivity.this,NewArticle.class);
+                        Intent intent = new Intent(MainActivity.this, NewArticle.class);
                         startActivity(intent);
                         break;
                     case R.id.action_share:
@@ -78,15 +81,15 @@ public class MainActivity extends BaseActivity {
                         msg += "Click setting";
                         break;
                 }
-                if(!"".equals(msg)){
-                    Toast.makeText(MainActivity.this,msg,Toast.LENGTH_SHORT).show();
+                if (!"".equals(msg)) {
+                    Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
                 }
                 return true;
             }
         };
-        mFragmentManager=getFragmentManager();
-        mFragmentTransaction=mFragmentManager.beginTransaction();
-        normalContentFragment=new NormalContentFragment();
+        mFragmentManager = getFragmentManager();
+        mFragmentTransaction = mFragmentManager.beginTransaction();
+        normalContentFragment = new NormalContentFragment();
         mFragmentTransaction.replace(R.id.framelayout_fragment, normalContentFragment);
         mFragmentTransaction.commit();
         //菜单按钮点击事件
@@ -95,16 +98,16 @@ public class MainActivity extends BaseActivity {
         //当drawer打开时，设置一个阴影覆盖在主要内容上面
 //        drawerLayout.setDrawerShadow(R.drawable.checked, GravityCompat.START);
         //关联抽屉和toolbar
-        mDrawerToggle=new ActionBarDrawerToggle(this,drawerLayout,toolbar,R.string.close,R.string.open){
+        mDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.close, R.string.open) {
         };
     }
 
     @Override
     public void onClick(View v) {
         super.onClick(v);
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.left_btn_layout1:
-                Toast.makeText(this,"点击按钮1",Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "点击按钮1", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.left_btn_layout2:
                 break;
@@ -114,10 +117,11 @@ public class MainActivity extends BaseActivity {
                 break;
         }
     }
+
     /*
     修改标题
      */
-    public void onEventMainThread(ChangeTitleEvent event){
+    public void onEventMainThread(ChangeTitleEvent event) {
         toolbar.setTitle(event.getTitle());
     }
 }
