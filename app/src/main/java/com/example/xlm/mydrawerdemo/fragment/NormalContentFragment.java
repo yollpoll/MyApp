@@ -1,5 +1,6 @@
 package com.example.xlm.mydrawerdemo.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.DrawerLayout;
@@ -7,32 +8,32 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.xlm.mydrawerdemo.API.ArticleService;
 import com.example.xlm.mydrawerdemo.API.FormListService;
+import com.example.xlm.mydrawerdemo.Activity.ChildArticleActivity;
 import com.example.xlm.mydrawerdemo.R;
-import com.example.xlm.mydrawerdemo.adapter.RecyclerAdapter;
+import com.example.xlm.mydrawerdemo.adapter.ArticleRecyclerAdapter;
 import com.example.xlm.mydrawerdemo.adapter.StringListRecyclerViewAdapter;
 import com.example.xlm.mydrawerdemo.base.BaseFragment;
 import com.example.xlm.mydrawerdemo.bean.Article;
 import com.example.xlm.mydrawerdemo.bean.ChangeTitleEvent;
-import com.example.xlm.mydrawerdemo.bean.ChildFourm;
+import com.example.xlm.mydrawerdemo.bean.ChildArticle;
 import com.example.xlm.mydrawerdemo.bean.Form;
 import com.example.xlm.mydrawerdemo.http.Httptools;
-import com.example.xlm.mydrawerdemo.http.Port;
+import com.example.xlm.mydrawerdemo.utils.SpaceItemDecoration;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import retrofit.Call;
 import retrofit.Callback;
-import retrofit.GsonConverterFactory;
 import retrofit.Response;
 import retrofit.Retrofit;
 
@@ -44,21 +45,22 @@ public class NormalContentFragment extends BaseFragment {
     private RecyclerView mRecyclerView, module;
     private SwipeRefreshLayout mSwipRefreshLayout;
     private LinearLayoutManager mLinearLayoutManager, moduleLayoutManager;
-    private RecyclerAdapter mAdapter;
+    private ArticleRecyclerAdapter adapterArticle;
     private String formId = "";//板块id,默认综合1
     private String formTitle = "";//板块名
     private int page = 1;//页数
     private DrawerLayout drawerForm;
     private boolean isLoadingMore = false;//是否正在加载中
     //右侧模块adapter
-    private StringListRecyclerViewAdapter moduleAdaprer;
+    private StringListRecyclerViewAdapter adaprerModule;
     //帖子内容
     private List<Article> data = new ArrayList<>();
     //右侧板块名
-    private List<ChildFourm> modules = new ArrayList<>();
+    private List<ChildArticle> modules = new ArrayList<>();
     //帖子评论
     private List<String> commentContentList = new ArrayList<>();
     private Retrofit retrofit;
+    private ProgressBar progressBar;
 
     @Nullable
     @Override
@@ -87,7 +89,8 @@ public class NormalContentFragment extends BaseFragment {
         mSwipRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
         module = (RecyclerView) view.findViewById(R.id.recycler_module);
         drawerForm = (DrawerLayout) view.findViewById(R.id.drawer_form);
-
+        progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
+        progressBar.setVisibility(View.VISIBLE);
     }
 
     private void initData() {
@@ -98,18 +101,20 @@ public class NormalContentFragment extends BaseFragment {
         moduleLayoutManager = new LinearLayoutManager(getActivity());
         moduleLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
 
-        mAdapter = new RecyclerAdapter(data, getActivity());
-        moduleAdaprer = new StringListRecyclerViewAdapter(modules, getActivity());
+        adapterArticle = new ArticleRecyclerAdapter(data, getActivity());
+        adaprerModule = new StringListRecyclerViewAdapter(modules, getActivity());
 
-        module.setAdapter(moduleAdaprer);
+        module.setAdapter(adaprerModule);
         module.setLayoutManager(moduleLayoutManager);
         module.setHasFixedSize(true);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
-        mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.setAdapter(adapterArticle);
         mRecyclerView.setHasFixedSize(false);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        int spacingInPixels = getResources().getDimensionPixelSize(R.dimen.recycler_space);
+        mRecyclerView.addItemDecoration(new SpaceItemDecoration(spacingInPixels));
         //设置刷新时颜色切换
         mSwipRefreshLayout.setColorSchemeResources(android.R.color.holo_red_light,
                 android.R.color.holo_green_light,
@@ -142,7 +147,8 @@ public class NormalContentFragment extends BaseFragment {
                 }
             }
         });
-        moduleAdaprer.setOnItemClickListener(new StringListRecyclerViewAdapter.onItemClickListener() {
+        //右侧板块点击切换板块
+        adaprerModule.setOnItemClickListener(new StringListRecyclerViewAdapter.onItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
                 if (drawerForm.isDrawerOpen(Gravity.RIGHT)) {
@@ -160,12 +166,20 @@ public class NormalContentFragment extends BaseFragment {
 
             }
         });
+        //点击进入串内部
+        adapterArticle.setOnItemClickListener(new ArticleRecyclerAdapter.OnItemClickListener() {
+            @Override
+            public void onClick(View view, int position) {
+                Intent intent=new Intent(getActivity(), ChildArticleActivity.class);
+                startActivity(intent);
+            }
+        });
         setModuleList();
     }
 
     public void onEventMainThread(Article obj) {
         data.add(obj);
-        mAdapter.notifyDataSetChanged();
+        adapterArticle.notifyDataSetChanged();
     }
 
     //加载下一页
@@ -187,12 +201,13 @@ public class NormalContentFragment extends BaseFragment {
             @Override
             public void onResponse(Response<List<Article>> response, Retrofit retrofit) {
                 mSwipRefreshLayout.setRefreshing(false);
+                progressBar.setVisibility(View.GONE);
                 //是否是加载下一页,是就不清空
                 if (!isLoad) {
                     data.clear();
                 }
                 data.addAll(response.body());
-                mAdapter.notifyDataSetChanged();
+                adapterArticle.notifyDataSetChanged();
             }
 
             @Override
@@ -216,7 +231,7 @@ public class NormalContentFragment extends BaseFragment {
                         modules.addAll(forms.get(i).getForums());
                     }
                 }
-                moduleAdaprer.notifyDataSetChanged();
+                adaprerModule.notifyDataSetChanged();
                 //设置正面内容
                 formId = modules.get(0).getId();
                 formTitle = modules.get(0).getName();

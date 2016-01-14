@@ -2,7 +2,6 @@ package com.example.xlm.mydrawerdemo.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,8 +9,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.xlm.mydrawerdemo.R;
-import com.example.xlm.mydrawerdemo.bean.ChildFourm;
-import com.example.xlm.mydrawerdemo.bean.Form;
+import com.example.xlm.mydrawerdemo.bean.ChildArticle;
 
 import java.util.List;
 
@@ -19,11 +17,11 @@ import java.util.List;
  * Created by spq on 2015/11/18.
  */
 public class StringListRecyclerViewAdapter extends RecyclerView.Adapter<StringListRecyclerViewAdapter.ViewHolder> {
-    private List<ChildFourm> data;
+    private List<ChildArticle> data;
     private Context context;
     private onItemClickListener onItemClickListener;
 
-    public StringListRecyclerViewAdapter(List<ChildFourm> data, Context context) {
+    public StringListRecyclerViewAdapter(List<ChildArticle> data, Context context) {
         this.data = data;
         this.context = context;
     }
@@ -36,11 +34,11 @@ public class StringListRecyclerViewAdapter extends RecyclerView.Adapter<StringLi
         void onItemClick(View view,int position);
         void onItemLongClick(View view,int position);
     }
-    public List<ChildFourm> getData() {
+    public List<ChildArticle> getData() {
         return data;
     }
 
-    public void setData(List<ChildFourm> data) {
+    public void setData(List<ChildArticle> data) {
         this.data = data;
     }
 
@@ -85,7 +83,7 @@ public class StringListRecyclerViewAdapter extends RecyclerView.Adapter<StringLi
         return data.size();
     }
 
-    public static class ViewHolder extends RecyclerAdapter.ViewHolder{
+    public static class ViewHolder extends ArticleRecyclerAdapter.ViewHolder{
         TextView title;
         RelativeLayout item;
         public ViewHolder(View itemView) {
