@@ -9,4 +9,6 @@
     <color name="colorBackground">#F2F2F2</color>
     <color name="textGrey">#818181</color>
     <color name="transparent">#00FFFFFF</color>
+    <color name="textRed">#ffff4444</color>
+
 </resources>

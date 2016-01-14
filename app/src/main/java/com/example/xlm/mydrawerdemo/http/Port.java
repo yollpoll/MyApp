@@ -9,5 +9,6 @@ public class Port {
     public final static String GET_ForumList="Api/getForumList";
     //获取串
     public final static String GET_ARTICLE="Api/showf";
+    public final static String GET_CHILD_ARTICLE="Api/thread";
 
 }

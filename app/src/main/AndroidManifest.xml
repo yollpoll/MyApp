@@ -18,6 +18,9 @@
         <activity android:name=".Activity.NewArticle"
             android:windowSoftInputMode="adjustPan"
             ></activity>
+        <activity android:name=".Activity.ChildArticleActivity"
+                  android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            ></activity>
     </application>
 
 </manifest>

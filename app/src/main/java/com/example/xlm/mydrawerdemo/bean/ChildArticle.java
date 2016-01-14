@@ -3,7 +3,7 @@ package com.example.xlm.mydrawerdemo.bean;
 /**
  * Created by xlm on 2015/11/19.
  */
-public class ChildFourm {
+public class ChildArticle {
     private String id;
     private String fgroup;
     private String sort;
@@ -15,7 +15,7 @@ public class ChildFourm {
     private String updateAt;
     private String status;
 
-    public ChildFourm(String id, String fgroup, String sort, String name, String showName, String msg, String interval, String createdAt, String updateAt, String status) {
+    public ChildArticle(String id, String fgroup, String sort, String name, String showName, String msg, String interval, String createdAt, String updateAt, String status) {
         this.id = id;
         this.fgroup = fgroup;
         this.sort = sort;

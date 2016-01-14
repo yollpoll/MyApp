@@ -32,4 +32,13 @@
                 ></android.support.v7.widget.RecyclerView>
         </RelativeLayout>
     </android.support.v4.widget.DrawerLayout>
+    <ProgressBar
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        style="?android:attr/progressBarStyleSmall"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="50dp"
+        android:id="@+id/progressBar"
+        android:visibility="gone"
+        />
 </RelativeLayout>
