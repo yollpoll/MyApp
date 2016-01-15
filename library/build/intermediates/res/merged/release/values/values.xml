@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- From: file:/C:/Program%20Files/Android/MyApp/library/src/main/res/values/attrs.xml -->
+    <!-- From: file:/C:/Android/workspace/MyApp/library/src/main/res/values/attrs.xml -->
     <eat-comment/>
     <attr format="reference" name="SwipeBackLayoutStyle"/>
-    <!-- From: file:/C:/Program%20Files/Android/MyApp/library/build/intermediates/exploded-aar/com.android.support/appcompat-v7/22.2.0/res/values/values.xml -->
+    <!-- From: file:/C:/Android/workspace/MyApp/library/build/intermediates/exploded-aar/com.android.support/appcompat-v7/22.2.0/res/values/values.xml -->
     <eat-comment/>
     <attr format="reference" name="drawerArrowStyle"/>
     <attr format="dimension" name="height"/>
@@ -1254,7 +1254,7 @@
     <style name="RtlOverlay.Widget.AppCompat.Toolbar.Button.Navigation" parent="Base.Widget.AppCompat.Toolbar.Button.Navigation">
         <item name="android:paddingLeft">@dimen/abc_action_bar_navigation_padding_start_material</item>
     </style>
-    <!-- From: file:/C:/Program%20Files/Android/MyApp/library/src/main/res/values/styles.xml -->
+    <!-- From: file:/C:/Android/workspace/MyApp/library/src/main/res/values/styles.xml -->
     <eat-comment/>
     <style name="SwipeBackLayout">
         <item name="edge_size">50dip</item>
@@ -1262,7 +1262,7 @@
         <item name="shadow_right">@drawable/shadow_right</item>
         <item name="shadow_bottom">@drawable/shadow_bottom</item>
     </style>
-    <!-- From: file:/C:/Program%20Files/Android/MyApp/library/build/intermediates/exploded-aar/com.android.support/appcompat-v7/22.2.0/res/values/values.xml -->
+    <!-- From: file:/C:/Android/workspace/MyApp/library/build/intermediates/exploded-aar/com.android.support/appcompat-v7/22.2.0/res/values/values.xml -->
     <eat-comment/>
     <style name="TextAppearance.AppCompat" parent="Base.TextAppearance.AppCompat"/>
     <style name="TextAppearance.AppCompat.Body1" parent="Base.TextAppearance.AppCompat.Body1"/>

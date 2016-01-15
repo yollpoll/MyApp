@@ -204,7 +204,6 @@ public class NormalContentFragment extends BaseFragment {
         articleCall.enqueue(new Callback<List<Article>>() {
             @Override
             public void onResponse(Response<List<Article>> response, Retrofit retrofit) {
-                ToastUtils.showShort("调用成功");
                 mSwipRefreshLayout.setRefreshing(false);
                 progressBar.setVisibility(View.GONE);
                 //是否是加载下一页,是就不清空
