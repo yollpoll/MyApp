@@ -22,6 +22,7 @@ import com.example.xlm.mydrawerdemo.base.BaseActivity;
 import com.example.xlm.mydrawerdemo.bean.ChangeTitleEvent;
 import com.example.xlm.mydrawerdemo.fragment.NormalContentFragment;
 import com.example.xlm.mydrawerdemo.utils.DrawerTools;
+import com.example.xlm.mydrawerdemo.utils.ToastUtils;
 
 import org.w3c.dom.Text;
 
