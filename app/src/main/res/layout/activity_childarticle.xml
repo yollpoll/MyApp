@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.example.xlm.mydrawerdemo.view.SildingFinishLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/layout_childarticle"
-    android:orientation="vertical"
     android:background="@color/white"
     >
-    <include layout="@layout/title_layout"
+    <include
         android:id="@+id/title"
-        ></include>
-</com.example.xlm.mydrawerdemo.view.SildingFinishLayout>
+        layout="@layout/layout_head" />
+</RelativeLayout>

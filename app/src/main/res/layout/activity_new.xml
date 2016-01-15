@@ -6,7 +6,7 @@
     android:orientation="vertical"
     android:weightSum="10"
     >
-    <include layout="@layout/title_layout"
+    <include layout="@layout/layout_head"
         android:id="@+id/title">
     </include>
     <android.support.v7.widget.CardView

@@ -1,5 +1,6 @@
 package com.example.xlm.mydrawerdemo.base;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.v7.app.ActionBarActivity;
@@ -13,7 +14,7 @@ import de.greenrobot.event.EventBus;
 /**
  * Created by xlm on 2015/11/13.
  */
-public class BaseActivity extends AppCompatActivity implements View.OnClickListener {
+public class BaseActivity extends Activity implements View.OnClickListener {
     protected EventBus eventBus;
 
     @Override

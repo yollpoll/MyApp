@@ -3,30 +3,32 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
     <android.support.v4.widget.DrawerLayout
         android:id="@+id/drawer"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
+        android:layout_height="match_parent">
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-            <include layout="@layout/title_layout"
+
+            <include
                 android:id="@+id/title"
-                ></include>
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/framelayout_fragment"
-            android:layout_below="@+id/title"
-            ></FrameLayout>
+                layout="@layout/layout_head" />
+
+            <FrameLayout
+                android:id="@+id/framelayout_fragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/title"></FrameLayout>
         </RelativeLayout>
+
         <include
-            layout="@layout/left_menu_list_layout"
             android:id="@+id/left_list_menu"
+            layout="@layout/left_menu_list_layout"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_gravity="start"
-            ></include>
+            android:layout_gravity="start"></include>
     </android.support.v4.widget.DrawerLayout>
 </RelativeLayout>

@@ -8,6 +8,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,6 +29,7 @@ import com.example.xlm.mydrawerdemo.bean.ChildArticle;
 import com.example.xlm.mydrawerdemo.bean.Form;
 import com.example.xlm.mydrawerdemo.http.Httptools;
 import com.example.xlm.mydrawerdemo.utils.SpaceItemDecoration;
+import com.example.xlm.mydrawerdemo.utils.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -171,6 +173,8 @@ public class NormalContentFragment extends BaseFragment {
             @Override
             public void onClick(View view, int position) {
                 Intent intent=new Intent(getActivity(), ChildArticleActivity.class);
+                intent.putExtra("id",data.get(position).getId());
+                intent.putExtra("title",data.get(position).getTitle());
                 startActivity(intent);
             }
         });
@@ -200,6 +204,7 @@ public class NormalContentFragment extends BaseFragment {
         articleCall.enqueue(new Callback<List<Article>>() {
             @Override
             public void onResponse(Response<List<Article>> response, Retrofit retrofit) {
+                ToastUtils.showShort("调用成功");
                 mSwipRefreshLayout.setRefreshing(false);
                 progressBar.setVisibility(View.GONE);
                 //是否是加载下一页,是就不清空
@@ -213,7 +218,7 @@ public class NormalContentFragment extends BaseFragment {
             @Override
             public void onFailure(Throwable throwable) {
                 mSwipRefreshLayout.setRefreshing(false);
-                Toast.makeText(getActivity(), "网络不通", Toast.LENGTH_SHORT).show();
+                ToastUtils.showShort("网络不通");
             }
         });
     }

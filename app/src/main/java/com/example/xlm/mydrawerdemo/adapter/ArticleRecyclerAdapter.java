@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -61,7 +62,11 @@ public class ArticleRecyclerAdapter extends RecyclerView.Adapter<ArticleRecycler
         holder.comment.setFactory(new ViewSwitcher.ViewFactory() {
             @Override
             public View makeView() {
+                //设置对应的textview的属性
                 TextView textView = new TextView(context);
+                textView.setSingleLine(true);
+                textView.setMaxEms(20);
+                textView.setEllipsize(TextUtils.TruncateAt.END);
                 return textView;
             }
         });
