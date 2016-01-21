@@ -17,7 +17,7 @@ public class Article {
     private String content;
     private String admin;//是否红名
     private String replayCount;
-    private List<reply> replys;
+    private List<Reply> replys;
 
     public String getId() {
         return id;
@@ -107,17 +107,17 @@ public class Article {
         this.replayCount = replayCount;
     }
 
-    public List<reply> getReplys() {
+    public List<Reply> getReplies() {
         return replys;
     }
 
-    public void setReplys(List<reply> replys) {
-        this.replys = replys;
+    public void setReplies(List<Reply> replies) {
+        this.replys = replies;
     }
 
     public Article(String id, String img, String ext, String now, String userid,
                    String name, String email, String title, String content, String admin, String replayCount,
-                   List<reply> replys) {
+                   List<Reply> replys) {
         this.id = id;
         this.img = img;
         this.ext = ext;

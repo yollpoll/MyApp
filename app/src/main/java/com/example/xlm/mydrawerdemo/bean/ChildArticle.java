@@ -1,31 +1,49 @@
 package com.example.xlm.mydrawerdemo.bean;
 
+import java.util.List;
+
 /**
- * Created by xlm on 2015/11/19.
+ * Created by 鹏祺 on 2015/12/28.
  */
 public class ChildArticle {
     private String id;
-    private String fgroup;
-    private String sort;
+    private String img;
+    private String ext;
+    private String now;
+    private String userid;
     private String name;
-    private String showName;
-    private String msg;
-    private String interval;
-    private String createdAt;
-    private String updateAt;
-    private String status;
+    private String email;
+    private String title;
+    private String content;
+    private String sage;
+    private String admin;
+    private int replyCount;
+    private List<Reply> replys;
 
-    public ChildArticle(String id, String fgroup, String sort, String name, String showName, String msg, String interval, String createdAt, String updateAt, String status) {
+    public ChildArticle(String id, String img, String ext, String now,
+                        String userid, String name, String email, String title,
+                        String content, String sage, String admin, int replyCount, List<Reply> replys) {
         this.id = id;
-        this.fgroup = fgroup;
-        this.sort = sort;
+        this.img = img;
+        this.ext = ext;
+        this.now = now;
+        this.userid = userid;
         this.name = name;
-        this.showName = showName;
-        this.msg = msg;
-        this.interval = interval;
-        this.createdAt = createdAt;
-        this.updateAt = updateAt;
-        this.status = status;
+        this.email = email;
+        this.title = title;
+        this.content = content;
+        this.sage = sage;
+        this.admin = admin;
+        this.replyCount = replyCount;
+        this.replys = replys;
+    }
+
+    public String getSage() {
+        return sage;
+    }
+
+    public void setSage(String sage) {
+        this.sage = sage;
     }
 
     public String getId() {
@@ -36,20 +54,36 @@ public class ChildArticle {
         this.id = id;
     }
 
-    public String getFgroup() {
-        return fgroup;
+    public String getImg() {
+        return img;
     }
 
-    public void setFgroup(String fgroup) {
-        this.fgroup = fgroup;
+    public void setImg(String img) {
+        this.img = img;
     }
 
-    public String getSort() {
-        return sort;
+    public String getExt() {
+        return ext;
     }
 
-    public void setSort(String sort) {
-        this.sort = sort;
+    public void setExt(String ext) {
+        this.ext = ext;
+    }
+
+    public String getNow() {
+        return now;
+    }
+
+    public void setNow(String now) {
+        this.now = now;
+    }
+
+    public String getUserid() {
+        return userid;
+    }
+
+    public void setUserid(String userid) {
+        this.userid = userid;
     }
 
     public String getName() {
@@ -60,51 +94,51 @@ public class ChildArticle {
         this.name = name;
     }
 
-    public String getShowName() {
-        return showName;
+    public String getEmail() {
+        return email;
     }
 
-    public void setShowName(String showName) {
-        this.showName = showName;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
-    public String getMsg() {
-        return msg;
+    public String getTitle() {
+        return title;
     }
 
-    public void setMsg(String msg) {
-        this.msg = msg;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
-    public String getInterval() {
-        return interval;
+    public String getContent() {
+        return content;
     }
 
-    public void setInterval(String interval) {
-        this.interval = interval;
+    public void setContent(String content) {
+        this.content = content;
     }
 
-    public String getCreatedAt() {
-        return createdAt;
+    public String getAdmin() {
+        return admin;
     }
 
-    public void setCreatedAt(String createdAt) {
-        this.createdAt = createdAt;
+    public void setAdmin(String admin) {
+        this.admin = admin;
     }
 
-    public String getUpdateAt() {
-        return updateAt;
+    public int getReplyCount() {
+        return replyCount;
     }
 
-    public void setUpdateAt(String updateAt) {
-        this.updateAt = updateAt;
+    public void setReplyCount(int replyCount) {
+        this.replyCount = replyCount;
     }
 
-    public String getStatus() {
-        return status;
+    public List<Reply> getReplies() {
+        return replys;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setReplies(List<Reply> replies) {
+        this.replys = replies;
     }
 }

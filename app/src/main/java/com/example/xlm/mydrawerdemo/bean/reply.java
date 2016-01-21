@@ -3,7 +3,7 @@ package com.example.xlm.mydrawerdemo.bean;
 /**
  * Created by xlm on 2015/11/25.
  */
-public class reply {
+public class Reply {
     private String id;
     private String img;
     private String ext;
@@ -13,10 +13,19 @@ public class reply {
     private String email;
     private String title;
     private String content;
+    private String sage;
     private String admin;
 
     public String getId() {
         return id;
+    }
+
+    public String getSage() {
+        return sage;
+    }
+
+    public void setSage(String sage) {
+        this.sage = sage;
     }
 
     public void setId(String id) {

@@ -8,7 +8,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,15 +18,17 @@ import android.widget.Toast;
 import com.example.xlm.mydrawerdemo.API.ArticleService;
 import com.example.xlm.mydrawerdemo.API.FormListService;
 import com.example.xlm.mydrawerdemo.Activity.ChildArticleActivity;
+import com.example.xlm.mydrawerdemo.Activity.ImageActivity;
 import com.example.xlm.mydrawerdemo.R;
 import com.example.xlm.mydrawerdemo.adapter.ArticleRecyclerAdapter;
 import com.example.xlm.mydrawerdemo.adapter.StringListRecyclerViewAdapter;
 import com.example.xlm.mydrawerdemo.base.BaseFragment;
 import com.example.xlm.mydrawerdemo.bean.Article;
 import com.example.xlm.mydrawerdemo.bean.ChangeTitleEvent;
-import com.example.xlm.mydrawerdemo.bean.ChildArticle;
+import com.example.xlm.mydrawerdemo.bean.ChildForm;
 import com.example.xlm.mydrawerdemo.bean.Form;
 import com.example.xlm.mydrawerdemo.http.Httptools;
+import com.example.xlm.mydrawerdemo.http.Port;
 import com.example.xlm.mydrawerdemo.utils.SpaceItemDecoration;
 import com.example.xlm.mydrawerdemo.utils.ToastUtils;
 
@@ -58,7 +59,7 @@ public class NormalContentFragment extends BaseFragment {
     //帖子内容
     private List<Article> data = new ArrayList<>();
     //右侧板块名
-    private List<ChildArticle> modules = new ArrayList<>();
+    private List<ChildForm> modules = new ArrayList<>();
     //帖子评论
     private List<String> commentContentList = new ArrayList<>();
     private Retrofit retrofit;
@@ -176,6 +177,14 @@ public class NormalContentFragment extends BaseFragment {
                 intent.putExtra("id",data.get(position).getId());
                 intent.putExtra("title",data.get(position).getTitle());
                 startActivity(intent);
+            }
+
+            @Override
+            public void onImageClick(View view, int position) {
+                String url= Port.IMG_URL+data.get(position).getImg()+data.get(position).getExt();
+                Intent intent=new Intent(getActivity(), ImageActivity.class);
+                intent.putExtra("url",url);
+                getActivity().startActivity(intent);
             }
         });
         setModuleList();

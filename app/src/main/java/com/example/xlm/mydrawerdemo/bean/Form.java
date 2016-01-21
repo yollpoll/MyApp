@@ -10,9 +10,9 @@ public class Form {
     private String sort;
     private String name;
     private String status;
-    private List<ChildArticle> forums;
+    private List<ChildForm> forums;
 
-    public Form(String id, String sort, String name, String status, List<ChildArticle> forums) {
+    public Form(String id, String sort, String name, String status, List<ChildForm> forums) {
         this.id = id;
         this.sort = sort;
         this.name = name;
@@ -52,11 +52,11 @@ public class Form {
         this.status = status;
     }
 
-    public List<ChildArticle> getForums() {
+    public List<ChildForm> getForums() {
         return forums;
     }
 
-    public void setForums(List<ChildArticle> forums) {
+    public void setForums(List<ChildForm> forums) {
         this.forums = forums;
     }
 }

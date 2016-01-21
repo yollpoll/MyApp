@@ -5,19 +5,23 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.Spanned;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextSwitcher;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
+import com.bumptech.glide.Glide;
 import com.example.xlm.mydrawerdemo.R;
 import com.example.xlm.mydrawerdemo.bean.Article;
-import com.example.xlm.mydrawerdemo.bean.reply;
+import com.example.xlm.mydrawerdemo.bean.Reply;
+import com.example.xlm.mydrawerdemo.http.Port;
 import com.example.xlm.mydrawerdemo.utils.Tools;
 
 import java.util.ArrayList;
@@ -42,6 +46,7 @@ public class ArticleRecyclerAdapter extends RecyclerView.Adapter<ArticleRecycler
 
     public abstract interface OnItemClickListener {
         void onClick(View view, int position);
+        void onImageClick(View view,int position);
     }
 
     public List<Article> getData() {
@@ -91,9 +96,9 @@ public class ArticleRecyclerAdapter extends RecyclerView.Adapter<ArticleRecycler
                 holder.sender.setTextColor(context.getResources().getColor(R.color.textRed));
             }
             holder.sender.setText(article.getUserid());
-            if (article.getReplys().size() > 0) {
+            if (article.getReplies().size() > 0) {
                 List<Spanned> replySpanneds = new ArrayList<>();
-                for (reply r : article.getReplys()) {
+                for (Reply r : article.getReplies()) {
                     replySpanneds.add(Html.fromHtml(r.getContent()));
                 }
                 Tools.changeText(holder.comment, replySpanneds, context);
@@ -104,6 +109,20 @@ public class ArticleRecyclerAdapter extends RecyclerView.Adapter<ArticleRecycler
                     onItemClickListener.onClick(v, holder.getAdapterPosition());
                 }
             });
+            if("".equals(article.getImg())){
+                holder.imgContent.setVisibility(View.GONE);
+            }else {
+                holder.imgContent.setVisibility(View.VISIBLE);
+                Glide.with(context).load(Port.IMG_THUMB_URL+article.getImg()+article.getExt())
+                        .into(holder.imgContent);
+                holder.imgContent.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        onItemClickListener.onImageClick(v,holder.getAdapterPosition());
+                    }
+                });
+
+            }
         }
     }
 
@@ -116,6 +135,7 @@ public class ArticleRecyclerAdapter extends RecyclerView.Adapter<ArticleRecycler
         TextView content, id, time, sender;
         RelativeLayout item_layout;
         TextSwitcher comment;
+        ImageView imgContent;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -125,6 +145,7 @@ public class ArticleRecyclerAdapter extends RecyclerView.Adapter<ArticleRecycler
             comment = (TextSwitcher) itemView.findViewById(R.id.tv_comment);
             time = (TextView) itemView.findViewById(R.id.tv_time);
             sender = (TextView) itemView.findViewById(R.id.tv_sender_id);
+            imgContent= (ImageView) itemView.findViewById(R.id.img_content);
         }
     }
 }
