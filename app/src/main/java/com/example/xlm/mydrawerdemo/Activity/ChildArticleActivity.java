@@ -8,14 +8,16 @@ import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.xlm.mydrawerdemo.API.ChildArticleService;
 import com.example.xlm.mydrawerdemo.R;
 import com.example.xlm.mydrawerdemo.adapter.ChildArticleAdapter;
+import com.example.xlm.mydrawerdemo.base.BaseSwipeActivity;
 import com.example.xlm.mydrawerdemo.bean.ChildArticle;
 import com.example.xlm.mydrawerdemo.bean.Reply;
 import com.example.xlm.mydrawerdemo.http.Httptools;
@@ -34,7 +36,7 @@ import retrofit.Retrofit;
 /**
  * Created by xlm on 2016/1/12.
  */
-public class ChildArticleActivity extends SwipeBackActivity implements View.OnClickListener{
+public class ChildArticleActivity extends BaseSwipeActivity implements View.OnClickListener{
     private String articleId,title;
     private RelativeLayout headBtnLeft;
     private TextView tvHeadTitle;
@@ -45,6 +47,7 @@ public class ChildArticleActivity extends SwipeBackActivity implements View.OnCl
     private LinearLayoutManager linearLayoutManager;
     private ChildArticleAdapter adapter;
     private Boolean isLoadingMore=false,isRefresh=false;
+    private Toolbar toolbarHead;
     private int page=0;
 
     @Override
@@ -60,8 +63,15 @@ public class ChildArticleActivity extends SwipeBackActivity implements View.OnCl
         swipChildArticle= (SwipeRefreshLayout) findViewById(R.id.swip_childarticle);
         recyclerChildArticle= (RecyclerView) findViewById(R.id.recyclerview_childarticle);
         headBtnLeft.setOnClickListener(this);
+        toolbarHead= (Toolbar) findViewById(R.id.toolbar_head);
+        setSupportActionBar(toolbarHead);
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main,menu);
+        return true;
+    }
 
     private void initData(){
         //获取上个页面传入数据
@@ -77,7 +87,8 @@ public class ChildArticleActivity extends SwipeBackActivity implements View.OnCl
         adapter.setOnItemClickListener(new ChildArticleAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-
+                Intent intent=new Intent(ChildArticleActivity.this,CoordingDemoActivity.class);
+                ChildArticleActivity.this.startActivity(intent);
             }
 
             @Override

@@ -6,13 +6,14 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.example.xlm.mydrawerdemo.R;
 import com.example.xlm.mydrawerdemo.base.BaseActivity;
+import com.example.xlm.mydrawerdemo.base.BaseSwipeActivity;
 
 import me.imid.swipebacklayout.lib.app.SwipeBackActivity;
 
 /**
  * Created by 鹏祺 on 2016/1/16.
  */
-public class ImageActivity extends SwipeBackActivity {
+public class ImageActivity extends BaseSwipeActivity {
     private String url;
     private ImageView imgView;
     @Override
