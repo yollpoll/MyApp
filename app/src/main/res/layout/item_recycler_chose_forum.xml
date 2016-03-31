@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/rl_root"
+    android:background="?android:attr/selectableItemBackground"
+    android:padding="20dp">
+<TextView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:id="@+id/tv_forum"
+    android:text="板块"
+    android:gravity="center"
+    android:textSize="16sp"
+    android:layout_centerInParent="true"
+    />
+    <android.support.v7.widget.AppCompatCheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/check_forum"
+        android:layout_alignParentRight="true"
+        />
+</RelativeLayout>

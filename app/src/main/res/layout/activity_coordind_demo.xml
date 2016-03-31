@@ -18,6 +18,11 @@
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
             app:layout_scrollFlags="scroll|enterAlways"
             />
+        <android.support.design.widget.TabLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/tab_demo"
+            ></android.support.design.widget.TabLayout>
 
     </android.support.design.widget.AppBarLayout>
 
@@ -26,5 +31,6 @@
         android:layout_height="wrap_content"
         android:id="@+id/recycler"
         android:layout_marginTop="100dp"
+        app:layout_scrollFlags="scroll|enterAlways"
         />
 </android.support.design.widget.CoordinatorLayout>

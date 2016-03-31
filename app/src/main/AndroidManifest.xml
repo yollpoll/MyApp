@@ -23,7 +23,7 @@
         <activity android:name=".Activity.ChildArticleActivity"
             ></activity>
         <activity android:name=".Activity.ImageActivity"></activity>
-        <activity android:name=".Activity.CoordingDemoActivity"></activity>
+        <activity android:name=".Activity.ChoseForumActivity"></activity>
     </application>
 
 </manifest>

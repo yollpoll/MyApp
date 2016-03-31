@@ -34,7 +34,7 @@ public class MainActivity extends BaseActivity {
     private FragmentManager mFragmentManager;
     private FragmentTransaction mFragmentTransaction;
     private NormalContentFragment normalContentFragment;
-    private TextView tvHeadTitle;
+    private TextView tvHeadTitle,tvLeft1,tvLeft2,tvLeft3;
     private ImageView imgMenu;
 
     @Override
@@ -55,6 +55,11 @@ public class MainActivity extends BaseActivity {
         left_menu1 = (RelativeLayout) findViewById(R.id.left_btn_layout1);
         left_menu2 = (RelativeLayout) findViewById(R.id.left_btn_layout2);
         left_menu3 = (RelativeLayout) findViewById(R.id.left_btn_layout3);
+        tvLeft1= (TextView) findViewById(R.id.tv_btn1);
+        tvLeft2= (TextView) findViewById(R.id.tv_btn2);
+        tvLeft3= (TextView) findViewById(R.id.tv_btn3);
+        tvLeft1.setText("板块设置");
+
         left_menu1.setOnClickListener(this);
         left_menu2.setOnClickListener(this);
         left_menu3.setOnClickListener(this);
@@ -83,6 +88,8 @@ public class MainActivity extends BaseActivity {
         super.onClick(v);
         switch (v.getId()) {
             case R.id.left_btn_layout1:
+                Intent intent=new Intent(MainActivity.this,ChoseForumActivity.class);
+                MainActivity.this.startActivity(intent);
                 break;
             case R.id.left_btn_layout2:
                 break;

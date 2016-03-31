@@ -2,6 +2,7 @@ package com.example.xlm.mydrawerdemo.Activity;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -25,6 +26,7 @@ public class CoordingDemoActivity extends BaseActivity {
     private LinearLayoutManager linearLayoutManager;
     private StringAdapter stringAdapter;
     private List<String> list=new ArrayList<>();
+    private TabLayout tabLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,6 +37,7 @@ public class CoordingDemoActivity extends BaseActivity {
     private void initView(){
         reccler= (RecyclerView) findViewById(R.id.recycler);
         toolbar= (Toolbar) findViewById(R.id.toolbar);
+        tabLayout= (TabLayout) findViewById(R.id.tab_demo);
         setSupportActionBar(toolbar);
     }
 
