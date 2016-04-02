@@ -6,25 +6,30 @@ import android.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.example.xlm.mydrawerdemo.Dao.DaoMaster;
+import com.example.xlm.mydrawerdemo.Dao.DaoSession;
 import com.example.xlm.mydrawerdemo.R;
 import com.example.xlm.mydrawerdemo.base.BaseActivity;
+import com.example.xlm.mydrawerdemo.base.MyApplication;
 import com.example.xlm.mydrawerdemo.bean.ChangeTitleEvent;
+import com.example.xlm.mydrawerdemo.bean.ChildForm;
 import com.example.xlm.mydrawerdemo.fragment.NormalContentFragment;
-import com.example.xlm.mydrawerdemo.utils.DrawerTools;
-import com.example.xlm.mydrawerdemo.utils.ToastUtils;
 
-import org.w3c.dom.Text;
+import java.util.List;
+import java.util.logging.Logger;
+
+import de.greenrobot.dao.query.Query;
+import de.greenrobot.dao.query.QueryBuilder;
+
 
 public class MainActivity extends BaseActivity {
     private DrawerLayout drawerLayout;
@@ -36,6 +41,8 @@ public class MainActivity extends BaseActivity {
     private NormalContentFragment normalContentFragment;
     private TextView tvHeadTitle,tvLeft1,tvLeft2,tvLeft3;
     private ImageView imgMenu;
+    private DaoSession daoSession;
+    private DaoMaster daoMaster;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -80,9 +87,17 @@ public class MainActivity extends BaseActivity {
         normalContentFragment = new NormalContentFragment();
         mFragmentTransaction.replace(R.id.framelayout_fragment, normalContentFragment);
         mFragmentTransaction.commit();
-
+        getForumTab();
     }
 
+    private void  getForumTab(){
+        daoSession=MyApplication.getInstance().getDaoSession();
+        Query query=daoSession.getChildFormDao().queryBuilder()
+                .build();
+        List<ChildForm> listTab=query.list();
+        QueryBuilder.LOG_VALUES=true;
+        QueryBuilder.LOG_SQL=true;
+    }
     @Override
     public void onClick(View v) {
         super.onClick(v);
@@ -90,6 +105,7 @@ public class MainActivity extends BaseActivity {
             case R.id.left_btn_layout1:
                 Intent intent=new Intent(MainActivity.this,ChoseForumActivity.class);
                 MainActivity.this.startActivity(intent);
+                
                 break;
             case R.id.left_btn_layout2:
                 break;

@@ -1,19 +1,25 @@
 package com.example.xlm.mydrawerdemo.Activity;
 
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.example.xlm.mydrawerdemo.API.FormListService;
+import com.example.xlm.mydrawerdemo.Dao.ChildFormDao;
+import com.example.xlm.mydrawerdemo.Dao.DaoSession;
 import com.example.xlm.mydrawerdemo.R;
 import com.example.xlm.mydrawerdemo.adapter.ChoseForumAdapater;
 import com.example.xlm.mydrawerdemo.base.BaseActivity;
+import com.example.xlm.mydrawerdemo.base.MyApplication;
 import com.example.xlm.mydrawerdemo.bean.ChildForm;
 import com.example.xlm.mydrawerdemo.bean.Form;
 import com.example.xlm.mydrawerdemo.http.Httptools;
@@ -35,9 +41,13 @@ public class ChoseForumActivity extends BaseActivity {
     private LinearLayoutManager linearLayoutManager;
     private Retrofit retrofit;
     private List<ChildForm> listForums=new ArrayList<>();
+    private List<ChildForm> listChecked=new ArrayList<>();
     private ChoseForumAdapater adapater;
     private Toolbar toolbar;
     private TextView tvTitle;
+    private DaoSession daoSession;
+    private ChildFormDao childFormDao;
+    private Cursor cursor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,8 +59,24 @@ public class ChoseForumActivity extends BaseActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater=getMenuInflater();
+        menuInflater.inflate(R.menu.menu_chose_forum, menu);
         return super.onCreateOptionsMenu(menu);
+        }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int itemId=item.getItemId();
+        if(itemId==R.id.action_confirm){
+            submit();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+
+    private void submit(){
+        addChildForum();
+        this.finish();
     }
 
     private void initToolbar(){
@@ -73,17 +99,12 @@ public class ChoseForumActivity extends BaseActivity {
         initToolbar();
     }
     private void initData(){
+        //初始化dao 和session
+        daoSession= MyApplication.getInstance().getDaoSession();
+        childFormDao=daoSession.getChildFormDao();
+
         adapater=new ChoseForumAdapater(listForums,this);
-        adapater.setOnClickListener(new ChoseForumAdapater.OnClickListener() {
-            @Override
-            public void onItemClick(View view, int position, CheckBox checkBox) {
-                if(checkBox.isChecked()){
-                    checkBox.setChecked(false);
-                }else {
-                    checkBox.setChecked(true);
-                }
-            }
-        });
+        adapater.setOnClickListener(onClickListener);
         linearLayoutManager=new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerForum.setLayoutManager(linearLayoutManager);
@@ -118,4 +139,32 @@ public class ChoseForumActivity extends BaseActivity {
             }
         });
     }
+
+    //添加到数据库
+    private void addChildForum(){
+        childFormDao.deleteAll();
+        for(ChildForm form:listChecked){
+            childFormDao.insert(form);
+        }
+    }
+    //点击监听
+    ChoseForumAdapater.OnClickListener onClickListener=new ChoseForumAdapater.OnClickListener() {
+        @Override
+        public void onItemClick(View view, int position, CheckBox checkBox) {
+            if(checkBox.isChecked()){
+                checkBox.setChecked(false);
+            }else {
+                checkBox.setChecked(true);
+            }
+        }
+
+        @Override
+        public void onChcked(ChildForm childForm, boolean isChecked) {
+            if(isChecked){
+                listChecked.add(childForm);
+            }else {
+                listChecked.remove(childForm);
+            }
+        }
+    };
 }

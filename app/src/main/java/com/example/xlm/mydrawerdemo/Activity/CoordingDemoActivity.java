@@ -8,13 +8,20 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 
+import com.example.xlm.mydrawerdemo.Dao.ChildFormDao;
+import com.example.xlm.mydrawerdemo.Dao.DaoMaster;
+import com.example.xlm.mydrawerdemo.Dao.DaoSession;
 import com.example.xlm.mydrawerdemo.R;
 import com.example.xlm.mydrawerdemo.adapter.StringAdapter;
 import com.example.xlm.mydrawerdemo.base.BaseActivity;
+import com.example.xlm.mydrawerdemo.base.MyApplication;
+import com.example.xlm.mydrawerdemo.bean.ChildForm;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import de.greenrobot.dao.query.Query;
+import de.greenrobot.dao.query.QueryBuilder;
 import me.imid.swipebacklayout.lib.app.SwipeBackActivity;
 
 /**
@@ -27,6 +34,10 @@ public class CoordingDemoActivity extends BaseActivity {
     private StringAdapter stringAdapter;
     private List<String> list=new ArrayList<>();
     private TabLayout tabLayout;
+    private DaoSession daoSession;
+    private ChildFormDao childFormDao;
+    private List<ChildForm> listTab=new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,6 +54,9 @@ public class CoordingDemoActivity extends BaseActivity {
 
 
     private void initData(){
+        daoSession= MyApplication.getInstance().getDaoSession();
+        childFormDao=daoSession.getChildFormDao();
+
         getDate();
         linearLayoutManager=new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -55,6 +69,12 @@ public class CoordingDemoActivity extends BaseActivity {
     private void getDate(){
         for(int i=0;i<50;i++){
             list.add(i+"");
+        }
+        Query query=childFormDao.queryBuilder().build();
+
+        listTab.addAll(query.list());
+        for(ChildForm c:listTab){
+            tabLayout.addTab(tabLayout.newTab().setText(c.getName()));
         }
     }
 }

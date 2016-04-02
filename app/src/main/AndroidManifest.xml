@@ -24,6 +24,7 @@
             ></activity>
         <activity android:name=".Activity.ImageActivity"></activity>
         <activity android:name=".Activity.ChoseForumActivity"></activity>
+        <activity android:name=".Activity.CoordingDemoActivity"></activity>
     </application>
 
 </manifest>

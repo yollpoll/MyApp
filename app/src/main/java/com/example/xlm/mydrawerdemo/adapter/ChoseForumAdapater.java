@@ -6,12 +6,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.xlm.mydrawerdemo.R;
 import com.example.xlm.mydrawerdemo.bean.ChildForm;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -33,20 +35,27 @@ public class ChoseForumAdapater extends RecyclerView.Adapter<ChoseForumAdapater.
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view= LayoutInflater.from(context).inflate(R.layout.item_recycler_chose_forum,null);
+        View view= LayoutInflater.from(context).inflate(R.layout.item_recycler_chose_forum, null);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        ChildForm item=forms.get(position);
+        final ChildForm item=forms.get(position);
         holder.tvChoseForum.setText(item.getName());
         holder.rlRoot.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(onClickListener!=null){
-                    onClickListener.onItemClick(v,holder.getAdapterPosition(),holder.checkBoxForum);
+                if (onClickListener != null) {
+                    onClickListener.onItemClick(v, holder.getAdapterPosition(), holder.checkBoxForum);
                 }
+            }
+        });
+        holder.checkBoxForum.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(onClickListener!=null)
+                    onClickListener.onChcked(item,isChecked);
             }
         });
     }
@@ -55,6 +64,7 @@ public class ChoseForumAdapater extends RecyclerView.Adapter<ChoseForumAdapater.
     public int getItemCount() {
         return forms.size();
     }
+
 
     public class ViewHolder extends RecyclerView.ViewHolder{
         TextView tvChoseForum;
@@ -69,5 +79,6 @@ public class ChoseForumAdapater extends RecyclerView.Adapter<ChoseForumAdapater.
     }
     public interface OnClickListener{
         void onItemClick(View view,int position,CheckBox checkBox);
+        void onChcked(ChildForm childForm,boolean isChecked);
     }
 }
