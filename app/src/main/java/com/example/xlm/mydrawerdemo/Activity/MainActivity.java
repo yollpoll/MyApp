@@ -1,12 +1,11 @@
 package com.example.xlm.mydrawerdemo.Activity;
 
 import android.content.Intent;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.View;
@@ -15,17 +14,17 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.example.xlm.mydrawerdemo.Dao.DaoMaster;
 import com.example.xlm.mydrawerdemo.Dao.DaoSession;
 import com.example.xlm.mydrawerdemo.R;
+import com.example.xlm.mydrawerdemo.adapter.ArticlePagerAdapter;
 import com.example.xlm.mydrawerdemo.base.BaseActivity;
 import com.example.xlm.mydrawerdemo.base.MyApplication;
 import com.example.xlm.mydrawerdemo.bean.ChangeTitleEvent;
 import com.example.xlm.mydrawerdemo.bean.ChildForm;
 import com.example.xlm.mydrawerdemo.fragment.NormalContentFragment;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
 import de.greenrobot.dao.query.Query;
 import de.greenrobot.dao.query.QueryBuilder;
@@ -34,15 +33,15 @@ import de.greenrobot.dao.query.QueryBuilder;
 public class MainActivity extends BaseActivity {
     private DrawerLayout drawerLayout;
     private ListView listView;
-    private ActionBarDrawerToggle mDrawerToggle;
     private RelativeLayout left_menu1, left_menu2, left_menu3, headBtnLeft;
-    private FragmentManager mFragmentManager;
-    private FragmentTransaction mFragmentTransaction;
-    private NormalContentFragment normalContentFragment;
     private TextView tvHeadTitle,tvLeft1,tvLeft2,tvLeft3;
     private ImageView imgMenu;
     private DaoSession daoSession;
-    private DaoMaster daoMaster;
+    private ArticlePagerAdapter pagerAdapter;
+    private List<Fragment> listFragment=new ArrayList<>();
+    private List<String> listTitle=new ArrayList<>();
+    private TabLayout tab;
+    private ViewPager mViewPager;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -55,6 +54,12 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.main);
         initView();
         initData();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getForumTab();
     }
 
     private void initView() {
@@ -79,15 +84,11 @@ public class MainActivity extends BaseActivity {
         headBtnLeft.setOnClickListener(this);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer);
         listView = (ListView) findViewById(R.id.left_drawer);
+        tab= (TabLayout) findViewById(R.id.tab);
+        mViewPager= (ViewPager) findViewById(R.id.viewpager_articles);
     }
 
     private void initData() {
-        mFragmentManager = getFragmentManager();
-        mFragmentTransaction = mFragmentManager.beginTransaction();
-        normalContentFragment = new NormalContentFragment();
-        mFragmentTransaction.replace(R.id.framelayout_fragment, normalContentFragment);
-        mFragmentTransaction.commit();
-        getForumTab();
     }
 
     private void  getForumTab(){
@@ -97,6 +98,18 @@ public class MainActivity extends BaseActivity {
         List<ChildForm> listTab=query.list();
         QueryBuilder.LOG_VALUES=true;
         QueryBuilder.LOG_SQL=true;
+
+        for (ChildForm form:listTab){
+            listTitle.add(form.getName());
+            listFragment.add(new NormalContentFragment());
+        }
+        tab.setTabMode(TabLayout.MODE_SCROLLABLE);
+        for(String s:listTitle){
+            tab.addTab(tab.newTab().setText(s));
+        }
+        pagerAdapter=new ArticlePagerAdapter(getSupportFragmentManager(),listFragment,listTitle);
+        mViewPager.setAdapter(pagerAdapter);
+        tab.setupWithViewPager(mViewPager);
     }
     @Override
     public void onClick(View v) {
@@ -105,7 +118,6 @@ public class MainActivity extends BaseActivity {
             case R.id.left_btn_layout1:
                 Intent intent=new Intent(MainActivity.this,ChoseForumActivity.class);
                 MainActivity.this.startActivity(intent);
-                
                 break;
             case R.id.left_btn_layout2:
                 break;

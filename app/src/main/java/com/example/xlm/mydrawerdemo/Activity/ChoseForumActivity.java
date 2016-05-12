@@ -28,6 +28,8 @@ import com.example.xlm.mydrawerdemo.utils.SpaceItemDecoration;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.greenrobot.dao.query.Query;
+import de.greenrobot.dao.query.QueryBuilder;
 import retrofit.Call;
 import retrofit.Callback;
 import retrofit.Response;
@@ -40,8 +42,8 @@ public class ChoseForumActivity extends BaseActivity {
     private RecyclerView recyclerForum;
     private LinearLayoutManager linearLayoutManager;
     private Retrofit retrofit;
-    private List<ChildForm> listForums=new ArrayList<>();
-    private List<ChildForm> listChecked=new ArrayList<>();
+    private List<ChildForm> listForums = new ArrayList<>();
+    private List<ChildForm> listChecked = new ArrayList<>();
     private ChoseForumAdapater adapater;
     private Toolbar toolbar;
     private TextView tvTitle;
@@ -59,27 +61,27 @@ public class ChoseForumActivity extends BaseActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater menuInflater=getMenuInflater();
+        MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.menu_chose_forum, menu);
         return super.onCreateOptionsMenu(menu);
-        }
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int itemId=item.getItemId();
-        if(itemId==R.id.action_confirm){
+        int itemId = item.getItemId();
+        if (itemId == R.id.action_confirm) {
             submit();
         }
         return super.onOptionsItemSelected(item);
     }
 
 
-    private void submit(){
+    private void submit() {
         addChildForum();
         this.finish();
     }
 
-    private void initToolbar(){
+    private void initToolbar() {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         toolbar.setNavigationIcon(R.mipmap.icon_back);
@@ -91,21 +93,22 @@ public class ChoseForumActivity extends BaseActivity {
         });
     }
 
-    private void initView(){
-        recyclerForum= (RecyclerView) findViewById(R.id.recycler_forum);
-        toolbar= (Toolbar) findViewById(R.id.toolbar);
-        tvTitle= (TextView) findViewById(R.id.tv_title);
+    private void initView() {
+        recyclerForum = (RecyclerView) findViewById(R.id.recycler_forum);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        tvTitle = (TextView) findViewById(R.id.tv_title);
         tvTitle.setText("板块设置");
         initToolbar();
     }
-    private void initData(){
-        //初始化dao 和session
-        daoSession= MyApplication.getInstance().getDaoSession();
-        childFormDao=daoSession.getChildFormDao();
 
-        adapater=new ChoseForumAdapater(listForums,this);
+    private void initData() {
+        //初始化dao 和session
+        daoSession = MyApplication.getInstance().getDaoSession();
+        childFormDao = daoSession.getChildFormDao();
+
+        adapater = new ChoseForumAdapater(listForums, this);
         adapater.setOnClickListener(onClickListener);
-        linearLayoutManager=new LinearLayoutManager(this);
+        linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerForum.setLayoutManager(linearLayoutManager);
         recyclerForum.setAdapter(adapater);
@@ -114,9 +117,10 @@ public class ChoseForumActivity extends BaseActivity {
         int spacingInPixels = getResources().getDimensionPixelSize(R.dimen.recycler_space);
         recyclerForum.addItemDecoration(new SpaceItemDecoration(spacingInPixels));
 
-        retrofit= Httptools.getInstance().getRetrofit();
+        retrofit = Httptools.getInstance().getRetrofit();
         setModuleList();
     }
+
     //设置板块列表
     private void setModuleList() {
         FormListService formList = retrofit.create(FormListService.class);
@@ -130,6 +134,13 @@ public class ChoseForumActivity extends BaseActivity {
                         listForums.addAll(forms.get(i).getForums());
                     }
                 }
+                for (ChildForm c : getLocalChoose()) {
+                    for (ChildForm c2 : listForums) {
+                        if (c.getId().equals(c2.getId())) {
+                            c2.setChecked(true);
+                        }
+                    }
+                }
                 adapater.notifyItemRangeInserted(0, listForums.size());
             }
 
@@ -140,29 +151,41 @@ public class ChoseForumActivity extends BaseActivity {
         });
     }
 
+    /*
+    获取存在本地的版块选择
+     */
+    private List<ChildForm> getLocalChoose() {
+        Query query = daoSession.getChildFormDao().queryBuilder().build();
+        List<ChildForm> result = query.list();
+        QueryBuilder.LOG_SQL = true;
+        QueryBuilder.LOG_VALUES = true;
+        return result;
+    }
+
     //添加到数据库
-    private void addChildForum(){
+    private void addChildForum() {
         childFormDao.deleteAll();
-        for(ChildForm form:listChecked){
+        for (ChildForm form : listChecked) {
             childFormDao.insert(form);
         }
     }
+
     //点击监听
-    ChoseForumAdapater.OnClickListener onClickListener=new ChoseForumAdapater.OnClickListener() {
+    ChoseForumAdapater.OnClickListener onClickListener = new ChoseForumAdapater.OnClickListener() {
         @Override
         public void onItemClick(View view, int position, CheckBox checkBox) {
-            if(checkBox.isChecked()){
+            if (checkBox.isChecked()) {
                 checkBox.setChecked(false);
-            }else {
+            } else {
                 checkBox.setChecked(true);
             }
         }
 
         @Override
         public void onChcked(ChildForm childForm, boolean isChecked) {
-            if(isChecked){
+            if (isChecked) {
                 listChecked.add(childForm);
-            }else {
+            } else {
                 listChecked.remove(childForm);
             }
         }

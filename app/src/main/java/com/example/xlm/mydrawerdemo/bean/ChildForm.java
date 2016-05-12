@@ -17,6 +17,7 @@ public class ChildForm {
     private String createAt;
     private String updateAt;
     private String status;
+    private boolean isChecked=false;
 
     public ChildForm() {
     }
@@ -116,4 +117,11 @@ public class ChildForm {
         this.status = status;
     }
 
+    public boolean isChecked() {
+        return isChecked;
+    }
+
+    public void setChecked(boolean checked) {
+        isChecked = checked;
+    }
 }

@@ -1,7 +1,8 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <!--<style name="AppTheme" parent="Base.Theme.AppCompat.Light">-->
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
@@ -16,6 +17,7 @@
         <!-- SearchView -->
         <item name="searchViewStyle">@style/MySearchViewStyle</item>
     </style>
+
     <style name="MySearchViewStyle" parent="Widget.AppCompat.SearchView">
         <!--
     Background for the search query section (e.g. EditText)

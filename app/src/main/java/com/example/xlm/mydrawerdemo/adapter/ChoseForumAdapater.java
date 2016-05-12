@@ -51,6 +51,11 @@ public class ChoseForumAdapater extends RecyclerView.Adapter<ChoseForumAdapater.
                 }
             }
         });
+        if(item.isChecked()){
+            holder.checkBoxForum.setChecked(true);
+        }else {
+            holder.checkBoxForum.setChecked(false);
+        }
         holder.checkBoxForum.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
