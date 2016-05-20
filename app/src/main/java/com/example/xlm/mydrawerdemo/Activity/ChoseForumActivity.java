@@ -43,7 +43,7 @@ public class ChoseForumActivity extends BaseActivity {
     private LinearLayoutManager linearLayoutManager;
     private Retrofit retrofit;
     private List<ChildForm> listForums = new ArrayList<>();
-    private List<ChildForm> listChecked = new ArrayList<>();
+    //    private List<ChildForm> listChecked = new ArrayList<>();
     private ChoseForumAdapater adapater;
     private Toolbar toolbar;
     private TextView tvTitle;
@@ -159,14 +159,18 @@ public class ChoseForumActivity extends BaseActivity {
         List<ChildForm> result = query.list();
         QueryBuilder.LOG_SQL = true;
         QueryBuilder.LOG_VALUES = true;
+        for (ChildForm c : result) {
+//            listChecked.add(c);
+        }
         return result;
     }
 
     //添加到数据库
     private void addChildForum() {
         childFormDao.deleteAll();
-        for (ChildForm form : listChecked) {
-            childFormDao.insert(form);
+        for (ChildForm form : listForums) {
+            if (form.isChecked())
+                childFormDao.insert(form);
         }
     }
 
@@ -184,9 +188,15 @@ public class ChoseForumActivity extends BaseActivity {
         @Override
         public void onChcked(ChildForm childForm, boolean isChecked) {
             if (isChecked) {
-                listChecked.add(childForm);
+                childForm.setChecked(true);
+//                listChecked.add(childForm);
             } else {
-                listChecked.remove(childForm);
+                childForm.setChecked(false);
+//                for (ChildForm c:listChecked){
+//                    if(c.getId().equals(childForm.getId())){
+//                        listChecked.remove(childForm);
+//                    }
+//                }
             }
         }
     };
