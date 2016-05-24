@@ -25,6 +25,7 @@ import com.example.xlm.mydrawerdemo.bean.ChildForm;
 import com.example.xlm.mydrawerdemo.bean.Form;
 import com.example.xlm.mydrawerdemo.fragment.NormalContentFragment;
 import com.example.xlm.mydrawerdemo.http.Httptools;
+import com.example.xlm.mydrawerdemo.utils.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,6 +53,8 @@ public class MainActivity extends BaseActivity {
     private ViewPager mViewPager;
     private boolean isFirst = true;
     private Retrofit retrofit;
+    private static final int START_CHOOSEFORUM = 1;
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -66,6 +69,7 @@ public class MainActivity extends BaseActivity {
         initData();
     }
 
+    //
     @Override
     protected void onResume() {
         super.onResume();
@@ -101,6 +105,22 @@ public class MainActivity extends BaseActivity {
     private void initData() {
         retrofit = Httptools.getInstance().getRetrofit();
         getForumTab();
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                tvHeadTitle.setText(listTab.get(position).getName());
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
     }
 
     private void getForumTab() {
@@ -141,7 +161,8 @@ public class MainActivity extends BaseActivity {
     private void bindTab() {
         for (ChildForm form : listTab) {
             listTitle.add(form.getName());
-            listFragment.add(new NormalContentFragment());
+            NormalContentFragment normalContentFragment = new NormalContentFragment(form.getId());
+            listFragment.add(normalContentFragment);
         }
         tab.setTabMode(TabLayout.MODE_SCROLLABLE);
         for (String s : listTitle) {
@@ -150,6 +171,8 @@ public class MainActivity extends BaseActivity {
         pagerAdapter = new ArticlePagerAdapter(getSupportFragmentManager(), listFragment, listTitle);
         mViewPager.setAdapter(pagerAdapter);
         tab.setupWithViewPager(mViewPager);
+        if (listTitle.size() >= 0)
+            tvHeadTitle.setText(listTitle.get(0));
     }
 
     private void notifyTab() {
@@ -164,7 +187,8 @@ public class MainActivity extends BaseActivity {
         listFragment.clear();
         for (ChildForm form : listTab) {
             listTitle.add(form.getName());
-            listFragment.add(new NormalContentFragment());
+            NormalContentFragment normalContentFragment = new NormalContentFragment(form.getId());
+            listFragment.add(normalContentFragment);
         }
         pagerAdapter = new ArticlePagerAdapter(getSupportFragmentManager(), listFragment, listTitle);
         mViewPager.setAdapter(pagerAdapter);
@@ -177,7 +201,7 @@ public class MainActivity extends BaseActivity {
         switch (v.getId()) {
             case R.id.left_btn_layout1:
                 Intent intent = new Intent(MainActivity.this, ChoseForumActivity.class);
-                MainActivity.this.startActivity(intent);
+                MainActivity.this.startActivityForResult(intent, START_CHOOSEFORUM);
                 break;
             case R.id.left_btn_layout2:
                 break;

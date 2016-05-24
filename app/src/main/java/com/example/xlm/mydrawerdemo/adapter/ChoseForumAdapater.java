@@ -2,6 +2,7 @@ package com.example.xlm.mydrawerdemo.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,15 +53,18 @@ public class ChoseForumAdapater extends RecyclerView.Adapter<ChoseForumAdapater.
             }
         });
         if(item.isChecked()){
+            Log.d("spq",item.getName()+"Ture");
             holder.checkBoxForum.setChecked(true);
         }else {
+            Log.d("spq",item.getName()+"false");
             holder.checkBoxForum.setChecked(false);
         }
         holder.checkBoxForum.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(onClickListener!=null)
-                    onClickListener.onChcked(item,isChecked);
+
+                    onClickListener.onChcked(isChecked,holder.getAdapterPosition());
             }
         });
     }
@@ -84,6 +88,6 @@ public class ChoseForumAdapater extends RecyclerView.Adapter<ChoseForumAdapater.
     }
     public interface OnClickListener{
         void onItemClick(View view,int position,CheckBox checkBox);
-        void onChcked(ChildForm childForm,boolean isChecked);
+        void onChcked(boolean isChecked,int position);
     }
 }

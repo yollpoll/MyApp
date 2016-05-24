@@ -45,25 +45,28 @@ import retrofit.Retrofit;
  */
 public class NormalContentFragment extends BaseFragment {
     private View rootView;
-    private RecyclerView mRecyclerView, module;
+    private RecyclerView mRecyclerView;
     private SwipeRefreshLayout mSwipRefreshLayout;
     private LinearLayoutManager mLinearLayoutManager, moduleLayoutManager;
     private ArticleRecyclerAdapter adapterArticle;
-    private String formId = "";//板块id,默认综合1
+    public String formId = "";//板块id,默认综合1
     private String formTitle = "";//板块名
     private int page = 1;//页数
-    private DrawerLayout drawerForm;
     private boolean isLoadingMore = false;//是否正在加载中
-    //右侧模块adapter
-    private StringListRecyclerViewAdapter adaprerModule;
     //帖子内容
     private List<Article> data = new ArrayList<>();
-    //右侧板块名
-    private List<ChildForm> modules = new ArrayList<>();
     //帖子评论
     private List<String> commentContentList = new ArrayList<>();
     private Retrofit retrofit;
     private ProgressBar progressBar;
+
+    public NormalContentFragment(String formId) {
+        this.formId = formId;
+    }
+
+    public NormalContentFragment() {
+
+    }
 
     @Nullable
     @Override
@@ -90,8 +93,6 @@ public class NormalContentFragment extends BaseFragment {
     private void initView(View view) {
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         mSwipRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
-        module = (RecyclerView) view.findViewById(R.id.recycler_module);
-        drawerForm = (DrawerLayout) view.findViewById(R.id.drawer_form);
         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
         progressBar.setVisibility(View.VISIBLE);
     }
@@ -105,11 +106,7 @@ public class NormalContentFragment extends BaseFragment {
         moduleLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
 
         adapterArticle = new ArticleRecyclerAdapter(data, getActivity());
-        adaprerModule = new StringListRecyclerViewAdapter(modules, getActivity());
 
-        module.setAdapter(adaprerModule);
-        module.setLayoutManager(moduleLayoutManager);
-        module.setHasFixedSize(true);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
@@ -150,44 +147,26 @@ public class NormalContentFragment extends BaseFragment {
                 }
             }
         });
-        //右侧板块点击切换板块
-        adaprerModule.setOnItemClickListener(new StringListRecyclerViewAdapter.onItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position) {
-                if (drawerForm.isDrawerOpen(Gravity.RIGHT)) {
-                    drawerForm.closeDrawer(Gravity.RIGHT);
-                }
-                formId = modules.get(position).getId();
-                page = 1;
-                mSwipRefreshLayout.setRefreshing(true);
-                getData(false);
-                eventBus.post(new ChangeTitleEvent(modules.get(position).getName()));
-            }
-
-            @Override
-            public void onItemLongClick(View view, int position) {
-
-            }
-        });
         //点击进入串内部
         adapterArticle.setOnItemClickListener(new ArticleRecyclerAdapter.OnItemClickListener() {
             @Override
             public void onClick(View view, int position) {
-                Intent intent=new Intent(getActivity(), ChildArticleActivity.class);
-                intent.putExtra("id",data.get(position).getId());
-                intent.putExtra("title",data.get(position).getTitle());
+                Intent intent = new Intent(getActivity(), ChildArticleActivity.class);
+                intent.putExtra("id", data.get(position).getId());
+                intent.putExtra("title", data.get(position).getTitle());
                 startActivity(intent);
             }
 
             @Override
             public void onImageClick(View view, int position) {
-                String url= Port.IMG_URL+data.get(position).getImg()+data.get(position).getExt();
-                Intent intent=new Intent(getActivity(), ImageActivity.class);
-                intent.putExtra("url",url);
+                String url = Port.IMG_URL + data.get(position).getImg() + data.get(position).getExt();
+                Intent intent = new Intent(getActivity(), ImageActivity.class);
+                intent.putExtra("url", url);
                 getActivity().startActivity(intent);
             }
         });
-        setModuleList();
+//        setModuleList();
+        getData(false);
     }
 
     public void onEventMainThread(Article obj) {
@@ -227,34 +206,6 @@ public class NormalContentFragment extends BaseFragment {
             public void onFailure(Throwable throwable) {
                 mSwipRefreshLayout.setRefreshing(false);
                 ToastUtils.showShort("网络不通");
-            }
-        });
-    }
-
-    //设置板块列表
-    private void setModuleList() {
-        FormListService formList = retrofit.create(FormListService.class);
-        Call<List<Form>> formsCall = formList.getFormList();
-        formsCall.enqueue(new Callback<List<Form>>() {
-            @Override
-            public void onResponse(Response<List<Form>> response, Retrofit retrofit) {
-                List<Form> forms = response.body();
-                if (forms != null) {
-                    for (int i = 0; i < forms.size(); i++) {
-                        modules.addAll(forms.get(i).getForums());
-                    }
-                }
-                adaprerModule.notifyDataSetChanged();
-                //设置正面内容
-                formId = modules.get(0).getId();
-                formTitle = modules.get(0).getName();
-                eventBus.post(new ChangeTitleEvent(formTitle));
-                getData(false);
-            }
-
-            @Override
-            public void onFailure(Throwable throwable) {
-
             }
         });
     }

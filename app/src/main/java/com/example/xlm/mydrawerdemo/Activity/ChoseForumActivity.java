@@ -77,6 +77,7 @@ public class ChoseForumActivity extends BaseActivity {
 
 
     private void submit() {
+        setResult(RESULT_OK);
         addChildForum();
         this.finish();
     }
@@ -186,17 +187,11 @@ public class ChoseForumActivity extends BaseActivity {
         }
 
         @Override
-        public void onChcked(ChildForm childForm, boolean isChecked) {
+        public void onChcked( boolean isChecked,int position) {
             if (isChecked) {
-                childForm.setChecked(true);
-//                listChecked.add(childForm);
+                listForums.get(position).setChecked(true);
             } else {
-                childForm.setChecked(false);
-//                for (ChildForm c:listChecked){
-//                    if(c.getId().equals(childForm.getId())){
-//                        listChecked.remove(childForm);
-//                    }
-//                }
+                listForums.get(position).setChecked(false);
             }
         }
     };
