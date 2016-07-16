@@ -1,11 +1,15 @@
 package com.example.xlm.mydrawerdemo.Activity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.View;
@@ -25,7 +29,6 @@ import com.example.xlm.mydrawerdemo.bean.ChildForm;
 import com.example.xlm.mydrawerdemo.bean.Form;
 import com.example.xlm.mydrawerdemo.fragment.NormalContentFragment;
 import com.example.xlm.mydrawerdemo.http.Httptools;
-import com.example.xlm.mydrawerdemo.utils.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,11 +42,12 @@ import retrofit.Retrofit;
 
 
 public class MainActivity extends BaseActivity {
+    private Toolbar toolbar;
     private DrawerLayout drawerLayout;
+    private ActionBarDrawerToggle mDrawerToggle;
     private ListView listView;
-    private RelativeLayout left_menu1, left_menu2, left_menu3, headBtnLeft;
-    private TextView tvHeadTitle, tvLeft1, tvLeft2, tvLeft3;
-    private ImageView imgMenu;
+    private RelativeLayout left_menu1, left_menu2, left_menu3;
+    private TextView  tvLeft1, tvLeft2, tvLeft3;
     private DaoSession daoSession;
     private ArticlePagerAdapter pagerAdapter;
     private List<Fragment> listFragment = new ArrayList<>();
@@ -77,6 +81,7 @@ public class MainActivity extends BaseActivity {
     }
 
     private void initView() {
+        initToolBar();
         //左边抽屉按钮
         left_menu1 = (RelativeLayout) findViewById(R.id.left_btn_layout1);
         left_menu2 = (RelativeLayout) findViewById(R.id.left_btn_layout2);
@@ -89,17 +94,36 @@ public class MainActivity extends BaseActivity {
         left_menu1.setOnClickListener(this);
         left_menu2.setOnClickListener(this);
         left_menu3.setOnClickListener(this);
-        //初始化标题
-        tvHeadTitle = (TextView) findViewById(R.id.tv_head_title);
-        tvHeadTitle.setText("广场");
-        imgMenu = (ImageView) findViewById(R.id.img_head_btn_left);
-        imgMenu.setImageResource(R.mipmap.icon_menu);
-        headBtnLeft = (RelativeLayout) findViewById(R.id.head_btn_left);
-        headBtnLeft.setOnClickListener(this);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer);
+        ActionBarDrawerToggle mDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.open,
+                R.string.close);
+        mDrawerToggle.syncState();
+        drawerLayout.setDrawerListener(mDrawerToggle);
+
+
         listView = (ListView) findViewById(R.id.left_drawer);
         tab = (TabLayout) findViewById(R.id.tab);
         mViewPager = (ViewPager) findViewById(R.id.viewpager_articles);
+    }
+
+    //初始化toolbar
+    private void initToolBar() {
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        toolbar.setTitle("广场");
+//        toolbar.setNavigationIcon(getResources().getDrawable(R.mipmap.icon_back));
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer);
+        mDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open,
+                R.string.drawer_close);
+        mDrawerToggle.syncState();
+        drawerLayout.setDrawerListener(mDrawerToggle);
+
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
     }
 
     private void initData() {
@@ -113,7 +137,8 @@ public class MainActivity extends BaseActivity {
 
             @Override
             public void onPageSelected(int position) {
-                tvHeadTitle.setText(listTab.get(position).getName());
+                toolbar.setTitle(listTab.get(position).getName());
+                getSupportActionBar().setTitle(listTab.get(position).getName());
             }
 
             @Override
@@ -171,17 +196,21 @@ public class MainActivity extends BaseActivity {
         pagerAdapter = new ArticlePagerAdapter(getSupportFragmentManager(), listFragment, listTitle);
         mViewPager.setAdapter(pagerAdapter);
         tab.setupWithViewPager(mViewPager);
-        if (listTitle.size() >= 0)
-            tvHeadTitle.setText(listTitle.get(0));
+        if (listTitle.size() >= 0) {
+            toolbar.setTitle(listTitle.get(0));
+            getSupportActionBar().setTitle(listTitle.get(0));
+        }
     }
 
     private void notifyTab() {
         if (isFirst) {
             isFirst = false;
+            Log.d("spq", "isFirst");
             return;
         }
+        Log.d("spq", "isNotFirst");
         Query query = daoSession.getChildFormDao().queryBuilder().build();
-        List<ChildForm> listTab = query.list();
+        listTab = query.list();
 
         listTitle.clear();
         listFragment.clear();
@@ -219,6 +248,7 @@ public class MainActivity extends BaseActivity {
     修改标题
      */
     public void onEventMainThread(ChangeTitleEvent event) {
-        tvHeadTitle.setText(event.getTitle());
+        toolbar.setTitle(event.getTitle());
+        getSupportActionBar().setTitle(event.getTitle());
     }
 }

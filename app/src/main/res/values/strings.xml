@@ -2,4 +2,6 @@
     <string name="app_name">SPQ</string>
     <string name="open">打开</string>
     <string name="close">关闭</string>
+    <string name="drawer_open">open</string>
+    <string name="drawer_close">close</string>
 </resources>

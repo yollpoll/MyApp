@@ -44,12 +44,12 @@
         "source": "C:\\Android\\workspace\\MyApp\\library\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\22.2.0\\res\\drawable-mdpi\\abc_list_divider_mtrl_alpha.9.png"
     },
     {
-        "merged": "C:\\Android\\workspace\\MyApp\\library\\build\\intermediates\\res\\merged\\release\\drawable-mdpi-v4\\abc_textfield_search_default_mtrl_alpha.9.png",
-        "source": "C:\\Android\\workspace\\MyApp\\library\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\22.2.0\\res\\drawable-mdpi\\abc_textfield_search_default_mtrl_alpha.9.png"
-    },
-    {
         "merged": "C:\\Android\\workspace\\MyApp\\library\\build\\intermediates\\res\\merged\\release\\drawable-mdpi-v4\\abc_list_longpressed_holo.9.png",
         "source": "C:\\Android\\workspace\\MyApp\\library\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\22.2.0\\res\\drawable-mdpi\\abc_list_longpressed_holo.9.png"
+    },
+    {
+        "merged": "C:\\Android\\workspace\\MyApp\\library\\build\\intermediates\\res\\merged\\release\\drawable-mdpi-v4\\abc_textfield_search_default_mtrl_alpha.9.png",
+        "source": "C:\\Android\\workspace\\MyApp\\library\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\22.2.0\\res\\drawable-mdpi\\abc_textfield_search_default_mtrl_alpha.9.png"
     },
     {
         "merged": "C:\\Android\\workspace\\MyApp\\library\\build\\intermediates\\res\\merged\\release\\drawable-mdpi-v4\\abc_btn_rating_star_off_mtrl_alpha.png",
