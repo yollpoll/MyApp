@@ -61,7 +61,7 @@
         <include
             android:id="@+id/left_list_menu"
             layout="@layout/left_menu_list_layout"
-            android:layout_width="wrap_content"
+            android:layout_width="300dp"
             android:layout_height="match_parent"
             android:layout_gravity="start" />
     </android.support.v4.widget.DrawerLayout>

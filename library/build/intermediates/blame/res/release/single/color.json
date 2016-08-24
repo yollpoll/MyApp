@@ -20,12 +20,12 @@
         "source": "C:\\Android\\workspace\\MyApp\\library\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\22.2.0\\res\\color\\abc_secondary_text_material_dark.xml"
     },
     {
-        "merged": "C:\\Android\\workspace\\MyApp\\library\\build\\intermediates\\res\\merged\\release\\color\\abc_secondary_text_material_light.xml",
-        "source": "C:\\Android\\workspace\\MyApp\\library\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\22.2.0\\res\\color\\abc_secondary_text_material_light.xml"
-    },
-    {
         "merged": "C:\\Android\\workspace\\MyApp\\library\\build\\intermediates\\res\\merged\\release\\color\\abc_primary_text_disable_only_material_light.xml",
         "source": "C:\\Android\\workspace\\MyApp\\library\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\22.2.0\\res\\color\\abc_primary_text_disable_only_material_light.xml"
+    },
+    {
+        "merged": "C:\\Android\\workspace\\MyApp\\library\\build\\intermediates\\res\\merged\\release\\color\\abc_secondary_text_material_light.xml",
+        "source": "C:\\Android\\workspace\\MyApp\\library\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\22.2.0\\res\\color\\abc_secondary_text_material_light.xml"
     },
     {
         "merged": "C:\\Android\\workspace\\MyApp\\library\\build\\intermediates\\res\\merged\\release\\color\\abc_background_cache_hint_selector_material_light.xml",

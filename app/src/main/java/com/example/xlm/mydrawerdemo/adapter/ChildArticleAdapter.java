@@ -70,7 +70,7 @@ public class ChildArticleAdapter  extends RecyclerView.Adapter<ChildArticleAdapt
         if("1".equals(item.getAdmin())){
             holder.tvUsername.setTextColor(context.getResources().getColor(R.color.textRed));
         }else {
-            holder.tvUsername.setTextColor(context.getResources().getColor(R.color.textGrey));
+            holder.tvUsername.setTextColor(context.getResources().getColor(R.color.black));
         }
         holder.tvUsername.setText(item.getUserid());
         holder.tvId.setText("No."+item.getId());

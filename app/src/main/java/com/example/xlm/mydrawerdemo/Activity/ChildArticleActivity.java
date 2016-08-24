@@ -38,7 +38,6 @@ import retrofit.Retrofit;
  */
 public class ChildArticleActivity extends BaseSwipeActivity implements View.OnClickListener{
     private String articleId,title;
-    private RelativeLayout headBtnLeft;
     private TextView tvHeadTitle;
     private Retrofit retrofit;
     private List<Reply> data=new ArrayList<>();
@@ -58,26 +57,28 @@ public class ChildArticleActivity extends BaseSwipeActivity implements View.OnCl
         initData();
     }
     private void initView(){
-        headBtnLeft= (RelativeLayout) findViewById(R.id.head_btn_left);
         tvHeadTitle= (TextView) findViewById(R.id.tv_head_title);
         swipChildArticle= (SwipeRefreshLayout) findViewById(R.id.swip_childarticle);
         recyclerChildArticle= (RecyclerView) findViewById(R.id.recyclerview_childarticle);
-        headBtnLeft.setOnClickListener(this);
         toolbarHead= (Toolbar) findViewById(R.id.toolbar_head);
         setSupportActionBar(toolbarHead);
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main,menu);
-        return true;
-    }
 
     private void initData(){
         //获取上个页面传入数据
         articleId=getIntent().getStringExtra("id");
         title=getIntent().getStringExtra("title");
-        tvHeadTitle.setText(title);
+        getSupportActionBar().setTitle(title);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//        toolbarHead.setTitle(title);
+//        toolbarHead.setNavigationIcon(R.mipmap.icon_back);
+        toolbarHead.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ChildArticleActivity.this.finish();
+            }
+        });
         //初始化retrofit
         retrofit= Httptools.getInstance().getRetrofit();
         //初始化list
@@ -87,8 +88,7 @@ public class ChildArticleActivity extends BaseSwipeActivity implements View.OnCl
         adapter.setOnItemClickListener(new ChildArticleAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                Intent intent=new Intent(ChildArticleActivity.this,CoordingDemoActivity.class);
-                ChildArticleActivity.this.startActivity(intent);
+
             }
 
             @Override

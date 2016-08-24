@@ -1,6 +1,7 @@
 package com.example.xlm.mydrawerdemo.Activity;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -18,6 +19,10 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.example.xlm.mydrawerdemo.API.FormListService;
 import com.example.xlm.mydrawerdemo.Dao.DaoSession;
 import com.example.xlm.mydrawerdemo.R;
@@ -29,6 +34,7 @@ import com.example.xlm.mydrawerdemo.bean.ChildForm;
 import com.example.xlm.mydrawerdemo.bean.Form;
 import com.example.xlm.mydrawerdemo.fragment.NormalContentFragment;
 import com.example.xlm.mydrawerdemo.http.Httptools;
+import com.example.xlm.mydrawerdemo.http.Port;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,6 +64,8 @@ public class MainActivity extends BaseActivity {
     private boolean isFirst = true;
     private Retrofit retrofit;
     private static final int START_CHOOSEFORUM = 1;
+    private ImageView imgCover;
+    private Bitmap coverBitmap;
 
 
     @Override
@@ -71,26 +79,49 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.main);
         initView();
         initData();
+        notifyTab();
     }
 
     //
     @Override
     protected void onResume() {
         super.onResume();
-        notifyTab();
     }
 
     private void initView() {
         initToolBar();
-        //左边抽屉按钮
+        initDrawerLayout();
+        tab = (TabLayout) findViewById(R.id.tab);
+        mViewPager = (ViewPager) findViewById(R.id.viewpager_articles);
+    }
+
+
+    //初始化左边抽屉
+    private void initDrawerLayout(){
         left_menu1 = (RelativeLayout) findViewById(R.id.left_btn_layout1);
         left_menu2 = (RelativeLayout) findViewById(R.id.left_btn_layout2);
         left_menu3 = (RelativeLayout) findViewById(R.id.left_btn_layout3);
         tvLeft1 = (TextView) findViewById(R.id.tv_btn1);
         tvLeft2 = (TextView) findViewById(R.id.tv_btn2);
         tvLeft3 = (TextView) findViewById(R.id.tv_btn3);
-        tvLeft1.setText("板块设置");
+        tvLeft1.setText("板块");
+        imgCover= (ImageView) findViewById(R.id.img_cover);
+        Glide.get(this).clearMemory();
+        Glide.with(this)
+                .load(Port.COVER)
+                .asBitmap()
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .placeholder(R.mipmap.left_drawer_bg)
+                .centerCrop()
+                .into(new SimpleTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                        imgCover.setImageBitmap(resource);
+                        coverBitmap=resource;
+                    }
+                });
 
+        imgCover.setOnClickListener(this);
         left_menu1.setOnClickListener(this);
         left_menu2.setOnClickListener(this);
         left_menu3.setOnClickListener(this);
@@ -99,11 +130,7 @@ public class MainActivity extends BaseActivity {
                 R.string.close);
         mDrawerToggle.syncState();
         drawerLayout.setDrawerListener(mDrawerToggle);
-
-
         listView = (ListView) findViewById(R.id.left_drawer);
-        tab = (TabLayout) findViewById(R.id.tab);
-        mViewPager = (ViewPager) findViewById(R.id.viewpager_articles);
     }
 
     //初始化toolbar
@@ -225,6 +252,18 @@ public class MainActivity extends BaseActivity {
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode){
+            case START_CHOOSEFORUM:
+                if(resultCode==RESULT_OK){
+                    notifyTab();
+                }
+                break;
+        }
+    }
+
+    @Override
     public void onClick(View v) {
         super.onClick(v);
         switch (v.getId()) {
@@ -238,6 +277,9 @@ public class MainActivity extends BaseActivity {
                 break;
             case R.id.head_btn_left:
                 drawerLayout.openDrawer(Gravity.LEFT);
+                break;
+            case R.id.img_cover:
+                ImageActivity.gotoImageActivity(MainActivity.this,coverBitmap);
                 break;
             default:
                 break;

@@ -4,6 +4,8 @@
     android:layout_height="wrap_content"
     android:background="?android:attr/selectableItemBackground"
     android:id="@+id/layout_item"
+    android:paddingTop="5dp"
+    android:paddingBottom="5dp"
     >
     <TextView
         android:layout_width="wrap_content"
@@ -11,14 +13,14 @@
         android:id="@+id/tv_username"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
-        android:textColor="@color/textGrey"
+        android:textColor="@color/black"
         />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/tv_id"
         android:layout_centerHorizontal="true"
-        android:textColor="@color/textGrey"
+        android:textColor="@color/black"
         android:layout_marginTop="10dp"
         />
     <TextView
@@ -28,6 +30,7 @@
         android:layout_alignParentRight="true"
         android:layout_marginTop="10dp"
         android:layout_marginRight="10dp"
+        android:textColor="@color/black"
         />
     <TextView
         android:layout_width="wrap_content"
@@ -35,6 +38,7 @@
         android:layout_below="@+id/tv_username"
         android:id="@+id/tv_content"
         android:layout_margin="10dp"
+        android:textColor="@color/black"
         />
     <ImageView
         android:layout_width="50dp"
@@ -46,6 +50,6 @@
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
         android:layout_below="@+id/img_content"
-        android:background="@color/colorPressed"
+        android:background="@color/textGrey"
         />
 </RelativeLayout>

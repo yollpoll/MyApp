@@ -4,12 +4,12 @@
         "source": "C:\\Android\\workspace\\MyApp\\library\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\22.2.0\\res\\layout\\abc_dialog_title_material.xml"
     },
     {
-        "merged": "C:\\Android\\workspace\\MyApp\\library\\build\\intermediates\\res\\merged\\release\\layout\\select_dialog_item_material.xml",
-        "source": "C:\\Android\\workspace\\MyApp\\library\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\22.2.0\\res\\layout\\select_dialog_item_material.xml"
-    },
-    {
         "merged": "C:\\Android\\workspace\\MyApp\\library\\build\\intermediates\\res\\merged\\release\\layout\\abc_activity_chooser_view_list_item.xml",
         "source": "C:\\Android\\workspace\\MyApp\\library\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\22.2.0\\res\\layout\\abc_activity_chooser_view_list_item.xml"
+    },
+    {
+        "merged": "C:\\Android\\workspace\\MyApp\\library\\build\\intermediates\\res\\merged\\release\\layout\\select_dialog_item_material.xml",
+        "source": "C:\\Android\\workspace\\MyApp\\library\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\22.2.0\\res\\layout\\select_dialog_item_material.xml"
     },
     {
         "merged": "C:\\Android\\workspace\\MyApp\\library\\build\\intermediates\\res\\merged\\release\\layout\\notification_template_part_chronometer.xml",

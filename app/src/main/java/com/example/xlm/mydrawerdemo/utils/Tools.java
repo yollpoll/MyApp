@@ -62,12 +62,11 @@ public class Tools {
             @Override
             public void run() {
                 int i = 0;
-                while (i <= texts.size()) {
-                    i++;
+                while (i < texts.size()) {
                     //到最后的时候切换回第一个
-                    if (i == texts.size()) {
-                        i = 0;
-                    }
+//                    if (i == texts.size()) {
+//                        i = 0;
+//                    }
                     Message message = Message.obtain();
                     message.what = CHANGE_TEXT;
                     ChangeTextObj changeTextObj = new ChangeTextObj(textSwitcher, texts.get(i), context);
@@ -79,7 +78,7 @@ public class Tools {
                         e.printStackTrace();
                         Thread.currentThread().interrupt();
                     }
-
+                    i++;
                 }
             }
         }

@@ -4,26 +4,28 @@
     android:id="@+id/layout_childarticle"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    android:background="@color/white"
+    >
 
-    <include
-        android:id="@+id/layout_title"
-        layout="@layout/layout_head"
-        />
+    <!--<include-->
+        <!--android:id="@+id/layout_title"-->
+        <!--layout="@layout/layout_head"-->
+        <!--/>-->
     <android.support.v7.widget.Toolbar
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="?attr/actionBarSize"
         android:background="?android:attr/colorPrimary"
+        style="@style/Widget.MyTheme.HeaderBar"
         android:id="@+id/toolbar_head"
         >
-
     </android.support.v7.widget.Toolbar>
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/layout_title"
+        android:layout_below="@+id/toolbar_head"
         android:id="@+id/swip_childarticle"
+
         >
 
         <android.support.v7.widget.RecyclerView
