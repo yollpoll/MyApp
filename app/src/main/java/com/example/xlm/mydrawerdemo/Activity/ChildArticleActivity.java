@@ -161,6 +161,7 @@ public class ChildArticleActivity extends BaseSwipeActivity implements View.OnCl
                         head.setExt(temp.getExt());
                         data.add(head);
                         data.addAll(response.body().getReplies());
+                        adapter.addAll(data);
                         adapter.notifyDataSetChanged();
                         swipChildArticle.setRefreshing(false);
                     }
