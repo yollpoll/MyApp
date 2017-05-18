@@ -1,6 +1,8 @@
 package com.example.xlm.mydrawerdemo.adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
@@ -13,6 +15,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.example.xlm.mydrawerdemo.R;
 import com.example.xlm.mydrawerdemo.base.MyApplication;
 import com.example.xlm.mydrawerdemo.bean.ChildArticle;
@@ -105,8 +109,13 @@ public class ChildArticleAdapter extends RecyclerView.Adapter<ChildArticleAdapte
             holder.imgContent.setVisibility(View.GONE);
         } else {
             holder.imgContent.setVisibility(View.VISIBLE);
-            Glide.with(context).load(Port.IMG_THUMB_URL + item.getImg() + item.getExt())
+            Glide.with(context)
+                    .load(Port.IMG_THUMB_URL + item.getImg() + item.getExt())
+                    .centerCrop()
+                    .crossFade()
+                    .error(R.mipmap.icon_yygq)
                     .into(holder.imgContent);
+
             holder.imgContent.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

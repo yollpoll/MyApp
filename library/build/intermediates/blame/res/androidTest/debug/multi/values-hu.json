@@ -1,6 +1,6 @@
 [
     {
-        "outputFile": "C:\\Android\\workspace\\MyApp\\library\\build\\intermediates\\res\\merged\\androidTest\\debug\\values-hu\\values-hu.xml",
+        "outputFile": "C:\\Android\\workspace\\MyApp\\library\\build\\intermediates\\incremental\\mergeDebugAndroidTestResources\\merged.dir\\values-hu\\values-hu.xml",
         "map": [
             {
                 "to": {

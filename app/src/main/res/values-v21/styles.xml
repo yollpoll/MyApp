@@ -8,8 +8,8 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:textColorPrimary">#ffffff</item>
-        <item name="android:navigationBarColor">#ffffff</item>
-        <item name="android:colorControlNormal">#ffffff</item>
+        <item name="android:navigationBarColor">@color/colorPrimary</item>
+        <item name="android:colorControlNormal">@color/colorAccent</item>
         <item name="android:actionOverflowButtonStyle">@style/menuOverflow</item>
         <!-- 窗口的背景颜色 -->
         <item name="android:windowBackground">@color/white</item>
@@ -56,9 +56,9 @@
          <item name="colorControlNormal">#FFFFFF</item>
     </style>
     <style name="ActionBarThemeOverlay" parent="">
-        <item name="android:textColorPrimary">#ffffff</item>
-        <item name="colorControlNormal">#ffffff</item>
-        <item name="colorControlHighlight">#ff33b5e5</item>
+        <item name="android:textColorPrimary">#FFFFFF</item>
+        <item name="colorControlNormal">#FFFFFF</item>
+        <item name="colorControlHighlight">#FFFFFF</item>
     </style>
 
     <style name="Widget.MyTheme.HeaderBar" parent="Widget.AppCompat.Light.Spinner.DropDown.ActionBar">

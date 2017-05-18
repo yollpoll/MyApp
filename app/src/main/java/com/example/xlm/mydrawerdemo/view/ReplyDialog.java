@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.Request;
+import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.target.SizeReadyCallback;
@@ -87,63 +88,13 @@ public class ReplyDialog extends Dialog {
         if (TextUtils.isEmpty(reply.getImg())) {
             imgContent.setVisibility(View.GONE);
         } else {
-
-            Glide.with(MyApplication.getInstance()).load(Port.IMG_THUMB_URL + reply.getImg() + reply.getExt())
-                    .asBitmap()
-                    .into(new Target<Bitmap>() {
-                        @Override
-                        public void onLoadStarted(Drawable placeholder) {
-                            Log.i("spq", "onLoadStarted");
-                        }
-
-                        @Override
-                        public void onLoadFailed(Exception e, Drawable errorDrawable) {
-                            Log.i("spq", "onLoadFailed");
-                            imgContent.setVisibility(View.GONE);
-                        }
-
-                        @Override
-                        public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-                            Log.i("spq", "onResourceReady");
-                            imgContent.setImageBitmap(resource);
-                            imgContent.setVisibility(View.VISIBLE);
-                        }
-
-                        @Override
-                        public void onLoadCleared(Drawable placeholder) {
-                            Log.i("spq", "onLoadCleared");
-                        }
-
-                        @Override
-                        public void getSize(SizeReadyCallback cb) {
-
-                        }
-
-                        @Override
-                        public void setRequest(Request request) {
-
-                        }
-
-                        @Override
-                        public Request getRequest() {
-                            return null;
-                        }
-
-                        @Override
-                        public void onStart() {
-
-                        }
-
-                        @Override
-                        public void onStop() {
-
-                        }
-
-                        @Override
-                        public void onDestroy() {
-
-                        }
-                    });
+            imgContent.setVisibility(View.VISIBLE);
+            Glide.with(MyApplication.getInstance())
+                    .load(Port.IMG_THUMB_URL + reply.getImg() + reply.getExt())
+                    .centerCrop()
+                    .crossFade()
+                    .error(R.mipmap.icon_yygq)
+                    .into(imgContent);
         }
 
         if (null != this && !this.isShowing()) {

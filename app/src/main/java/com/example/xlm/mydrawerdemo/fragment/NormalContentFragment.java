@@ -60,9 +60,6 @@ public class NormalContentFragment extends BaseFragment {
     private Retrofit retrofit;
     private ProgressBar progressBar;
 
-    public NormalContentFragment(String formId) {
-        this.formId = formId;
-    }
 
     public NormalContentFragment() {
 
@@ -98,6 +95,7 @@ public class NormalContentFragment extends BaseFragment {
     }
 
     private void initData() {
+        this.formId = getArguments().getString("formId");
         mSwipRefreshLayout.setRefreshing(true);
         retrofit = Httptools.getInstance().getRetrofit();
         mLinearLayoutManager = new LinearLayoutManager(getActivity());

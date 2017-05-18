@@ -1,6 +1,6 @@
 [
     {
-        "outputFile": "C:\\Android\\workspace\\MyApp\\library\\build\\intermediates\\res\\merged\\androidTest\\debug\\values-sw\\values-sw.xml",
+        "outputFile": "C:\\Android\\workspace\\MyApp\\library\\build\\intermediates\\incremental\\mergeDebugAndroidTestResources\\merged.dir\\values-sw\\values-sw.xml",
         "map": [
             {
                 "to": {

@@ -9,6 +9,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -161,14 +162,18 @@ public class ChildArticleActivity extends BaseSwipeActivity implements View.OnCl
                         head.setExt(temp.getExt());
                         data.add(head);
                         data.addAll(response.body().getReplies());
-                        adapter.addAll(data);
+//                        adapter.addAll(data);
                         adapter.notifyDataSetChanged();
                         swipChildArticle.setRefreshing(false);
                     }
                 if(isLoadingMore){
                     //加载下一页不用和刷新一样处理
+                    if(data.get(1).getId().equals(response.body().getReplies().get(0).getId())){
+                        //过滤掉重复的数据防止重复加载最后一页
+                        return;
+                    }
                     data.addAll(response.body().getReplies());
-                    adapter.notifyDataSetChanged();
+                    adapter.notifyItemRangeInserted(data.size()-response.body().getReplies().size(),data.size());
                 }
                 isLoadingMore=false;
                 isRefresh=false;

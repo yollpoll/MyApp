@@ -1,6 +1,6 @@
 [
     {
-        "outputFile": "C:\\Android\\workspace\\MyApp\\library\\build\\intermediates\\res\\merged\\release\\values-ru\\values-ru.xml",
+        "outputFile": "C:\\Android\\workspace\\MyApp\\library\\build\\intermediates\\incremental\\mergeReleaseResources\\merged.dir\\values-ru\\values-ru.xml",
         "map": [
             {
                 "to": {

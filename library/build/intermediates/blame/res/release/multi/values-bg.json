@@ -1,6 +1,6 @@
 [
     {
-        "outputFile": "C:\\Android\\workspace\\MyApp\\library\\build\\intermediates\\res\\merged\\release\\values-bg\\values-bg.xml",
+        "outputFile": "C:\\Android\\workspace\\MyApp\\library\\build\\intermediates\\incremental\\mergeReleaseResources\\merged.dir\\values-bg\\values-bg.xml",
         "map": [
             {
                 "to": {

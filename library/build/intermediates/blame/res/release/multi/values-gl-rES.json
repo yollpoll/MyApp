@@ -1,6 +1,6 @@
 [
     {
-        "outputFile": "C:\\Android\\workspace\\MyApp\\library\\build\\intermediates\\res\\merged\\release\\values-gl-rES\\values-gl-rES.xml",
+        "outputFile": "C:\\Android\\workspace\\MyApp\\library\\build\\intermediates\\incremental\\mergeReleaseResources\\merged.dir\\values-gl-rES\\values-gl-rES.xml",
         "map": [
             {
                 "to": {

@@ -212,8 +212,13 @@ public class MainActivity extends BaseActivity {
     //绑定页面和tablayout
     private void bindTab() {
         for (ChildForm form : listTab) {
+            if(form.getId().equals("-1"))
+                continue;
             listTitle.add(form.getName());
-            NormalContentFragment normalContentFragment = new NormalContentFragment(form.getId());
+            NormalContentFragment normalContentFragment = new NormalContentFragment();
+            Bundle bundle=new Bundle();
+            bundle.putString("formId",form.getId());
+            normalContentFragment.setArguments(bundle);
             listFragment.add(normalContentFragment);
         }
         tab.setTabMode(TabLayout.MODE_SCROLLABLE);
@@ -243,7 +248,10 @@ public class MainActivity extends BaseActivity {
         listFragment.clear();
         for (ChildForm form : listTab) {
             listTitle.add(form.getName());
-            NormalContentFragment normalContentFragment = new NormalContentFragment(form.getId());
+            NormalContentFragment normalContentFragment = new NormalContentFragment();
+            Bundle bundle=new Bundle();
+            bundle.putString("formId",form.getId());
+            normalContentFragment.setArguments(bundle);
             listFragment.add(normalContentFragment);
         }
         pagerAdapter = new ArticlePagerAdapter(getSupportFragmentManager(), listFragment, listTitle);

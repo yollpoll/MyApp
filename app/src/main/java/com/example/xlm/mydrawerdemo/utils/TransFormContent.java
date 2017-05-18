@@ -35,9 +35,9 @@ public class TransFormContent {
             tv.setText(spannableString);
             tv.setLinkTextColor(Color.BLUE);
             tv.setMovementMethod(LinkMovementMethod.getInstance());
-            tv.setFocusable(false);
-            tv.setClickable(false);
-            tv.setLongClickable(false);
+//            tv.setFocusable(false);
+//            tv.setClickable(false);
+//            tv.setLongClickable(false);
         }else {
             tv.setText(content);
         }

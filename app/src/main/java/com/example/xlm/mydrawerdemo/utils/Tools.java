@@ -1,9 +1,14 @@
 package com.example.xlm.mydrawerdemo.utils;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
 import android.text.Spanned;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.animation.Animation;
@@ -16,10 +21,12 @@ import android.widget.ViewSwitcher;
 import com.example.xlm.mydrawerdemo.view.SecretTextView;
 
 
+import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Created by xlm on 2015/11/25.
@@ -103,6 +110,7 @@ public class Tools {
 
     //时间转化，变成相对时间
     public static String replaceTime(String dateStr) {
+        try {
         String returnStr = "";
         char[] buf = new char[10];
         char[] buf2 = new char[8];
@@ -140,5 +148,55 @@ public class Tools {
             e.printStackTrace();
         }
         return returnStr;
+    }catch (Exception e){
+            Log.i("yollpoll",dateStr);
+    }
+    return "未知异次元时间";
+    }
+
+    /**获取应用名
+     * @param context
+     * @return
+     */
+    public static String getApplicationName(Context context) {
+        PackageManager packageManager = null;
+        ApplicationInfo applicationInfo = null;
+        try {
+            packageManager = context.getPackageManager();
+            applicationInfo = packageManager.getApplicationInfo(context.getPackageName(), 0);
+        } catch (PackageManager.NameNotFoundException e) {
+            applicationInfo = null;
+        }
+        String applicationName =
+                (String) packageManager.getApplicationLabel(applicationInfo);
+        return applicationName;
+    }
+
+    /**
+     * 分享
+     * @param activityTitle
+     * @param msgTitle
+     * @param msgText
+     * @param imgPath
+     */
+    public static void shareMsg(String activityTitle, String msgTitle, String msgText,
+                         String imgPath,Context context) {
+
+
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        if (imgPath == null || imgPath.equals("")) {
+            intent.setType("text/plain"); // 纯文本
+        } else {
+            File f = new File(imgPath);
+            if (f != null && f.exists() && f.isFile()) {
+                intent.setType("image/png");
+                Uri u = Uri.fromFile(f);
+                intent.putExtra(Intent.EXTRA_STREAM, u);
+            }
+        }
+        intent.putExtra(Intent.EXTRA_SUBJECT, msgTitle);
+        intent.putExtra(Intent.EXTRA_TEXT, msgText);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(Intent.createChooser(intent, activityTitle));
     }
 }

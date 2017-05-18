@@ -15,4 +15,9 @@
         <item name="shadow_left">@drawable/shadow_left</item>
         <item name="shadow_right">@drawable/shadow_right</item>
         <item name="shadow_bottom">@drawable/shadow_bottom</item>
-    </style></file></source><source path="C:\Android\workspace\MyApp\library\build\generated\res\rs\debug"/><source path="C:\Android\workspace\MyApp\library\build\generated\res\resValues\debug"/></dataSet><dataSet config="debug" generated-set="debug$Generated"><source path="C:\Android\workspace\MyApp\library\src\debug\res"/></dataSet><mergedItems><configuration qualifiers=""><declare-styleable name="SwipeBackLayout"><attr format="dimension" name="edge_size"/><attr name="edge_flag"><enum name="left" value="0"/><enum name="right" value="1"/><enum name="bottom" value="2"/><enum name="all" value="3"/></attr><attr format="reference" name="shadow_left"/><attr format="reference" name="shadow_right"/><attr format="reference" name="shadow_bottom"/></declare-styleable></configuration></mergedItems></merger>
+    </style></file></source><source path="C:\Android\workspace\MyApp\library\build\generated\res\rs\debug"/><source path="C:\Android\workspace\MyApp\library\build\generated\res\resValues\debug"/></dataSet><dataSet config="debug" generated-set="debug$Generated"><source path="C:\Android\workspace\MyApp\library\src\debug\res"/></dataSet><mergedItems><configuration qualifiers=""><declare-styleable name="SwipeBackLayout"><attr format="dimension" name="edge_size"/><attr name="edge_flag">
+            <enum name="left" value="0"/>
+            <enum name="right" value="1"/>
+            <enum name="bottom" value="2"/>
+            <enum name="all" value="3"/>
+        </attr><attr format="reference" name="shadow_left"/><attr format="reference" name="shadow_right"/><attr format="reference" name="shadow_bottom"/></declare-styleable></configuration></mergedItems></merger>

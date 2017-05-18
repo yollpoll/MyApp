@@ -113,7 +113,11 @@ public class ArticleRecyclerAdapter extends RecyclerView.Adapter<ArticleRecycler
                 holder.imgContent.setVisibility(View.GONE);
             }else {
                 holder.imgContent.setVisibility(View.VISIBLE);
-                Glide.with(context).load(Port.IMG_THUMB_URL+article.getImg()+article.getExt())
+                Glide.with(context)
+                        .load(Port.IMG_THUMB_URL+article.getImg()+article.getExt())
+                        .centerCrop()
+                        .crossFade()
+                        .error(R.mipmap.icon_yygq)
                         .into(holder.imgContent);
                 holder.imgContent.setOnClickListener(new View.OnClickListener() {
                     @Override
