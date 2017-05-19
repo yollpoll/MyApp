@@ -37,7 +37,6 @@
         android:layout_below="@+id/tv_username"
         android:id="@+id/tv_content"
         android:layout_margin="10dp"
-        android:textColor="@color/black"
         />
     <ImageView
         android:layout_width="80dp"

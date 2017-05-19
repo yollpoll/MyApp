@@ -44,6 +44,15 @@ public class ChoseForumAdapater extends RecyclerView.Adapter<ChoseForumAdapater.
     public void onBindViewHolder(final ViewHolder holder, int position) {
         final ChildForm item=forms.get(position);
         holder.tvChoseForum.setText(item.getName());
+        if(item.getId().equals("-1")){
+            holder.checkBoxForum.setEnabled(false);
+            holder.checkBoxForum.setClickable(false);
+            holder.rlRoot.setClickable(false);
+        }else {
+            holder.checkBoxForum.setEnabled(true);
+            holder.checkBoxForum.setClickable(true);
+            holder.rlRoot.setClickable(true);
+        }
         holder.rlRoot.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -53,10 +62,8 @@ public class ChoseForumAdapater extends RecyclerView.Adapter<ChoseForumAdapater.
             }
         });
         if(item.isChecked()){
-            Log.d("spq",item.getName()+"Ture");
             holder.checkBoxForum.setChecked(true);
         }else {
-            Log.d("spq",item.getName()+"false");
             holder.checkBoxForum.setChecked(false);
         }
         holder.checkBoxForum.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {

@@ -35,6 +35,7 @@ import com.example.xlm.mydrawerdemo.bean.Form;
 import com.example.xlm.mydrawerdemo.fragment.NormalContentFragment;
 import com.example.xlm.mydrawerdemo.http.Httptools;
 import com.example.xlm.mydrawerdemo.http.Port;
+import com.example.xlm.mydrawerdemo.utils.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -280,6 +281,7 @@ public class MainActivity extends BaseActivity {
                 MainActivity.this.startActivityForResult(intent, START_CHOOSEFORUM);
                 break;
             case R.id.left_btn_layout2:
+                ToastUtils.showShort("本肥肥还没做这个功能");
                 break;
             case R.id.left_btn_layout3:
                 break;

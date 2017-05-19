@@ -33,7 +33,7 @@ public class TransFormContent {
                 }
             },matcher.start(),matcher.end(),Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             tv.setText(spannableString);
-            tv.setLinkTextColor(Color.BLUE);
+            tv.setLinkTextColor(Color.parseColor("#7cb342"));
             tv.setMovementMethod(LinkMovementMethod.getInstance());
 //            tv.setFocusable(false);
 //            tv.setClickable(false);
