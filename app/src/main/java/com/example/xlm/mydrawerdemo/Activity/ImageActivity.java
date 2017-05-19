@@ -5,6 +5,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -22,7 +26,11 @@ import com.bumptech.glide.request.target.Target;
 import com.example.xlm.mydrawerdemo.R;
 import com.example.xlm.mydrawerdemo.base.BaseActivity;
 import com.example.xlm.mydrawerdemo.base.BaseSwipeActivity;
+import com.example.xlm.mydrawerdemo.utils.DownLoadImageThread;
+import com.example.xlm.mydrawerdemo.utils.ToastUtils;
 import com.example.xlm.mydrawerdemo.utils.Tools;
+
+import java.io.File;
 
 import me.imid.swipebacklayout.lib.app.SwipeBackActivity;
 
@@ -35,15 +43,20 @@ public class ImageActivity extends BaseSwipeActivity {
     private static Bitmap mBitmap;
     private ProgressBar mProgressBar;
     private Toolbar mToolbar;
+    private String imageName;
+    private String mSharePath;
+    private boolean isShareing;
 
     public static void gotoImageActivity(Context context,Bitmap bitmap){
         mBitmap=bitmap;
         Intent intent=new Intent(context,ImageActivity.class);
+        intent.putExtra("imageName",System.currentTimeMillis());
         context.startActivity(intent);
     }
-    public static void gotoImageActivity(Context context,String url){
+    public static void gotoImageActivity(Context context,String url,String imageName){
         Intent intent=new Intent(context,ImageActivity.class);
         intent.putExtra("url",url);
+        intent.putExtra("imageName",imageName);
         context.startActivity(intent);
     }
 
@@ -57,8 +70,14 @@ public class ImageActivity extends BaseSwipeActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.menu_share:
-                Tools.shareMsg(Tools.getApplicationName(ImageActivity.this),mToolbar.getTitle().toString()
-                        ,"","",ImageActivity.this);
+                if(null!=mSharePath){
+                    Tools.shareMsg(Tools.getApplicationName(ImageActivity.this),mToolbar.getTitle().toString()
+                            ,"",mSharePath,ImageActivity.this);
+                }else {
+                    //这种情况是用户进入直接分享图，图片还没有下载完成
+                    isShareing=true;
+                    onDown(url,false,true);
+                }
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -73,6 +92,7 @@ public class ImageActivity extends BaseSwipeActivity {
         initData();
     }
     private void initData(){
+        imageName=getIntent().getStringExtra("imageName");
         initTitle();
         loadImage();
     }
@@ -82,7 +102,6 @@ public class ImageActivity extends BaseSwipeActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setTitle("大图赏析(　^ω^)");
-//        mToolbar.setNavigationIcon(getResources().getDrawable(R.mipmap.icon_back));
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -93,23 +112,19 @@ public class ImageActivity extends BaseSwipeActivity {
     private void loadImage(){
         url=getIntent().getStringExtra("url");
         if(!TextUtils.isEmpty(url)){
-            Glide.with(this)
-                    .load(url)
-                    .crossFade()
-                    .error(R.mipmap.icon_yygq)
-                    .listener(new RequestListener<String, GlideDrawable>() {
-                        @Override
-                        public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
-                            return false;
-                        }
-
-                        @Override
-                        public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
-                            mProgressBar.setVisibility(View.GONE);
-                            return false;
-                        }
-                    })
-                    .into(imgView);
+            onDown(url,true,true);
+//            Glide.with(this)
+//                    .load(url)
+//                    .asBitmap()
+////                    .crossFade()
+//                    .error(R.mipmap.icon_yygq)
+//                    .into(new SimpleTarget<Bitmap>() {
+//                        @Override
+//                        public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+//                            mProgressBar.setVisibility(View.GONE);
+//                            imgView.setImageBitmap(resource);
+//                        }
+//                    });
         }else {
             imgView.setImageBitmap(mBitmap);
         }
@@ -118,5 +133,70 @@ public class ImageActivity extends BaseSwipeActivity {
         imgView= (ImageView) findViewById(R.id.img);
         mProgressBar= (ProgressBar) findViewById(R.id.progressBar);
         mToolbar= (Toolbar) findViewById(R.id.toolbar);
+    }
+
+    /**
+     * @param url
+     * @param isShow 是否是第一次显示
+     * @param isSave 是保存还是分享
+     */
+    private void onDown(String url, final boolean isShow, boolean isSave){
+        //下载图片
+        final DownloadHandler handler=new DownloadHandler();
+        DownLoadImageThread downLoadImageThread=new DownLoadImageThread(url, this, new DownLoadImageThread.ImageDownCallback() {
+            @Override
+            public void onDownLoadSuccess(Bitmap bitmap) {
+                Message message=new Message();
+                message.what=DownLoadImageThread.DOWN_SUCCESS_WITH_BITMIP;
+//                Bundle bundle=new Bundle();
+//                bundle.putParcelable("bitmip",bitmap);
+//                message.setData(bundle);
+                mBitmap=bitmap;
+                handler.sendMessage(message);
+            }
+
+            @Override
+            public void onDownLoadSuccess(File file) {
+                Message message=new Message();
+                message.what=DownLoadImageThread.DOWN_SUCCESS_WITH_FILE;
+                Bundle bundle=new Bundle();
+                bundle.putString("path",file.getAbsolutePath());
+                message.setData(bundle);
+                handler.sendMessage(message);
+            }
+
+            @Override
+            public void onDownFailed() {
+                handler.sendEmptyMessage(DownLoadImageThread.DOWN_FAILED);
+            }
+        },isSave,imageName);
+        new Thread(downLoadImageThread).start();
+    }
+
+    //处理下载好图片
+    private class DownloadHandler extends Handler{
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what){
+                case  DownLoadImageThread.DOWN_SUCCESS_WITH_BITMIP:
+//                    Bitmap bitmap=msg.getData().getParcelable("bitmap");
+                    if(null!=mBitmap)
+                        imgView.setImageBitmap(mBitmap);
+                    break;
+                case DownLoadImageThread.DOWN_SUCCESS_WITH_FILE:
+                    String path=msg.getData().getString("path");
+                    mSharePath=path;
+                    if (isShareing){
+                        //这种情况是从用户分享走到这一步的
+                        Tools.shareMsg(Tools.getApplicationName(ImageActivity.this),mToolbar.getTitle().toString()
+                                ,"",path,ImageActivity.this);
+                        isShareing=false;
+                    }
+                    break;
+                case DownLoadImageThread.DOWN_FAILED:
+                    break;
+            }
+        }
     }
 }
