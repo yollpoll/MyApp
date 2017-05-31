@@ -53,4 +53,5 @@ dependencies {
     compile 'com.android.support:design:23.3.0'
     compile 'de.greenrobot:greendao:2.1.0'
     compile 'de.greenrobot:greendao-generator:2.1.0'
+    compile 'com.bignerdranch.android:recyclerview-multiselect:0.2'
 }

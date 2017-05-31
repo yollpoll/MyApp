@@ -36,7 +36,10 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/tv_username"
         android:id="@+id/tv_content"
-        android:layout_margin="10dp"
+        android:textColor="@color/ColorTextPrimary"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
         />
     <ImageView
         android:layout_width="80dp"
@@ -50,5 +53,6 @@
         android:layout_height="0.5dp"
         android:layout_below="@+id/img_content"
         android:background="@color/colorLine"
+        android:layout_marginTop="20dp"
         />
 </RelativeLayout>

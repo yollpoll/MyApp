@@ -8,6 +8,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -91,8 +92,9 @@ public class NormalContentFragment extends BaseFragment {
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         mSwipRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
-        progressBar.setVisibility(View.VISIBLE);
     }
+
+    int spacingInPixels=0;
 
     private void initData() {
         this.formId = getArguments().getString("formId");
@@ -111,8 +113,10 @@ public class NormalContentFragment extends BaseFragment {
         mRecyclerView.setAdapter(adapterArticle);
         mRecyclerView.setHasFixedSize(false);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        int spacingInPixels = getResources().getDimensionPixelSize(R.dimen.recycler_space);
-        mRecyclerView.addItemDecoration(new SpaceItemDecoration(spacingInPixels));
+        if(spacingInPixels==0){
+            spacingInPixels = getResources().getDimensionPixelSize(R.dimen.recycler_space);
+            mRecyclerView.addItemDecoration(new SpaceItemDecoration(spacingInPixels));
+        }
         //设置刷新时颜色切换
         mSwipRefreshLayout.setColorSchemeResources(android.R.color.holo_red_light,
                 android.R.color.holo_green_light,
@@ -158,13 +162,9 @@ public class NormalContentFragment extends BaseFragment {
             @Override
             public void onImageClick(View view, int position) {
                 String url = Port.IMG_URL + data.get(position).getImg() + data.get(position).getExt();
-//                Intent intent = new Intent(getActivity(), ImageActivity.class);
-//                intent.putExtra("url", url);
-//                getActivity().startActivity(intent);
-                ImageActivity.gotoImageActivity(getActivity(),url,data.get(position).getImg()+data.get(position).getExt());
+                ImageActivity.gotoImageActivity(getActivity(),url,data.get(position).getImg()+data.get(position).getExt(),view);
             }
         });
-//        setModuleList();
         getData(false);
     }
 

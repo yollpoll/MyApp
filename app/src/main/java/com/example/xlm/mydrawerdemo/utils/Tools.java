@@ -11,6 +11,7 @@ import android.text.Spanned;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.TextSwitcher;
@@ -111,50 +112,52 @@ public class Tools {
     //时间转化，变成相对时间
     public static String replaceTime(String dateStr) {
         try {
-        String returnStr = "";
-        char[] buf = new char[10];
-        char[] buf2 = new char[8];
-        dateStr.getChars(0, 10, buf, 0);
-        dateStr.getChars(13, 21, buf2, 0);
-        String tempStr = new String(buf);
-        String tempStr2 = new String(buf2);
-        dateStr = tempStr + " " + tempStr2;
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-        try {
-            Date date = sdf.parse(dateStr);
-            Date nowDate = new Date();
-            Long time = nowDate.getTime() - date.getTime();
-            if (time / (1000 * 60 * 60 * 24) >= 2) {
-                //昨天以前
-                returnStr = new String(buf);
-            } else if (time / (1000 * 60 * 60 * 24) >= 1 && (time / (1000 * 60 * 60 * 24) < 2)) {
-                returnStr = "昨天";
-            } else if (time / (1000 * 60 * 60 * 24) == 0) {
-                //一天以内
-                if (time / (1000 * 60 * 60) > 0) {
-                    //一小时内上
-                    returnStr = time / (1000 * 60 * 60) + "小时前";
-                } else {
-                    //一小时内
-                    if (time / (1000 * 60) > 0) {
-                        //一分钟以上
-                        returnStr = time / (1000 * 60) + "分钟前";
+            String returnStr = "";
+            char[] buf = new char[10];
+            char[] buf2 = new char[8];
+            dateStr.getChars(0, 10, buf, 0);
+            dateStr.getChars(13, 21, buf2, 0);
+            String tempStr = new String(buf);
+            String tempStr2 = new String(buf2);
+            dateStr = tempStr + " " + tempStr2;
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+            try {
+                Date date = sdf.parse(dateStr);
+                Date nowDate = new Date();
+                Long time = nowDate.getTime() - date.getTime();
+                if (time / (1000 * 60 * 60 * 24) >= 2) {
+                    //昨天以前
+                    returnStr = new String(buf);
+                } else if (time / (1000 * 60 * 60 * 24) >= 1 && (time / (1000 * 60 * 60 * 24) < 2)) {
+                    returnStr = "昨天";
+                } else if (time / (1000 * 60 * 60 * 24) == 0) {
+                    //一天以内
+                    if (time / (1000 * 60 * 60) > 0) {
+                        //一小时内上
+                        returnStr = time / (1000 * 60 * 60) + "小时前";
                     } else {
-                        returnStr = "刚刚";
+                        //一小时内
+                        if (time / (1000 * 60) > 0) {
+                            //一分钟以上
+                            returnStr = time / (1000 * 60) + "分钟前";
+                        } else {
+                            returnStr = "刚刚";
+                        }
                     }
                 }
+            } catch (ParseException e) {
+                e.printStackTrace();
             }
-        } catch (ParseException e) {
-            e.printStackTrace();
+            return returnStr;
+        } catch (Exception e) {
+            Log.i("yollpoll", dateStr);
         }
-        return returnStr;
-    }catch (Exception e){
-            Log.i("yollpoll",dateStr);
-    }
-    return "未知异次元时间";
+        return "未知异次元时间";
     }
 
-    /**获取应用名
+    /**
+     * 获取应用名
+     *
      * @param context
      * @return
      */
@@ -174,13 +177,14 @@ public class Tools {
 
     /**
      * 分享
+     *
      * @param activityTitle
      * @param msgTitle
      * @param msgText
      * @param imgPath
      */
     public static void shareMsg(String activityTitle, String msgTitle, String msgText,
-                         String imgPath,Context context) {
+                                String imgPath, Context context) {
 
 
         Intent intent = new Intent(Intent.ACTION_SEND);
@@ -198,5 +202,53 @@ public class Tools {
         intent.putExtra(Intent.EXTRA_TEXT, msgText);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(Intent.createChooser(intent, activityTitle));
+    }
+
+    /**
+     * 设置某个View的margin
+     *
+     * @param view   需要设置的view
+     * @param isDp   需要设置的数值是否为DP
+     * @param left   左边距
+     * @param right  右边距
+     * @param top    上边距
+     * @param bottom 下边距
+     * @return
+     */
+    public static ViewGroup.LayoutParams setViewMargin(View view, boolean isDp, Context context, int left, int right, int top, int bottom) {
+        if (view == null) {
+            return null;
+        }
+
+        int leftPx = left;
+        int rightPx = right;
+        int topPx = top;
+        int bottomPx = bottom;
+        ViewGroup.LayoutParams params = view.getLayoutParams();
+        ViewGroup.MarginLayoutParams marginParams = null;
+        //获取view的margin设置参数
+        if (params instanceof ViewGroup.MarginLayoutParams) {
+            marginParams = (ViewGroup.MarginLayoutParams) params;
+        } else {
+            //不存在时创建一个新的参数
+            marginParams = new ViewGroup.MarginLayoutParams(params);
+        }
+
+        //根据DP与PX转换计算值
+        if (isDp) {
+            leftPx = calculateDpToPx(left, context);
+            rightPx = calculateDpToPx(right, context);
+            topPx = calculateDpToPx(top, context);
+            bottomPx = calculateDpToPx(bottom, context);
+        }
+        //设置margin
+        marginParams.setMargins(leftPx, topPx, rightPx, bottomPx);
+        view.setLayoutParams(marginParams);
+        return marginParams;
+    }
+
+    public static int calculateDpToPx(int padding_in_dp, Context context) {
+        final float scale = context.getResources().getDisplayMetrics().density;
+        return (int) (padding_in_dp * scale + 0.5f);
     }
 }

@@ -22,6 +22,7 @@
         <android.support.design.widget.CoordinatorLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:id="@+id/cdl_content"
             android:visibility="visible">
 
             <android.support.design.widget.AppBarLayout
@@ -55,12 +56,24 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+            <android.support.design.widget.FloatingActionButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_anchor="@+id/viewpager_articles"
+                app:layout_anchorGravity="bottom|right"
+                app:pressedTranslationZ="12dp"
+                app:fabSize="normal"
+                android:layout_margin="16dp"
+                android:src="@mipmap/icon_new"
+                android:id="@+id/fb_new"
+                app:rippleColor="@color/white"
+                />
         </android.support.design.widget.CoordinatorLayout>
 
         <include
             android:id="@+id/left_list_menu"
             layout="@layout/left_menu_list_layout"
-            android:layout_width="300dp"
+            android:layout_width="250dp"
             android:layout_height="match_parent"
             android:layout_gravity="start" />
     </android.support.v4.widget.DrawerLayout>

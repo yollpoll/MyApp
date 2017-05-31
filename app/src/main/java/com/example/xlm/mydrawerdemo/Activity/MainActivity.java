@@ -3,6 +3,9 @@ package com.example.xlm.mydrawerdemo.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -38,6 +41,7 @@ import com.example.xlm.mydrawerdemo.http.Port;
 import com.example.xlm.mydrawerdemo.utils.ToastUtils;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import de.greenrobot.dao.query.Query;
@@ -67,6 +71,8 @@ public class MainActivity extends BaseActivity {
     private static final int START_CHOOSEFORUM = 1;
     private ImageView imgCover;
     private Bitmap coverBitmap;
+    private FloatingActionButton fbNew;
+    private CoordinatorLayout cdlContent;
 
 
     @Override
@@ -94,6 +100,10 @@ public class MainActivity extends BaseActivity {
         initDrawerLayout();
         tab = (TabLayout) findViewById(R.id.tab);
         mViewPager = (ViewPager) findViewById(R.id.viewpager_articles);
+        fbNew= (FloatingActionButton) findViewById(R.id.fb_new);
+        cdlContent= (CoordinatorLayout) findViewById(R.id.cdl_content);
+
+        fbNew.setOnClickListener(this);
     }
 
 
@@ -182,6 +192,7 @@ public class MainActivity extends BaseActivity {
         Query query = daoSession.getChildFormDao().queryBuilder()
                 .build();
         listTab = query.list();
+        removeTimeLine();
         QueryBuilder.LOG_VALUES = true;
         QueryBuilder.LOG_SQL = true;
         if (listTab.size() <= 0) {
@@ -200,6 +211,7 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onResponse(Response<List<Form>> response, Retrofit retrofit) {
                 listTab = (ArrayList<ChildForm>) response.body().get(0).getForums();
+                removeTimeLine();
                 bindTab();
             }
 
@@ -244,7 +256,7 @@ public class MainActivity extends BaseActivity {
         Log.d("spq", "isNotFirst");
         Query query = daoSession.getChildFormDao().queryBuilder().build();
         listTab = query.list();
-
+        removeTimeLine();
         listTitle.clear();
         listFragment.clear();
         for (ChildForm form : listTab) {
@@ -258,6 +270,16 @@ public class MainActivity extends BaseActivity {
         pagerAdapter = new ArticlePagerAdapter(getSupportFragmentManager(), listFragment, listTitle);
         mViewPager.setAdapter(pagerAdapter);
         tab.setupWithViewPager(mViewPager);
+    }
+    //暂时去掉时间线功能
+    private void removeTimeLine(){
+        Iterator iterator=listTab.iterator();
+        while (iterator.hasNext()){
+            ChildForm childForm= (ChildForm) iterator.next();
+            if(childForm.getId().equals("-1")){
+                iterator.remove();
+            }
+        }
     }
 
     @Override
@@ -281,15 +303,19 @@ public class MainActivity extends BaseActivity {
                 MainActivity.this.startActivityForResult(intent, START_CHOOSEFORUM);
                 break;
             case R.id.left_btn_layout2:
-                ToastUtils.showShort("本肥肥还没做这个功能");
+                SetActivity.gotoSetActivity(MainActivity.this);
                 break;
             case R.id.left_btn_layout3:
+                CollectionActivity.gitoCollectionActivity(MainActivity.this);
                 break;
             case R.id.head_btn_left:
                 drawerLayout.openDrawer(Gravity.LEFT);
                 break;
             case R.id.img_cover:
-                ImageActivity.gotoImageActivity(MainActivity.this,coverBitmap);
+                ImageActivity.gotoImageActivity(MainActivity.this,coverBitmap,imgCover);
+                break;
+            case R.id.fb_new:
+                ToastUtils.SnakeShowShort(cdlContent,"本肥肥还没做这个功能,你在乱点什么啦(　^ω^)");
                 break;
             default:
                 break;

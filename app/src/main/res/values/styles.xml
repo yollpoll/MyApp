@@ -8,7 +8,12 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:textColorPrimary">#ffffff</item>
+        <!--actionMode不不覆盖toolbar-->
+        <item name="windowActionModeOverlay">true</item>
+        <item name="android:windowActionModeOverlay">true</item>
         <item name="android:actionOverflowButtonStyle">@style/menuOverflow</item>
+        <item name="android:actionModeBackground">@color/colorPrimary</item>
+        <item name="actionModeBackground">@color/colorPrimary</item>
         <!-- 窗口的背景颜色 -->
         <item name="android:windowBackground">@color/white</item>
         <item name="android:windowAnimationStyle">@android:style/Animation.Translucent</item>

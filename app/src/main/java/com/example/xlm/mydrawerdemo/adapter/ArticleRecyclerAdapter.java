@@ -97,11 +97,14 @@ public class ArticleRecyclerAdapter extends RecyclerView.Adapter<ArticleRecycler
             }
             holder.sender.setText(article.getUserid());
             if (article.getReplies().size() > 0) {
+                holder.comment.setVisibility(View.VISIBLE);
                 List<Spanned> replySpanneds = new ArrayList<>();
                 for (Reply r : article.getReplies()) {
                     replySpanneds.add(Html.fromHtml(r.getContent()));
                 }
                 Tools.changeText(holder.comment, replySpanneds, context);
+            }else {
+                holder.comment.setVisibility(View.GONE);
             }
             holder.item_layout.setOnClickListener(new View.OnClickListener() {
                 @Override

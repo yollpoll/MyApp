@@ -21,5 +21,6 @@
     android:id="@+id/img"
     android:layout_centerInParent="true"
     android:layout_below="@+id/toolbar"
+    android:transitionName="img"
     />
 </RelativeLayout>

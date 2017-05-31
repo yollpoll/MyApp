@@ -9,6 +9,8 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -37,7 +39,7 @@ import me.imid.swipebacklayout.lib.app.SwipeBackActivity;
 /**
  * Created by 鹏祺 on 2016/1/16.
  */
-public class ImageActivity extends BaseSwipeActivity {
+public class ImageActivity extends BaseActivity {
     private String url;
     private ImageView imgView;
     private static Bitmap mBitmap;
@@ -47,11 +49,13 @@ public class ImageActivity extends BaseSwipeActivity {
     private String mSharePath;
     private boolean isShareing;
 
-    public static void gotoImageActivity(Context context,Bitmap bitmap){
+    public static void gotoImageActivity(Activity activity,Bitmap bitmap,View shareView ){
+        ActivityOptionsCompat options = ActivityOptionsCompat
+                .makeSceneTransitionAnimation(activity, shareView, "img");
         mBitmap=bitmap;
-        Intent intent=new Intent(context,ImageActivity.class);
+        Intent intent=new Intent(activity,ImageActivity.class);
         intent.putExtra("imageName",System.currentTimeMillis());
-        context.startActivity(intent);
+        activity.startActivity(intent, options.toBundle());
     }
     public static void gotoImageActivity(Context context,String url,String imageName){
         Intent intent=new Intent(context,ImageActivity.class);
@@ -60,6 +64,14 @@ public class ImageActivity extends BaseSwipeActivity {
         context.startActivity(intent);
     }
 
+    public static void gotoImageActivity(Activity activity,String url,String imageName,View shareView ){
+        ActivityOptionsCompat options = ActivityOptionsCompat
+                .makeSceneTransitionAnimation(activity, shareView, "img");
+        Intent intent = new Intent(activity, ImageActivity.class);
+        intent.putExtra("url",url);
+        intent.putExtra("imageName",imageName);
+        activity.startActivity(intent, options.toBundle());
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_image_activity, menu);
