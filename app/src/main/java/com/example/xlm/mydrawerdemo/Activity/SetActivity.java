@@ -14,6 +14,8 @@ import android.widget.TextView;
 import com.example.xlm.mydrawerdemo.API.GetCookieService;
 import com.example.xlm.mydrawerdemo.R;
 import com.example.xlm.mydrawerdemo.base.BaseSwipeActivity;
+import com.example.xlm.mydrawerdemo.http.AddCookieInterceptor;
+import com.example.xlm.mydrawerdemo.http.GetCookieInterceptor;
 import com.example.xlm.mydrawerdemo.http.Httptools;
 import com.example.xlm.mydrawerdemo.utils.SPUtiles;
 import com.example.xlm.mydrawerdemo.utils.ToastUtils;
@@ -78,7 +80,7 @@ public class SetActivity extends BaseSwipeActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setTitle("设置(　^ω^)");
+        getSupportActionBar().setTitle("设置");
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -88,18 +90,21 @@ public class SetActivity extends BaseSwipeActivity {
     }
 
     private void getCookie() {
+//        retrofit.client().interceptors().add(new AddCookieInterceptor());
+//        retrofit.client().interceptors().add(new GetCookieInterceptor());
         GetCookieService cookieService = retrofit.create(GetCookieService.class);
         Call<String> call = cookieService.getArticleList();
         call.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Response<String> response, Retrofit retrofit) {
                 if ("error".equals(response.body()) || TextUtils.isEmpty(response.body())) {
-                    ToastUtils.SnakeShowShort(llRoot, "获取失败");
+//                    ToastUtils.SnakeShowShort(llRoot, "获取失败");
                     cookie = "暂时没有饼干";
                 } else {
-                    cookie = response.body();
-                    SPUtiles.saveCookie("当前饼干是: "+cookie);
+                    cookie = SPUtiles.getCookie();
                 }
+                tvCurrentCookie.setText("当前饼干是："+cookie);
+                ToastUtils.SnakeShowShort(llRoot, response.body());
             }
 
             @Override

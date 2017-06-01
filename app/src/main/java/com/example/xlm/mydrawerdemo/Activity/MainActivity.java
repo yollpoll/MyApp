@@ -14,8 +14,10 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.Menu;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -39,6 +41,7 @@ import com.example.xlm.mydrawerdemo.fragment.NormalContentFragment;
 import com.example.xlm.mydrawerdemo.http.Httptools;
 import com.example.xlm.mydrawerdemo.http.Port;
 import com.example.xlm.mydrawerdemo.utils.ToastUtils;
+import com.example.xlm.mydrawerdemo.view.MutiTouchListener;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -58,10 +61,11 @@ public class MainActivity extends BaseActivity {
     private ActionBarDrawerToggle mDrawerToggle;
     private ListView listView;
     private RelativeLayout left_menu1, left_menu2, left_menu3;
-    private TextView  tvLeft1, tvLeft2, tvLeft3;
+    private TextView tvLeft1, tvLeft2, tvLeft3;
     private DaoSession daoSession;
     private ArticlePagerAdapter pagerAdapter;
     private List<Fragment> listFragment = new ArrayList<>();
+    private NormalContentFragment currentFragment;
     private List<String> listTitle = new ArrayList<>();
     private List<ChildForm> listTab = new ArrayList<>();
     private TabLayout tab;
@@ -100,15 +104,16 @@ public class MainActivity extends BaseActivity {
         initDrawerLayout();
         tab = (TabLayout) findViewById(R.id.tab);
         mViewPager = (ViewPager) findViewById(R.id.viewpager_articles);
-        fbNew= (FloatingActionButton) findViewById(R.id.fb_new);
-        cdlContent= (CoordinatorLayout) findViewById(R.id.cdl_content);
+        fbNew = (FloatingActionButton) findViewById(R.id.fb_new);
+        cdlContent = (CoordinatorLayout) findViewById(R.id.cdl_content);
 
         fbNew.setOnClickListener(this);
+        fbNew.setOnTouchListener(mutiTouchListener);
     }
 
 
     //初始化左边抽屉
-    private void initDrawerLayout(){
+    private void initDrawerLayout() {
         left_menu1 = (RelativeLayout) findViewById(R.id.left_btn_layout1);
         left_menu2 = (RelativeLayout) findViewById(R.id.left_btn_layout2);
         left_menu3 = (RelativeLayout) findViewById(R.id.left_btn_layout3);
@@ -116,7 +121,7 @@ public class MainActivity extends BaseActivity {
         tvLeft2 = (TextView) findViewById(R.id.tv_btn2);
         tvLeft3 = (TextView) findViewById(R.id.tv_btn3);
         tvLeft1.setText("板块");
-        imgCover= (ImageView) findViewById(R.id.img_cover);
+        imgCover = (ImageView) findViewById(R.id.img_cover);
         Glide.get(this).clearMemory();
         Glide.with(this)
                 .load(Port.COVER)
@@ -128,7 +133,7 @@ public class MainActivity extends BaseActivity {
                     @Override
                     public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
                         imgCover.setImageBitmap(resource);
-                        coverBitmap=resource;
+                        coverBitmap = resource;
                     }
                 });
 
@@ -175,6 +180,7 @@ public class MainActivity extends BaseActivity {
 
             @Override
             public void onPageSelected(int position) {
+                currentFragment = (NormalContentFragment) listFragment.get(position);
                 toolbar.setTitle(listTab.get(position).getName());
                 getSupportActionBar().setTitle(listTab.get(position).getName());
             }
@@ -225,12 +231,12 @@ public class MainActivity extends BaseActivity {
     //绑定页面和tablayout
     private void bindTab() {
         for (ChildForm form : listTab) {
-            if(form.getId().equals("-1"))
+            if (form.getId().equals("-1"))
                 continue;
             listTitle.add(form.getName());
             NormalContentFragment normalContentFragment = new NormalContentFragment();
-            Bundle bundle=new Bundle();
-            bundle.putString("formId",form.getId());
+            Bundle bundle = new Bundle();
+            bundle.putString("formId", form.getId());
             normalContentFragment.setArguments(bundle);
             listFragment.add(normalContentFragment);
         }
@@ -262,8 +268,8 @@ public class MainActivity extends BaseActivity {
         for (ChildForm form : listTab) {
             listTitle.add(form.getName());
             NormalContentFragment normalContentFragment = new NormalContentFragment();
-            Bundle bundle=new Bundle();
-            bundle.putString("formId",form.getId());
+            Bundle bundle = new Bundle();
+            bundle.putString("formId", form.getId());
             normalContentFragment.setArguments(bundle);
             listFragment.add(normalContentFragment);
         }
@@ -271,12 +277,13 @@ public class MainActivity extends BaseActivity {
         mViewPager.setAdapter(pagerAdapter);
         tab.setupWithViewPager(mViewPager);
     }
+
     //暂时去掉时间线功能
-    private void removeTimeLine(){
-        Iterator iterator=listTab.iterator();
-        while (iterator.hasNext()){
-            ChildForm childForm= (ChildForm) iterator.next();
-            if(childForm.getId().equals("-1")){
+    private void removeTimeLine() {
+        Iterator iterator = listTab.iterator();
+        while (iterator.hasNext()) {
+            ChildForm childForm = (ChildForm) iterator.next();
+            if (childForm.getId().equals("-1")) {
                 iterator.remove();
             }
         }
@@ -285,9 +292,9 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode){
+        switch (requestCode) {
             case START_CHOOSEFORUM:
-                if(resultCode==RESULT_OK){
+                if (resultCode == RESULT_OK) {
                     notifyTab();
                 }
                 break;
@@ -312,21 +319,34 @@ public class MainActivity extends BaseActivity {
                 drawerLayout.openDrawer(Gravity.LEFT);
                 break;
             case R.id.img_cover:
-                ImageActivity.gotoImageActivity(MainActivity.this,coverBitmap,imgCover);
+                ImageActivity.gotoImageActivity(MainActivity.this, coverBitmap, imgCover);
                 break;
             case R.id.fb_new:
-                ToastUtils.SnakeShowShort(cdlContent,"本肥肥还没做这个功能,你在乱点什么啦(　^ω^)");
+                ToastUtils.SnakeShowShort(cdlContent, "本肥肥还没做这个功能,你在乱点什么啦(　^ω^)");
                 break;
             default:
                 break;
         }
     }
 
-    /*
-    修改标题
-     */
-    public void onEventMainThread(ChangeTitleEvent event) {
-        toolbar.setTitle(event.getTitle());
-        getSupportActionBar().setTitle(event.getTitle());
-    }
+    private MutiTouchListener mutiTouchListener = new MutiTouchListener() {
+        @Override
+        public void onMultiTouch(View v, MotionEvent event, int count) {
+            switch (count) {
+                case 1:
+                    ToastUtils.SnakeShowShort(cdlContent, "本肥肥还没做这个功能,你在乱点什么啦(　^ω^)");
+                    break;
+                case 2:
+                    if (null == currentFragment) {
+                        if (listFragment.size() > 0) {
+                            currentFragment = (NormalContentFragment) listFragment.get(0);
+                        } else {
+                            break;
+                        }
+                    }
+                    currentFragment.refresh();
+                    break;
+            }
+        }
+    };
 }
