@@ -3,6 +3,7 @@ package com.example.xlm.mydrawerdemo.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.os.Build;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -106,11 +107,83 @@ public class MainActivity extends BaseActivity {
         mViewPager = (ViewPager) findViewById(R.id.viewpager_articles);
         fbNew = (FloatingActionButton) findViewById(R.id.fb_new);
         cdlContent = (CoordinatorLayout) findViewById(R.id.cdl_content);
-
+        detector.setOnDoubleTapListener(onDoubleTapListener);
+        //使用手势监听仍然保留这个是为了保留点击时候的波纹效果
         fbNew.setOnClickListener(this);
-        fbNew.setOnTouchListener(mutiTouchListener);
+        fbNew.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return detector.onTouchEvent(event);
+            }
+        });
     }
 
+    //手势事件处理
+    private GestureDetector detector = new GestureDetector(new GestureDetector.OnGestureListener() {
+        @Override
+        public boolean onDown(MotionEvent e) {
+            return false;
+        }
+
+        @Override
+        public void onShowPress(MotionEvent e) {
+
+        }
+
+        @Override
+        public boolean onSingleTapUp(MotionEvent e) {
+            return false;
+        }
+
+        @Override
+        public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+            return false;
+        }
+
+        @Override
+        public void onLongPress(MotionEvent e) {
+            ToastUtils.SnakeShowShort(mViewPager,"显示菜单");
+        }
+
+        @Override
+        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+            if (null == currentFragment) {
+                if (listFragment.size() > 0) {
+                    currentFragment = (NormalContentFragment) listFragment.get(0);
+                } else {
+                    return false;
+                }
+            }
+            currentFragment.refresh();
+            return false;
+        }
+    });
+    //双击事件
+    private GestureDetector.OnDoubleTapListener onDoubleTapListener = new GestureDetector.OnDoubleTapListener() {
+        @Override
+        public boolean onSingleTapConfirmed(MotionEvent e) {
+            ToastUtils.SnakeShowShort(mViewPager,"这个功能正在开发中，你在乱点什么啦。");
+            return false;
+        }
+
+        @Override
+        public boolean onDoubleTap(MotionEvent e) {
+            if (null == currentFragment) {
+                if (listFragment.size() > 0) {
+                    currentFragment = (NormalContentFragment) listFragment.get(0);
+                } else {
+                    return false;
+                }
+            }
+            currentFragment.refresh();
+            return false;
+        }
+
+        @Override
+        public boolean onDoubleTapEvent(MotionEvent e) {
+            return false;
+        }
+    };
 
     //初始化左边抽屉
     private void initDrawerLayout() {
@@ -322,31 +395,10 @@ public class MainActivity extends BaseActivity {
                 ImageActivity.gotoImageActivity(MainActivity.this, coverBitmap, imgCover);
                 break;
             case R.id.fb_new:
-                ToastUtils.SnakeShowShort(cdlContent, "本肥肥还没做这个功能,你在乱点什么啦(　^ω^)");
+//                ToastUtils.SnakeShowShort(cdlContent, "本肥肥还没做这个功能,你在乱点什么啦(　^ω^)");
                 break;
             default:
                 break;
         }
     }
-
-    private MutiTouchListener mutiTouchListener = new MutiTouchListener() {
-        @Override
-        public void onMultiTouch(View v, MotionEvent event, int count) {
-            switch (count) {
-                case 1:
-                    ToastUtils.SnakeShowShort(cdlContent, "本肥肥还没做这个功能,你在乱点什么啦(　^ω^)");
-                    break;
-                case 2:
-                    if (null == currentFragment) {
-                        if (listFragment.size() > 0) {
-                            currentFragment = (NormalContentFragment) listFragment.get(0);
-                        } else {
-                            break;
-                        }
-                    }
-                    currentFragment.refresh();
-                    break;
-            }
-        }
-    };
 }
