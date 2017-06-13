@@ -94,7 +94,7 @@ public class NormalContentFragment extends BaseFragment {
         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
     }
 
-    int spacingInPixels=0;
+    int spacingInPixels = 0;
 
     private void initData() {
         this.formId = getArguments().getString("formId");
@@ -113,7 +113,7 @@ public class NormalContentFragment extends BaseFragment {
         mRecyclerView.setAdapter(adapterArticle);
         mRecyclerView.setHasFixedSize(false);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        if(spacingInPixels==0){
+        if (spacingInPixels == 0) {
             spacingInPixels = getResources().getDimensionPixelSize(R.dimen.recycler_space);
             mRecyclerView.addItemDecoration(new SpaceItemDecoration(spacingInPixels));
         }
@@ -162,7 +162,7 @@ public class NormalContentFragment extends BaseFragment {
             @Override
             public void onImageClick(View view, int position) {
                 String url = Port.IMG_URL + data.get(position).getImg() + data.get(position).getExt();
-                ImageActivity.gotoImageActivity(getActivity(),url,data.get(position).getImg()+data.get(position).getExt(),view);
+                ImageActivity.gotoImageActivity(getActivity(), url, data.get(position).getImg() + data.get(position).getExt(), view);
             }
         });
         getData(false);
@@ -199,6 +199,9 @@ public class NormalContentFragment extends BaseFragment {
                 }
                 data.addAll(response.body());
                 adapterArticle.notifyDataSetChanged();
+                if(!isLoad){
+                    mLinearLayoutManager.smoothScrollToPosition(mRecyclerView,null,0);
+                }
             }
 
             @Override

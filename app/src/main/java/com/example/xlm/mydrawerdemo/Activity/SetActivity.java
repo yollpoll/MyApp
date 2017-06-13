@@ -61,7 +61,7 @@ public class SetActivity extends BaseSwipeActivity {
         cookie = SPUtiles.getCookie();
         if (TextUtils.isEmpty(cookie))
             cookie = "当前饼干是: 暂时没有饼干";
-        tvCurrentCookie.setText(cookie);
+        tvCurrentCookie.setText("当前饼干是:"+cookie);
 
         retrofit = Httptools.getInstance().getRetrofit();
     }
@@ -91,7 +91,7 @@ public class SetActivity extends BaseSwipeActivity {
 
     private void getCookie() {
 //        retrofit.client().interceptors().add(new AddCookieInterceptor());
-//        retrofit.client().interceptors().add(new GetCookieInterceptor());
+        retrofit.client().interceptors().add(new GetCookieInterceptor());
         GetCookieService cookieService = retrofit.create(GetCookieService.class);
         Call<String> call = cookieService.getArticleList();
         call.enqueue(new Callback<String>() {

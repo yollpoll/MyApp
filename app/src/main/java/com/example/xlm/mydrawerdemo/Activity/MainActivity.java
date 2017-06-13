@@ -14,9 +14,11 @@ import android.support.v4.widget.DrawerLayout;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
@@ -42,7 +44,8 @@ import com.example.xlm.mydrawerdemo.fragment.NormalContentFragment;
 import com.example.xlm.mydrawerdemo.http.Httptools;
 import com.example.xlm.mydrawerdemo.http.Port;
 import com.example.xlm.mydrawerdemo.utils.ToastUtils;
-import com.example.xlm.mydrawerdemo.view.MutiTouchListener;
+import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
+import com.oguzdev.circularfloatingactionmenu.library.SubActionButton;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -78,6 +81,7 @@ public class MainActivity extends BaseActivity {
     private Bitmap coverBitmap;
     private FloatingActionButton fbNew;
     private CoordinatorLayout cdlContent;
+    private String currentTagName, currentTagId;//当前板块名字和id
 
 
     @Override
@@ -110,14 +114,16 @@ public class MainActivity extends BaseActivity {
         detector.setOnDoubleTapListener(onDoubleTapListener);
         //使用手势监听仍然保留这个是为了保留点击时候的波纹效果
         fbNew.setOnClickListener(this);
-        fbNew.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                return detector.onTouchEvent(event);
-            }
-        });
+        fbNew.setOnTouchListener(onTouchListener);
+//        initFloatingActionButton();
     }
 
+    private View.OnTouchListener onTouchListener = new View.OnTouchListener() {
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            return detector.onTouchEvent(event);
+        }
+    };
     //手势事件处理
     private GestureDetector detector = new GestureDetector(new GestureDetector.OnGestureListener() {
         @Override
@@ -142,19 +148,19 @@ public class MainActivity extends BaseActivity {
 
         @Override
         public void onLongPress(MotionEvent e) {
-            ToastUtils.SnakeShowShort(mViewPager,"显示菜单");
+//            ToastUtils.SnakeShowShort(mViewPager, "显示菜单");
         }
 
         @Override
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-            if (null == currentFragment) {
-                if (listFragment.size() > 0) {
-                    currentFragment = (NormalContentFragment) listFragment.get(0);
-                } else {
-                    return false;
-                }
-            }
-            currentFragment.refresh();
+//            if (null == currentFragment) {
+//                if (listFragment.size() > 0) {
+//                    currentFragment = (NormalContentFragment) listFragment.get(0);
+//                } else {
+//                    return false;
+//                }
+//            }
+//            currentFragment.refresh();
             return false;
         }
     });
@@ -162,7 +168,11 @@ public class MainActivity extends BaseActivity {
     private GestureDetector.OnDoubleTapListener onDoubleTapListener = new GestureDetector.OnDoubleTapListener() {
         @Override
         public boolean onSingleTapConfirmed(MotionEvent e) {
-            ToastUtils.SnakeShowShort(mViewPager,"这个功能正在开发中，你在乱点什么啦。");
+            if (TextUtils.isEmpty(currentTagName))
+                return false;
+            if (TextUtils.isEmpty(currentTagId))
+                return false;
+            NewThreadActivity.gotoNewThreadActivity(MainActivity.this, currentTagName, currentTagId);
             return false;
         }
 
@@ -184,6 +194,19 @@ public class MainActivity extends BaseActivity {
             return false;
         }
     };
+
+//    private void initFloatingActionButton() {
+//        SubActionButton.Builder builder = new SubActionButton.Builder(this);
+//        ImageView imageView=new ImageView(this);
+//        imageView.setImageResource(R.mipmap.icon_add);
+//
+//        SubActionButton subActionButton = builder.setContentView(imageView).build();
+//        FloatingActionMenu actionMenu = new FloatingActionMenu.Builder(this)
+//                .addSubActionView(subActionButton)
+//                // ...
+//                .attachTo(fbNew)
+//                .build();
+//    }
 
     //初始化左边抽屉
     private void initDrawerLayout() {
@@ -256,6 +279,9 @@ public class MainActivity extends BaseActivity {
                 currentFragment = (NormalContentFragment) listFragment.get(position);
                 toolbar.setTitle(listTab.get(position).getName());
                 getSupportActionBar().setTitle(listTab.get(position).getName());
+
+                currentTagName = listTab.get(position).getName();
+                currentTagId = listTab.get(position).getName();
             }
 
             @Override
@@ -324,6 +350,13 @@ public class MainActivity extends BaseActivity {
             toolbar.setTitle(listTitle.get(0));
             getSupportActionBar().setTitle(listTitle.get(0));
         }
+        if (listTab.size() > 0) {
+            currentTagId = listTab.get(0).getId();
+            currentTagName = listTab.get(0).getName();
+        } else {
+            currentTagName = null;
+            currentTagId = null;
+        }
     }
 
     private void notifyTab() {
@@ -373,6 +406,27 @@ public class MainActivity extends BaseActivity {
                 break;
         }
     }
+
+    private long firstTime = 0;
+
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        // TODO Auto-generated method stub
+        switch (keyCode) {
+            case KeyEvent.KEYCODE_BACK:
+                long secondTime = System.currentTimeMillis();
+                if (secondTime - firstTime > 2000) {                                         //如果两次按键时间间隔大于2秒，则不退出
+                    ToastUtils.SnakeShowShort(mViewPager, "再按一次退出程序");
+                    firstTime = secondTime;//更新firstTime
+                    return true;
+                } else {                                                    //两次按键小于2秒时，退出应用
+                    System.exit(0);
+                }
+                break;
+        }
+        return super.onKeyUp(keyCode, event);
+    }
+
 
     @Override
     public void onClick(View v) {

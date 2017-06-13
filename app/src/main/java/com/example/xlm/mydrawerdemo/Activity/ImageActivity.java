@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -49,29 +50,31 @@ public class ImageActivity extends BaseActivity {
     private String mSharePath;
     private boolean isShareing;
 
-    public static void gotoImageActivity(Activity activity,Bitmap bitmap,View shareView ){
+    public static void gotoImageActivity(Activity activity, Bitmap bitmap, View shareView) {
         ActivityOptionsCompat options = ActivityOptionsCompat
                 .makeSceneTransitionAnimation(activity, shareView, "img");
-        mBitmap=bitmap;
-        Intent intent=new Intent(activity,ImageActivity.class);
-        intent.putExtra("imageName",System.currentTimeMillis());
+        mBitmap = bitmap;
+        Intent intent = new Intent(activity, ImageActivity.class);
+        intent.putExtra("imageName", System.currentTimeMillis());
         activity.startActivity(intent, options.toBundle());
     }
-    public static void gotoImageActivity(Context context,String url,String imageName){
-        Intent intent=new Intent(context,ImageActivity.class);
-        intent.putExtra("url",url);
-        intent.putExtra("imageName",imageName);
+
+    public static void gotoImageActivity(Context context, String url, String imageName) {
+        Intent intent = new Intent(context, ImageActivity.class);
+        intent.putExtra("url", url);
+        intent.putExtra("imageName", imageName);
         context.startActivity(intent);
     }
 
-    public static void gotoImageActivity(Activity activity,String url,String imageName,View shareView ){
+    public static void gotoImageActivity(Activity activity, String url, String imageName, View shareView) {
         ActivityOptionsCompat options = ActivityOptionsCompat
                 .makeSceneTransitionAnimation(activity, shareView, "img");
         Intent intent = new Intent(activity, ImageActivity.class);
-        intent.putExtra("url",url);
-        intent.putExtra("imageName",imageName);
+        intent.putExtra("url", url);
+        intent.putExtra("imageName", imageName);
         activity.startActivity(intent, options.toBundle());
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_image_activity, menu);
@@ -80,15 +83,15 @@ public class ImageActivity extends BaseActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.menu_share:
-                if(null!=mSharePath){
-                    Tools.shareMsg(Tools.getApplicationName(ImageActivity.this),mToolbar.getTitle().toString()
-                            ,"",mSharePath,ImageActivity.this);
-                }else {
+                if (null != mSharePath) {
+                    Tools.shareMsg(Tools.getApplicationName(ImageActivity.this), mToolbar.getTitle().toString()
+                            , "", mSharePath, ImageActivity.this);
+                } else {
                     //这种情况是用户进入直接分享图，图片还没有下载完成
-                    isShareing=true;
-                    onDown(url,false,true);
+                    isShareing = true;
+                    onDown(url, false, true);
                 }
                 return true;
             default:
@@ -103,12 +106,14 @@ public class ImageActivity extends BaseActivity {
         initView();
         initData();
     }
-    private void initData(){
-        imageName=getIntent().getStringExtra("imageName");
+
+    private void initData() {
+        imageName = getIntent().getStringExtra("imageName");
         initTitle();
         loadImage();
     }
-    private void initTitle(){
+
+    private void initTitle() {
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -117,14 +122,19 @@ public class ImageActivity extends BaseActivity {
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ImageActivity.this.finish();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    ImageActivity.this.finishAfterTransition();
+                } else {
+                    ImageActivity.this.finish();
+                }
             }
         });
     }
-    private void loadImage(){
-        url=getIntent().getStringExtra("url");
-        if(!TextUtils.isEmpty(url)){
-            onDown(url,true,true);
+
+    private void loadImage() {
+        url = getIntent().getStringExtra("url");
+        if (!TextUtils.isEmpty(url)) {
+            onDown(url, true, true);
 //            Glide.with(this)
 //                    .load(url)
 //                    .asBitmap()
@@ -137,14 +147,15 @@ public class ImageActivity extends BaseActivity {
 //                            imgView.setImageBitmap(resource);
 //                        }
 //                    });
-        }else {
+        } else {
             imgView.setImageBitmap(mBitmap);
         }
     }
-    private void initView(){
-        imgView= (ImageView) findViewById(R.id.img);
-        mProgressBar= (ProgressBar) findViewById(R.id.progressBar);
-        mToolbar= (Toolbar) findViewById(R.id.toolbar);
+
+    private void initView() {
+        imgView = (ImageView) findViewById(R.id.img);
+        mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
     }
 
     /**
@@ -152,27 +163,27 @@ public class ImageActivity extends BaseActivity {
      * @param isShow 是否是第一次显示
      * @param isSave 是保存还是分享
      */
-    private void onDown(String url, final boolean isShow, boolean isSave){
+    private void onDown(String url, final boolean isShow, boolean isSave) {
         //下载图片
-        final DownloadHandler handler=new DownloadHandler();
-        DownLoadImageThread downLoadImageThread=new DownLoadImageThread(url, this, new DownLoadImageThread.ImageDownCallback() {
+        final DownloadHandler handler = new DownloadHandler();
+        DownLoadImageThread downLoadImageThread = new DownLoadImageThread(url, this, new DownLoadImageThread.ImageDownCallback() {
             @Override
             public void onDownLoadSuccess(Bitmap bitmap) {
-                Message message=new Message();
-                message.what=DownLoadImageThread.DOWN_SUCCESS_WITH_BITMIP;
+                Message message = new Message();
+                message.what = DownLoadImageThread.DOWN_SUCCESS_WITH_BITMIP;
 //                Bundle bundle=new Bundle();
 //                bundle.putParcelable("bitmip",bitmap);
 //                message.setData(bundle);
-                mBitmap=bitmap;
+                mBitmap = bitmap;
                 handler.sendMessage(message);
             }
 
             @Override
             public void onDownLoadSuccess(File file) {
-                Message message=new Message();
-                message.what=DownLoadImageThread.DOWN_SUCCESS_WITH_FILE;
-                Bundle bundle=new Bundle();
-                bundle.putString("path",file.getAbsolutePath());
+                Message message = new Message();
+                message.what = DownLoadImageThread.DOWN_SUCCESS_WITH_FILE;
+                Bundle bundle = new Bundle();
+                bundle.putString("path", file.getAbsolutePath());
                 message.setData(bundle);
                 handler.sendMessage(message);
             }
@@ -181,29 +192,29 @@ public class ImageActivity extends BaseActivity {
             public void onDownFailed() {
                 handler.sendEmptyMessage(DownLoadImageThread.DOWN_FAILED);
             }
-        },isSave,imageName);
+        }, isSave, imageName);
         new Thread(downLoadImageThread).start();
     }
 
     //处理下载好图片
-    private class DownloadHandler extends Handler{
+    private class DownloadHandler extends Handler {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            switch (msg.what){
-                case  DownLoadImageThread.DOWN_SUCCESS_WITH_BITMIP:
+            switch (msg.what) {
+                case DownLoadImageThread.DOWN_SUCCESS_WITH_BITMIP:
 //                    Bitmap bitmap=msg.getData().getParcelable("bitmap");
-                    if(null!=mBitmap)
+                    if (null != mBitmap)
                         imgView.setImageBitmap(mBitmap);
                     break;
                 case DownLoadImageThread.DOWN_SUCCESS_WITH_FILE:
-                    String path=msg.getData().getString("path");
-                    mSharePath=path;
-                    if (isShareing){
+                    String path = msg.getData().getString("path");
+                    mSharePath = path;
+                    if (isShareing) {
                         //这种情况是从用户分享走到这一步的
-                        Tools.shareMsg(Tools.getApplicationName(ImageActivity.this),mToolbar.getTitle().toString()
-                                ,"",path,ImageActivity.this);
-                        isShareing=false;
+                        Tools.shareMsg(Tools.getApplicationName(ImageActivity.this), mToolbar.getTitle().toString()
+                                , "", path, ImageActivity.this);
+                        isShareing = false;
                     }
                     break;
                 case DownLoadImageThread.DOWN_FAILED:

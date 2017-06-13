@@ -17,10 +17,18 @@ import java.util.HashSet;
 public class AddCookieInterceptor implements Interceptor {
     @Override
     public Response intercept(Chain chain) throws IOException {
-        Request.Builder builder = chain.request().newBuilder();
         String cookie = SPUtiles.getCookie();
-        if (!TextUtils.isEmpty(cookie))
-            builder.addHeader("Cookie", cookie);
-        return chain.proceed(builder.build());
+        Request request = chain.request();
+        Response response;
+        if (!cookie.equals("")) {
+            Request compressedRequest = request.newBuilder()
+                    .header("Content-type", "application/x-www-form-urlencoded; charset=UTF-8")//请求服务器端上传类型
+                    .header("cookie", cookie.substring(0, cookie.length() - 1))
+                    .build();
+            response = chain.proceed(compressedRequest);
+        } else {
+            response = chain.proceed(request);
+        }
+        return response;
     }
 }

@@ -53,5 +53,7 @@ dependencies {
     compile 'com.android.support:design:23.3.0'
     compile 'de.greenrobot:greendao:2.1.0'
     compile 'de.greenrobot:greendao-generator:2.1.0'
-    compile 'com.bignerdranch.android:recyclerview-multiselect:0.2'
+    compile 'com.oguzdev:CircularFloatingActionMenu:1.0.2'
+    compile 'com.tiancaicc.springfloatingactionmenu:library:0.0.2'
+
 }

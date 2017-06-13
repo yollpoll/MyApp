@@ -16,7 +16,7 @@
         <item name="actionModeBackground">@color/colorPrimary</item>
         <!-- 窗口的背景颜色 -->
         <item name="android:windowBackground">@color/white</item>
-        <item name="android:windowAnimationStyle">@android:style/Animation.Translucent</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation.Activity</item>
 
         <item name="android:windowIsTranslucent">true</item>
         <!-- SearchView -->
@@ -53,5 +53,20 @@
 
     <style name="menuOverflow" parent="Widget.AppCompat.Light.ActionButton.Overflow">
         <item name="actionOverflowButtonStyle">@style/menuOverflow</item>
+    </style>
+
+    <style name="BackGroundRipple">
+        <item name="android:background">?android:attr/selectableItemBackground</item>
+    </style>
+
+    <style name="NewThreadTagStyle">
+        <item name="android:background">@drawable/shape_new_thread_tag</item>
+    </style>
+
+    <style name="TransparentStyle" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:background">@color/transparent</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowAnimationStyle">@android:style/Theme.Translucent</item>
+        <item name="android:windowNoTitle">true</item>
     </style>
 </resources>
