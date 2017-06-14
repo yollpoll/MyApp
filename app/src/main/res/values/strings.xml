@@ -4,4 +4,8 @@
     <string name="close">关闭</string>
     <string name="drawer_open">open</string>
     <string name="drawer_close">close</string>
+    <item type="id" name="tag_first">
+    </item>
+    <item type="id" name="tag_second">
+    </item>
 </resources>

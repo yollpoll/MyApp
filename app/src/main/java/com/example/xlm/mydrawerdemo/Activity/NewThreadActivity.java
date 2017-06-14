@@ -79,6 +79,16 @@ public class NewThreadActivity extends BaseActivity {
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            tagName = data.getStringExtra("tagName");
+            tagId = data.getStringExtra("tagId");
+            tvTag.setText(tagName);
+        }
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
         super.onCreate(savedInstanceState);
@@ -124,6 +134,7 @@ public class NewThreadActivity extends BaseActivity {
         tvTag.setText(tagName);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             tvTag.setTransitionName(tagId);
+            Log.d("spq", "transitionName " + tvTag.getTransitionName());
         }
         getTagData();
     }
@@ -148,6 +159,10 @@ public class NewThreadActivity extends BaseActivity {
 
             }
         });
+    }
+
+    public void setTagName(String name) {
+        tvTag.setText(name);
     }
 
     private void showMoreTitle() {
@@ -209,9 +224,9 @@ public class NewThreadActivity extends BaseActivity {
     }
 
     private void chooseTag() {
-        Pair<View, String> pair1 = Pair.create((View) tvTag, "tag");
+        Pair<View, String> pair1 = Pair.create((View) tvTag, tagId);
         Pair<View, String> pair2 = Pair.create((View) rlTag, "tag_group");
-        ChooseTagActivity.gotoChooseTagActivity(this, tagId, pair1, pair2);
+        ChooseTagActivity.gotoChooseTagActivity(this, tagId, pair1);
     }
 
     @Override

@@ -281,7 +281,7 @@ public class MainActivity extends BaseActivity {
                 getSupportActionBar().setTitle(listTab.get(position).getName());
 
                 currentTagName = listTab.get(position).getName();
-                currentTagId = listTab.get(position).getName();
+                currentTagId = listTab.get(position).getId();
             }
 
             @Override
