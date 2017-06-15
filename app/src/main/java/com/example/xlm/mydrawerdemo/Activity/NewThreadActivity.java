@@ -2,13 +2,16 @@ package com.example.xlm.mydrawerdemo.Activity;
 
 import android.animation.ObjectAnimator;
 import android.annotation.TargetApi;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Rect;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.util.Pair;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.transition.ChangeBounds;
 import android.transition.ChangeImageTransform;
 import android.transition.ChangeTransform;
@@ -23,7 +26,9 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.Window;
+import android.view.WindowManager;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
@@ -42,10 +47,12 @@ import com.example.xlm.mydrawerdemo.R;
 import com.example.xlm.mydrawerdemo.base.BaseActivity;
 import com.example.xlm.mydrawerdemo.bean.ChildForm;
 import com.example.xlm.mydrawerdemo.bean.Form;
+import com.example.xlm.mydrawerdemo.fragment.ChooseEmojiDialogFragment;
 import com.example.xlm.mydrawerdemo.http.Httptools;
 import com.example.xlm.mydrawerdemo.utils.SPUtiles;
 import com.example.xlm.mydrawerdemo.utils.Tools;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -65,11 +72,13 @@ public class NewThreadActivity extends BaseActivity {
     private EditText edtContent;
     private TextView tvTag;
     private CardView cardContent;
-    private LinearLayout llRoot;
+    private RelativeLayout rlRoot;
     private RelativeLayout rlTag;
     private String tagName, tagId;
     private Retrofit retrofit;
     private List<ChildForm> listTag = new ArrayList<>();
+    private ImageView imgEmoji, imgPic, imgDraw, imgSend;
+    private ImageView imgPicContent;
 
     public static void gotoNewThreadActivity(Context context, String tagName, String tagId) {
         Intent intent = new Intent(context, NewThreadActivity.class);
@@ -104,11 +113,20 @@ public class NewThreadActivity extends BaseActivity {
         edtContent = (EditText) findViewById(R.id.edt_content);
         tvTag = (TextView) findViewById(R.id.tv_tag);
         cardContent = (CardView) findViewById(R.id.card_content);
-        llRoot = (LinearLayout) findViewById(R.id.ll_root);
+        rlRoot = (RelativeLayout) findViewById(R.id.rl_root);
         rlTag = (RelativeLayout) findViewById(R.id.rl_choose_tag);
+        imgEmoji = (ImageView) findViewById(R.id.img_emoji);
+        imgPic = (ImageView) findViewById(R.id.img_pic);
+        imgDraw = (ImageView) findViewById(R.id.img_draw);
+        imgSend = (ImageView) findViewById(R.id.img_send);
+        imgPicContent = (ImageView) findViewById(R.id.img_pic_content);
 
+        imgSend.setOnClickListener(this);
         imgShowMoreTitle.setOnClickListener(this);
         tvTag.setOnClickListener(this);
+        imgEmoji.setOnClickListener(this);
+        imgPic.setOnClickListener(this);
+        imgDraw.setOnClickListener(this);
         initTitle();
     }
 
@@ -134,9 +152,9 @@ public class NewThreadActivity extends BaseActivity {
         tvTag.setText(tagName);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             tvTag.setTransitionName(tagId);
-            Log.d("spq", "transitionName " + tvTag.getTransitionName());
         }
         getTagData();
+        getKeyBoardHeight();
     }
 
     private void getTagData() {
@@ -161,10 +179,26 @@ public class NewThreadActivity extends BaseActivity {
         });
     }
 
+    //获得软键盘高度
+    private void getKeyBoardHeight() {
+        rlRoot.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                Rect r = new Rect();
+                rlRoot.getWindowVisibleDisplayFrame(r);
+
+                int screenHeight = rlRoot.getRootView().getHeight();
+                int heightDifference = screenHeight - (r.bottom - r.top);
+                Log.d("spq", "Size    " + heightDifference);
+            }
+        });
+    }
+
     public void setTagName(String name) {
         tvTag.setText(name);
     }
 
+    //更多标题参数
     private void showMoreTitle() {
         llMoreTitle.setVisibility(View.VISIBLE);
         ObjectAnimator anim = ObjectAnimator.ofFloat(imgShowMoreTitle, "rotation", 0f, 180f);
@@ -181,6 +215,7 @@ public class NewThreadActivity extends BaseActivity {
         llMoreTitle.setLayoutAnimation(layoutAnimationController);
         llMoreTitle.startLayoutAnimation();
         edtContent.startAnimation(animation);
+        imgPicContent.startAnimation(animation);
     }
 
     private void dismisMoreTitle() {
@@ -220,7 +255,7 @@ public class NewThreadActivity extends BaseActivity {
 
         //edt anim
         edtContent.startAnimation(animation);
-
+        imgPicContent.startAnimation(animation);
     }
 
     private void chooseTag() {
@@ -228,6 +263,26 @@ public class NewThreadActivity extends BaseActivity {
         Pair<View, String> pair2 = Pair.create((View) rlTag, "tag_group");
         ChooseTagActivity.gotoChooseTagActivity(this, tagId, pair1);
     }
+
+    private void showEmojiDialog() {
+        new ChooseEmojiDialogFragment(onEmojiClickListener).show(getSupportFragmentManager(), "chooseEmoji");
+    }
+
+    private ChooseEmojiDialogFragment.OnEmojiClickListener onEmojiClickListener = new ChooseEmojiDialogFragment.OnEmojiClickListener() {
+        @Override
+        public void onClick(String word, int id) {
+            if (TextUtils.isEmpty(word)) {
+                //选择了图片
+                if(id==0)
+                    return;
+                imgPicContent.setImageResource(id);
+                imgPicContent.setVisibility(View.VISIBLE);
+            } else {
+                //选择了文字
+                edtContent.append(word);
+            }
+        }
+    };
 
     @Override
     public void onClick(View v) {
@@ -242,6 +297,18 @@ public class NewThreadActivity extends BaseActivity {
                 break;
             case R.id.tv_tag:
                 chooseTag();
+                break;
+            case R.id.img_emoji:
+                showEmojiDialog();
+                break;
+            case R.id.img_pic:
+
+                break;
+            case R.id.drawer:
+
+                break;
+            case R.id.img_send:
+
                 break;
         }
     }

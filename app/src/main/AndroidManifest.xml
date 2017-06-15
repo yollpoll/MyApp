@@ -26,7 +26,9 @@
         <activity android:name=".Activity.CoordingDemoActivity" />
         <activity android:name=".Activity.SetActivity" />
         <activity android:name=".Activity.CollectionActivity" />
-        <activity android:name=".Activity.NewThreadActivity" />
+        <activity android:name=".Activity.NewThreadActivity"
+            android:windowSoftInputMode="adjustResize"
+            />
         <activity
             android:name=".Activity.ChooseTagActivity"
             android:theme="@style/TransparentStyle"

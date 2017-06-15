@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/ll_root"
+    android:id="@+id/rl_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -17,129 +17,193 @@
         android:id="@+id/card_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_above="@+id/rl_send"
+        android:layout_below="@+id/toolbar"
         android:layout_margin="16dp">
 
-        <LinearLayout
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <RelativeLayout
-                android:id="@+id/rl_tag"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:id="@+id/tv_tag_left"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="20dp"
-                    android:text="板块" />
-
-                <RelativeLayout
-                    android:id="@+id/rl_choose_tag"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:layout_toRightOf="@+id/tv_tag_left"
-                    android:transitionName="tag_group">
-
-                    <TextView
-                        android:id="@+id/tv_tag"
-                        style="@style/NewThreadTagStyle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:padding="10dp"
-                        android:text="综合板1"
-                        android:transitionName="tag" />
-                </RelativeLayout>
-
-                <ImageView
-                    android:id="@+id/img_show_more_title"
-                    style="@style/BackGroundRipple"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="16dp"
-                    android:padding="10dp"
-                    android:src="@mipmap/icon_show" />
-            </RelativeLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:background="@color/textGrey" />
+            android:layout_height="match_parent">
 
             <LinearLayout
-                android:id="@+id/ll_more_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:focusable="true"
-                android:focusableInTouchMode="true"
-                android:orientation="vertical"
-                android:visibility="gone">
-
-                <android.support.design.widget.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp">
-
-                    <android.support.design.widget.TextInputEditText
-                        android:id="@+id/txtEdt_title"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="标题"
-                        android:paddingLeft="16dp"
-                        android:textColor="@color/black"
-                        android:textColorHint="@color/textGrey"
-                        android:textSize="14sp"
-                        app:backgroundTint="@color/selector_edt_color" />
-                </android.support.design.widget.TextInputLayout>
-
-                <android.support.design.widget.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp">
-
-                    <android.support.design.widget.TextInputEditText
-                        android:id="@+id/txtEdt_name"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="名称"
-                        android:paddingLeft="16dp"
-                        android:textColor="@color/black"
-                        android:textColorHint="@color/textGrey"
-                        android:textSize="14sp"
-                        app:backgroundTint="@color/selector_edt_color" />
-                </android.support.design.widget.TextInputLayout>
-
-                <android.support.design.widget.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp">
-
-                    <android.support.design.widget.TextInputEditText
-                        android:id="@+id/txtEdt_email"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="邮件"
-                        android:paddingLeft="16dp"
-                        android:textColor="@color/black"
-                        android:textColorHint="@color/textGrey"
-                        android:textSize="14sp"
-                        app:backgroundTint="@color/selector_edt_color" />
-                </android.support.design.widget.TextInputLayout>
-            </LinearLayout>
-
-            <EditText
-                android:id="@+id/edt_content"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/white"
-                android:gravity="top|left"
-                android:padding="16dp"
-                android:textColor="@color/ColorTextPrimary" />
-        </LinearLayout>
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:id="@+id/rl_tag"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/tv_tag_left"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="20dp"
+                        android:text="板块" />
+
+                    <RelativeLayout
+                        android:id="@+id/rl_choose_tag"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:layout_toRightOf="@+id/tv_tag_left"
+                        android:transitionName="tag_group">
+
+                        <TextView
+                            android:id="@+id/tv_tag"
+                            style="@style/NewThreadTagStyle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:padding="10dp"
+                            android:text="综合板1"
+                            android:transitionName="tag" />
+                    </RelativeLayout>
+
+                    <ImageView
+                        android:id="@+id/img_show_more_title"
+                        style="@style/BackGroundRipple"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="16dp"
+                        android:padding="10dp"
+                        android:src="@mipmap/icon_show" />
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/colorLine" />
+
+                <LinearLayout
+                    android:id="@+id/ll_more_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <android.support.design.widget.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp">
+
+                        <android.support.design.widget.TextInputEditText
+                            android:id="@+id/txtEdt_title"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="标题"
+                            android:paddingLeft="16dp"
+                            android:textColor="@color/black"
+                            android:textColorHint="@color/textGrey"
+                            android:textSize="14sp"
+                            app:backgroundTint="@color/selector_edt_color" />
+                    </android.support.design.widget.TextInputLayout>
+
+                    <android.support.design.widget.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp">
+
+                        <android.support.design.widget.TextInputEditText
+                            android:id="@+id/txtEdt_name"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="名称"
+                            android:paddingLeft="16dp"
+                            android:textColor="@color/black"
+                            android:textColorHint="@color/textGrey"
+                            android:textSize="14sp"
+                            app:backgroundTint="@color/selector_edt_color" />
+                    </android.support.design.widget.TextInputLayout>
+
+                    <android.support.design.widget.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp">
+
+                        <android.support.design.widget.TextInputEditText
+                            android:id="@+id/txtEdt_email"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="邮件"
+                            android:paddingLeft="16dp"
+                            android:textColor="@color/black"
+                            android:textColorHint="@color/textGrey"
+                            android:textSize="14sp"
+                            app:backgroundTint="@color/selector_edt_color" />
+                    </android.support.design.widget.TextInputLayout>
+                </LinearLayout>
+
+                <EditText
+                    android:id="@+id/edt_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/white"
+                    android:gravity="top|left"
+                    android:padding="16dp"
+                    android:textColor="@color/ColorTextPrimary" />
+
+                <ImageView
+                    android:id="@+id/img_pic_content"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:visibility="gone"
+                    />
+            </LinearLayout>
+        </ScrollView>
     </android.support.v7.widget.CardView>
-</LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_send"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/colorPrimary">
+
+
+        <ImageView
+            android:id="@+id/img_emoji"
+            style="@style/BackGroundRipple"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:padding="10dp"
+            android:src="@mipmap/icon_emoji" />
+
+        <ImageView
+            android:id="@+id/img_pic"
+            style="@style/BackGroundRipple"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/img_emoji"
+            android:padding="10dp"
+            android:src="@mipmap/icon_pic" />
+
+        <ImageView
+            android:id="@+id/img_draw"
+            style="@style/BackGroundRipple"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/img_pic"
+            android:padding="10dp"
+            android:src="@mipmap/icon_drawer" />
+
+        <ImageView
+            android:id="@+id/img_send"
+            style="@style/BackGroundRipple"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:padding="10dp"
+            android:src="@mipmap/icon_send" />
+    </RelativeLayout>
+</RelativeLayout>

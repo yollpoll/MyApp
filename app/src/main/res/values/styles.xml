@@ -69,4 +69,6 @@
         <item name="android:windowAnimationStyle">@android:style/Theme.Translucent</item>
         <item name="android:windowNoTitle">true</item>
     </style>
+        
+
 </resources>
