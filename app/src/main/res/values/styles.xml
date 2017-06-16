@@ -71,4 +71,8 @@
     </style>
         
 
+    <style name="CouponStyle">
+        <item name="android:background">@drawable/shape_coupon</item>
+    </style>
+
 </resources>

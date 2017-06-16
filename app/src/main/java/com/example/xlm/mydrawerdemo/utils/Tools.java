@@ -1,5 +1,6 @@
 package com.example.xlm.mydrawerdemo.utils;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
@@ -7,27 +8,34 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.MediaStore;
+import android.support.v7.app.AlertDialog;
 import android.text.Spanned;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.RelativeLayout;
 import android.widget.TextSwitcher;
 import android.widget.TextView;
-import android.R;
 import android.widget.ViewSwitcher;
 
+import com.example.xlm.mydrawerdemo.R;
 import com.example.xlm.mydrawerdemo.view.SecretTextView;
 
 
 import java.io.File;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+
+import static com.example.xlm.mydrawerdemo.R.layout.alert_choose_photo;
 
 /**
  * Created by xlm on 2015/11/25.
@@ -250,5 +258,51 @@ public class Tools {
     public static int calculateDpToPx(int padding_in_dp, Context context) {
         final float scale = context.getResources().getDisplayMetrics().density;
         return (int) (padding_in_dp * scale + 0.5f);
+    }
+
+    public static final int PIC_FROM_PHOTO = 11;
+    public static final int PIC_FROM_CAMERA = 12;
+    public static final int CROP_PHOTO = 13;
+    public static Uri imgUri;
+
+    public static void showChoosePicDialog(final Activity activity) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+        View view = LayoutInflater.from(activity).inflate(R.layout.alert_choose_photo, null);
+        builder.setView(view);
+        final AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+        RelativeLayout rlPhoto = (RelativeLayout) view.findViewById(R.id.rl_photo);
+        RelativeLayout rlCamera = (RelativeLayout) view.findViewById(R.id.rl_camera);
+        rlCamera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+                File file = activity.getExternalCacheDir();
+                File imgFile = new File(file, "temp.jpg");
+                if (file.exists())
+                    file.delete();
+                try {
+                    imgFile.createNewFile();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                imgUri = Uri.fromFile(imgFile);
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, imgUri);
+                activity.startActivityForResult(intent, PIC_FROM_CAMERA);
+
+            }
+        });
+        rlPhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+                Intent intent = new Intent();
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                activity.startActivityForResult(intent, PIC_FROM_PHOTO);
+            }
+        });
     }
 }

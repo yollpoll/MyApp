@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ripple xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="@color/white"
+    tools:targetApi="lollipop"
+    >
+    <item>
+        <shape>
+            <corners android:radius="10dp"></corners>
+            <solid android:color="@color/rippleYellow"></solid>
+        </shape>
+    </item>
+</ripple>

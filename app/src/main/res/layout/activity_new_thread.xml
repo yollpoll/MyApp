@@ -149,10 +149,16 @@
 
                 <ImageView
                     android:id="@+id/img_pic_content"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:visibility="gone"
-                    />
+                    style="@style/CouponStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:animateLayoutChanges="true"
+                    android:maxHeight="200dp"
+                    android:maxWidth="200dp"
+                    android:stateListAnimator="@drawable/anim_touch_pic"
+                    android:visibility="gone" />
             </LinearLayout>
         </ScrollView>
     </android.support.v7.widget.CardView>

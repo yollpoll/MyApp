@@ -86,4 +86,8 @@
         <item name="android:windowAnimationStyle">@android:style/Theme.Translucent</item>
         <item name="android:windowNoTitle">true</item>
     </style>
+
+    <style name="CouponStyle">
+        <item name="android:background">@drawable/ripple_coupon</item>
+    </style>
 </resources>

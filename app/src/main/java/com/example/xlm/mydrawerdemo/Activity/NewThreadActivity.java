@@ -3,12 +3,18 @@ package com.example.xlm.mydrawerdemo.Activity;
 import android.animation.ObjectAnimator;
 import android.annotation.TargetApi;
 import android.app.Dialog;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Rect;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v4.util.Pair;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -50,8 +56,10 @@ import com.example.xlm.mydrawerdemo.bean.Form;
 import com.example.xlm.mydrawerdemo.fragment.ChooseEmojiDialogFragment;
 import com.example.xlm.mydrawerdemo.http.Httptools;
 import com.example.xlm.mydrawerdemo.utils.SPUtiles;
+import com.example.xlm.mydrawerdemo.utils.ToastUtils;
 import com.example.xlm.mydrawerdemo.utils.Tools;
 
+import java.io.FileNotFoundException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
@@ -65,7 +73,7 @@ import retrofit.Retrofit;
  * Created by 鹏祺 on 2017/6/7.
  */
 
-public class NewThreadActivity extends BaseActivity {
+public class NewThreadActivity extends BaseActivity implements View.OnLongClickListener {
     private ImageView imgShowMoreTitle;
     private LinearLayout llMoreTitle;
     private Toolbar mToolbar;
@@ -90,11 +98,56 @@ public class NewThreadActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK) {
-            tagName = data.getStringExtra("tagName");
-            tagId = data.getStringExtra("tagId");
-            tvTag.setText(tagName);
+        switch (requestCode) {
+            case ChooseTagActivity.CHOOSE_TAG:
+                if (resultCode == RESULT_OK) {
+                    tagName = data.getStringExtra("tagName");
+                    tagId = data.getStringExtra("tagId");
+                    tvTag.setText(tagName);
+                }
+                break;
+            case Tools.PIC_FROM_PHOTO:
+                if (resultCode != RESULT_OK) {
+                    ToastUtils.SnakeShowShort(rlRoot, "获取图片失败");
+                    break;
+                }
+                Uri uri = data.getData();
+                ContentResolver cr = this.getContentResolver();
+                try {
+                    Bitmap bitmap = BitmapFactory.decodeStream(cr.openInputStream(uri));
+                    imgPicContent.setVisibility(View.VISIBLE);
+                    imgPicContent.setImageBitmap(bitmap);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+                break;
+            case Tools.PIC_FROM_CAMERA:
+                if (resultCode != RESULT_OK) {
+                    ToastUtils.SnakeShowShort(rlRoot, "拍照失败");
+                    break;
+                }
+                Intent intent = new Intent("com.android.camera.action.CROP");
+                intent.setDataAndType(Tools.imgUri, "image/*");
+                intent.putExtra("scale", true);
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, Tools.imgUri);
+                NewThreadActivity.this.startActivityForResult(intent, Tools.CROP_PHOTO);
+                break;
+            case Tools.CROP_PHOTO:
+                if (resultCode != RESULT_OK) {
+                    ToastUtils.SnakeShowShort(rlRoot, "剪裁失败");
+                    break;
+                }
+                Bitmap bitmap;
+                try {
+                    bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(Tools.imgUri));
+                    imgPicContent.setVisibility(View.VISIBLE);
+                    imgPicContent.setImageBitmap(bitmap);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+                break;
         }
+
     }
 
     @Override
@@ -121,6 +174,7 @@ public class NewThreadActivity extends BaseActivity {
         imgSend = (ImageView) findViewById(R.id.img_send);
         imgPicContent = (ImageView) findViewById(R.id.img_pic_content);
 
+        imgPicContent.setOnLongClickListener(this);
         imgSend.setOnClickListener(this);
         imgShowMoreTitle.setOnClickListener(this);
         tvTag.setOnClickListener(this);
@@ -273,7 +327,7 @@ public class NewThreadActivity extends BaseActivity {
         public void onClick(String word, int id) {
             if (TextUtils.isEmpty(word)) {
                 //选择了图片
-                if(id==0)
+                if (id == 0)
                     return;
                 imgPicContent.setImageResource(id);
                 imgPicContent.setVisibility(View.VISIBLE);
@@ -283,6 +337,10 @@ public class NewThreadActivity extends BaseActivity {
             }
         }
     };
+
+    private void choosePhote() {
+        Tools.showChoosePicDialog(this);
+    }
 
     @Override
     public void onClick(View v) {
@@ -302,7 +360,7 @@ public class NewThreadActivity extends BaseActivity {
                 showEmojiDialog();
                 break;
             case R.id.img_pic:
-
+                choosePhote();
                 break;
             case R.id.drawer:
 
@@ -313,4 +371,13 @@ public class NewThreadActivity extends BaseActivity {
         }
     }
 
+    @Override
+    public boolean onLongClick(View v) {
+        switch (v.getId()) {
+            case R.id.img_pic_content:
+                imgPicContent.setVisibility(View.GONE);
+                break;
+        }
+        return false;
+    }
 }
