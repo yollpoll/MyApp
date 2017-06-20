@@ -362,8 +362,8 @@ public class NewThreadActivity extends BaseActivity implements View.OnLongClickL
             case R.id.img_pic:
                 choosePhote();
                 break;
-            case R.id.drawer:
-
+            case R.id.img_draw:
+                DrawingActivity.gotoDrawingActivity(NewThreadActivity.this);
                 break;
             case R.id.img_send:
 

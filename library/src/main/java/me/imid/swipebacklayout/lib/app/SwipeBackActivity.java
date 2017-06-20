@@ -9,7 +9,7 @@ import android.view.View;
 import me.imid.swipebacklayout.lib.SwipeBackLayout;
 import me.imid.swipebacklayout.lib.Utils;
 
-public class SwipeBackActivity extends AppCompatActivity implements SwipeBackActivityBase {
+public class SwipeBackActivity extends AppCompatActivity implements SwipeBackActivityBase,View.OnClickListener {
     private SwipeBackActivityHelper mHelper;
 
     @Override
@@ -47,5 +47,10 @@ public class SwipeBackActivity extends AppCompatActivity implements SwipeBackAct
     public void scrollToFinishActivity() {
         Utils.convertActivityToTranslucent(this);
         getSwipeBackLayout().scrollToFinishActivity();
+    }
+
+    @Override
+    public void onClick(View v) {
+
     }
 }

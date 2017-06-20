@@ -161,6 +161,7 @@ public class MainActivity extends BaseActivity {
 //                }
 //            }
 //            currentFragment.refresh();
+            NewThreadActivity.gotoNewThreadActivity(MainActivity.this, currentTagName, currentTagId);
             return false;
         }
     });

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingBottom="10dp"
+    >
+
+    <RelativeLayout
+        android:id="@+id/rl_color"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true" />
+
+    <RelativeLayout
+        android:id="@+id/rl_red"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/rl_color">
+
+        <TextView
+            android:id="@+id/tv_red"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="20dp"
+            android:text="红"
+            android:textColor="@color/textRed" />
+
+        <android.support.v7.widget.AppCompatSeekBar
+            android:id="@+id/seek_red"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginTop="20dp"
+            android:layout_toRightOf="@+id/tv_red" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_green"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/rl_red">
+
+        <TextView
+            android:id="@+id/tv_green"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="20dp"
+            android:text="绿"
+            android:textColor="@color/lightGreen" />
+
+        <android.support.v7.widget.AppCompatSeekBar
+            android:id="@+id/seek_green"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginTop="20dp"
+            android:layout_toRightOf="@+id/tv_green" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_blue"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/rl_green">
+
+        <TextView
+            android:id="@+id/tv_blue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="20dp"
+            android:text="蓝"
+            android:textColor="@color/material_blue_500" />
+
+        <android.support.v7.widget.AppCompatSeekBar
+            android:id="@+id/seek_blue"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginTop="20dp"
+            android:layout_toRightOf="@+id/tv_blue" />
+    </RelativeLayout>
+</RelativeLayout>

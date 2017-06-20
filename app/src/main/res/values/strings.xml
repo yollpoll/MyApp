@@ -4,8 +4,10 @@
     <string name="close">关闭</string>
     <string name="drawer_open">open</string>
     <string name="drawer_close">close</string>
-    <item type="id" name="tag_first">
-    </item>
-    <item type="id" name="tag_second">
-    </item>
+    <item name="tag_first" type="id"></item>
+    <item name="tag_second" type="id"></item>
+    <item name="img_color" type="id" />
+    <item name="img_width" type="id" />
+    <item name="img_save" type="id" />
+    <item name="img_submit" type="id" />
 </resources>
