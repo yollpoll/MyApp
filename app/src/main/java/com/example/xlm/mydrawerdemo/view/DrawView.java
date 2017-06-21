@@ -2,6 +2,7 @@ package com.example.xlm.mydrawerdemo.view;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
@@ -25,7 +26,8 @@ import com.example.xlm.mydrawerdemo.utils.Tools;
  */
 
 public class DrawView extends android.support.v7.widget.AppCompatImageView {
-    private Bitmap imgCache;
+    private Bitmap imgCache, fakeCache;
+    private boolean isShowCache = false;
 
     public DrawView(Context context) {
         super(context);
@@ -43,10 +45,12 @@ public class DrawView extends android.support.v7.widget.AppCompatImageView {
     }
 
     public void setPaintColor(int color) {
+        //更新缓存
+        fakeCache = Bitmap.createBitmap(imgCache);
+
         mPaint.setColor(color);
         mPath.reset();
-        imgCache = getDrawingCache();
-        Log.d("spq", ">>>>>>>>>.");
+
     }
 
     public void setPaintWidth(int dp) {
@@ -63,15 +67,35 @@ public class DrawView extends android.support.v7.widget.AppCompatImageView {
         setImageBitmap(bitmap);
     }
 
+    public Bitmap getBitmapCache() {
+        return fakeCache;
+    }
+
+    @Override
+    public void draw(Canvas canvas) {
+        super.draw(canvas);
+        if (null != fakeCache) {
+            //每次绘制都会把缓存中的绘制一遍
+            RectF rectF = new RectF(0, 0, fakeCache.getWidth(), fakeCache.getHeight());
+            canvas.drawBitmap(fakeCache, null, rectF, mPaint);
+        }
+    }
+
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-//        canvas.drawLine(lastX, lastY, nowX, nowY, mPaint);
-        if (null != imgCache) {
-            Log.d("spq", "width>>>>>>>>>>>>>>>" + imgCache.getWidth() + "height>>>>>>>>" + imgCache.getHeight());
-            RectF rectF = new RectF(0, 0, imgCache.getWidth(), imgCache.getHeight());
-            canvas.drawBitmap(imgCache, null, rectF, mPaint);
-            canvas.drawPath(mPath, mPaint);
+        if (null == mCanvas) {
+            //新建一个canvas 模仿自带的画一样的图
+            imgCache = Bitmap.createBitmap(getMeasuredWidth(), getMeasuredHeight(), Bitmap.Config.ARGB_8888);
+            mCanvas = new Canvas(imgCache);
+        }
+        if (null != fakeCache) {
+            draw(canvas);
+        }
+        if (null != mCanvas) {
+            //自定义一个canvas抄袭绘制过程并且保存在bitmap中
+            mCanvas.drawColor(bgColor);
+            mCanvas.drawPath(mPath, mPaint);
         }
         canvas.drawColor(bgColor);
         canvas.drawPath(mPath, mPaint);
@@ -81,6 +105,7 @@ public class DrawView extends android.support.v7.widget.AppCompatImageView {
     private Paint mPaint;
     private Path mPath;
     private int bgColor = Color.WHITE;
+    private Canvas mCanvas;
 //    private Bitmap bpBackGround ;
 
     private void init() {
@@ -94,6 +119,7 @@ public class DrawView extends android.support.v7.widget.AppCompatImageView {
         mPath = new Path();
         setDrawingCacheEnabled(true);
     }
+
 
     private float lastX = 0, lastY = 0;
 

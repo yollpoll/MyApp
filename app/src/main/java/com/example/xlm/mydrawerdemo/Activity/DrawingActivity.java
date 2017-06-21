@@ -3,6 +3,8 @@ package com.example.xlm.mydrawerdemo.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -33,6 +35,7 @@ public class DrawingActivity extends BaseActivity {
     private DrawView mDrawView;
     private FloatingActionButton flbMenu;
     private FloatingActionMenu actionMenu;
+    private ImageView imgCache;
 
     public static void gotoDrawingActivity(Context context) {
         Intent intent = new Intent(context, DrawingActivity.class);
@@ -50,6 +53,7 @@ public class DrawingActivity extends BaseActivity {
     private void initView() {
         mDrawView = (DrawView) findViewById(R.id.draw_view);
         flbMenu = (FloatingActionButton) findViewById(R.id.fb_menu);
+        imgCache = (ImageView) findViewById(R.id.img_cache);
 
         flbMenu.setOnClickListener(this);
     }
@@ -96,16 +100,17 @@ public class DrawingActivity extends BaseActivity {
         SeekBar sbBlue = (SeekBar) dialog.findViewById(R.id.seek_blue);
         rlColor = (RelativeLayout) dialog.findViewById(R.id.rl_color);
         rlColor.setBackgroundColor(Color.rgb(red, green, blue));
-        sbRed.setProgress(red *100/ 255);
-        sbGreen.setProgress(green *100/ 255);
-        sbBlue.setProgress(blue *100/ 255);
+        sbRed.setProgress(red * 100 / 255);
+        sbGreen.setProgress(green * 100 / 255);
+        sbBlue.setProgress(blue * 100 / 255);
 
         sbRed.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 red = progress * 255 / 100;
                 rlColor.setBackgroundColor(Color.rgb(red, green, blue));
-                mDrawView.setPaintColor(Color.rgb(red,green,blue));
+                mDrawView.setPaintColor(Color.rgb(red, green, blue));
+                imgCache.setImageBitmap(mDrawView.getBitmapCache());
             }
 
             @Override
@@ -123,7 +128,8 @@ public class DrawingActivity extends BaseActivity {
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 green = progress * 255 / 100;
                 rlColor.setBackgroundColor(Color.rgb(red, green, blue));
-                mDrawView.setPaintColor(Color.rgb(red,green,blue));
+                mDrawView.setPaintColor(Color.rgb(red, green, blue));
+                imgCache.setImageBitmap(mDrawView.getBitmapCache());
             }
 
             @Override
@@ -141,7 +147,8 @@ public class DrawingActivity extends BaseActivity {
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 blue = progress * 255 / 100;
                 rlColor.setBackgroundColor(Color.rgb(red, green, blue));
-                mDrawView.setPaintColor(Color.rgb(red,green,blue));
+                mDrawView.setPaintColor(Color.rgb(red, green, blue));
+                imgCache.setImageBitmap(mDrawView.getBitmapCache());
             }
 
             @Override

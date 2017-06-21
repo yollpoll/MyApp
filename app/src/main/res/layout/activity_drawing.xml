@@ -12,6 +12,7 @@
 
         <com.example.xlm.mydrawerdemo.view.DrawView
             android:id="@+id/draw_view"
+            android:background="@color/textGrey"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
@@ -34,4 +35,8 @@
             app:rippleColor="@color/white" />
     </android.support.design.widget.CoordinatorLayout>
 
+    <ImageView
+        android:id="@+id/img_cache"
+        android:layout_width="100dp"
+        android:layout_height="100dp" />
 </RelativeLayout>
