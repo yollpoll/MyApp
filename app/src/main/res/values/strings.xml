@@ -8,6 +8,6 @@
     <item name="tag_second" type="id"></item>
     <item name="img_color" type="id" />
     <item name="img_width" type="id" />
-    <item name="img_save" type="id" />
-    <item name="img_submit" type="id" />
+    <item name="img_cleaner" type="id" />
+    <item name="img_clear" type="id" />
 </resources>

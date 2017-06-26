@@ -5,38 +5,41 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.design.widget.CoordinatorLayout
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        style="@style/Widget.MyTheme.HeaderBar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="?android:attr/actionBarSize"
+        android:background="@color/colorPrimary" />
 
+    <android.support.design.widget.CoordinatorLayout
+        android:id="@+id/cl_root"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/toolbar">
 
         <com.example.xlm.mydrawerdemo.view.DrawView
             android:id="@+id/draw_view"
-            android:background="@color/textGrey"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            style="@style/Widget.MyTheme.HeaderBar"
-            android:layout_width="match_parent"
-            android:layout_height="?android:attr/actionBarSize"
-            android:background="@color/colorPrimary" />
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/fb_menu"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
-            android:src="@mipmap/icon_menu"
+            android:src="@mipmap/icon_draw_menu"
             app:fabSize="normal"
             app:layout_anchor="@+id/draw_view"
             app:layout_anchorGravity="bottom|right"
             app:rippleColor="@color/white" />
     </android.support.design.widget.CoordinatorLayout>
 
-    <ImageView
-        android:id="@+id/img_cache"
-        android:layout_width="100dp"
-        android:layout_height="100dp" />
+    <!--<ImageView-->
+    <!--android:id="@+id/img_cache"-->
+    <!--android:layout_width="100dp"-->
+    <!--android:layout_height="100dp"-->
+    <!--android:layout_alignParentRight="true"-->
+    <!--/>-->
 </RelativeLayout>

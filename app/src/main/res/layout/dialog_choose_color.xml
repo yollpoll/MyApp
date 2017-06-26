@@ -3,15 +3,14 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:paddingBottom="10dp"
-    >
+    android:paddingBottom="8dp">
 
     <RelativeLayout
         android:id="@+id/rl_color"
         android:layout_width="match_parent"
-        android:layout_height="150dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true" />
+        android:layout_height="160dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true" />
 
     <RelativeLayout
         android:id="@+id/rl_red"
@@ -87,4 +86,27 @@
             android:layout_marginTop="20dp"
             android:layout_toRightOf="@+id/tv_blue" />
     </RelativeLayout>
+
+    <TextView
+        android:id="@+id/tv_brush"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/rl_blue"
+        android:layout_marginRight="16dp"
+        android:background="?android:attr/selectableItemBackground"
+        android:padding="5dp"
+        android:text="设为画笔"
+        android:textColor="@color/colorPrimaryDark" />
+
+    <TextView
+        android:id="@+id/tv_bg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@+id/tv_brush"
+        android:layout_below="@+id/rl_blue"
+        android:background="?android:attr/selectableItemBackground"
+        android:padding="5dp"
+        android:text="设为背景"
+        android:textColor="@color/colorPrimaryDark" />
 </RelativeLayout>

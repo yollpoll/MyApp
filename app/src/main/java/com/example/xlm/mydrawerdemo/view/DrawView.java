@@ -8,7 +8,11 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
 import android.graphics.RectF;
+import android.graphics.drawable.BitmapDrawable;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -25,9 +29,16 @@ import com.example.xlm.mydrawerdemo.utils.Tools;
  * 涂鸦板
  */
 
-public class DrawView extends android.support.v7.widget.AppCompatImageView {
+public class DrawView extends View {
+    private int mPaintWidth = 20;
     private Bitmap imgCache, fakeCache;
-    private boolean isShowCache = false;
+    private boolean isCleanMode = false;
+    private Paint mPaint, mCleanPaint;
+    private Path mPath, mCleanPath;
+    private int bgColor = Color.WHITE;
+    private Canvas mCanvas;
+    private OnCleanModeChangerListener onCleanModeChangerListener;
+//    private Bitmap bpBackGround ;
 
     public DrawView(Context context) {
         super(context);
@@ -47,79 +58,137 @@ public class DrawView extends android.support.v7.widget.AppCompatImageView {
     public void setPaintColor(int color) {
         //更新缓存
         fakeCache = Bitmap.createBitmap(imgCache);
-
         mPaint.setColor(color);
         mPath.reset();
-
     }
 
-    public void setPaintWidth(int dp) {
-        mPaint.setStrokeWidth(Tools.calculateDpToPx(dp, getContext()));
+    public void setPaintWidth(int px) {
+        //更新缓存
+        fakeCache = Bitmap.createBitmap(imgCache);
+        mPaint.setStrokeWidth(px);
+        mPath.reset();
+        this.mPaintWidth = px;
+        mCleanPaint.setStrokeWidth(px);
     }
+
 
     public void setBackGround(int bgColor) {
         this.bgColor = bgColor;
+        //重新设置橡皮擦颜色
+        mCleanPaint.setColor(bgColor);
+        //根据新颜色重新绘制一遍缓存
+        mCanvas.drawPath(mCleanPath, mCleanPaint);
+        //取出缓存
+        fakeCache = Bitmap.createBitmap(imgCache);
         postInvalidate();
     }
 
     public void setBackGround(Bitmap bitmap) {
-//        bpBackGround=bitmap;
-        setImageBitmap(bitmap);
+    }
+
+    public void setCleanModeListener(OnCleanModeChangerListener onCleanModeChangerListener) {
+        this.onCleanModeChangerListener = onCleanModeChangerListener;
+    }
+
+    public void setCleanMode() {
+        isCleanMode = true;
+        //更新缓存
+        fakeCache = Bitmap.createBitmap(imgCache);
+        mPath.reset();
+        initCleaner();
+        if (null != onCleanModeChangerListener)
+            onCleanModeChangerListener.onChange(isCleanMode);
+//        mCleanPath.reset();
+    }
+
+    public void cancelCleanMode() {
+        isCleanMode = false;
+        fakeCache = Bitmap.createBitmap(imgCache);
+        if (null != onCleanModeChangerListener)
+            onCleanModeChangerListener.onChange(isCleanMode);
+    }
+
+    public boolean isCleanMode() {
+        return isCleanMode;
+    }
+
+
+    public int getPaintWidth() {
+        return (int) mPaint.getStrokeWidth();
     }
 
     public Bitmap getBitmapCache() {
-        return fakeCache;
+        return imgCache;
     }
 
-    @Override
-    public void draw(Canvas canvas) {
-        super.draw(canvas);
-        if (null != fakeCache) {
-            //每次绘制都会把缓存中的绘制一遍
-            RectF rectF = new RectF(0, 0, fakeCache.getWidth(), fakeCache.getHeight());
-            canvas.drawBitmap(fakeCache, null, rectF, mPaint);
-        }
+    public void clear() {
+        mCleanPath.reset();
+        mPath.reset();
+        mCanvas = null;
+        fakeCache = null;
+        postInvalidate();
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+        canvas.drawColor(bgColor);
         if (null == mCanvas) {
             //新建一个canvas 模仿自带的画一样的图
             imgCache = Bitmap.createBitmap(getMeasuredWidth(), getMeasuredHeight(), Bitmap.Config.ARGB_8888);
             mCanvas = new Canvas(imgCache);
         }
         if (null != fakeCache) {
-            draw(canvas);
+            //每次绘制都会把缓存中的绘制一遍
+            Rect rectF = new Rect(0, 0, fakeCache.getWidth(), fakeCache.getHeight());
+            Paint paint = new Paint();
+            //设置覆盖模式，让新画的内容覆盖在bitmap上面
+            paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_OVER));
+            canvas.drawBitmap(fakeCache, rectF, rectF, paint);
         }
-        if (null != mCanvas) {
-            //自定义一个canvas抄袭绘制过程并且保存在bitmap中
-            mCanvas.drawColor(bgColor);
-            mCanvas.drawPath(mPath, mPaint);
+
+        if (isCleanMode) {
+            //清除模式
+            if (null != mCanvas) {
+                //自定义一个canvas抄袭绘制过程并且保存在bitmap中
+                mCanvas.drawPath(mCleanPath, mCleanPaint);
+            }
+            canvas.drawPath(mCleanPath, mCleanPaint);
+            mCleanPath.moveTo(lastX, lastY);
+        } else {
+            if (null != mCanvas) {
+                //自定义一个canvas抄袭绘制过程并且保存在bitmap中
+                mCanvas.drawPath(mPath, mPaint);
+            }
+            canvas.drawPath(mPath, mPaint);
+            mPath.moveTo(lastX, lastY);
         }
-        canvas.drawColor(bgColor);
-        canvas.drawPath(mPath, mPaint);
-        mPath.moveTo(lastX, lastY);
     }
 
-    private Paint mPaint;
-    private Path mPath;
-    private int bgColor = Color.WHITE;
-    private Canvas mCanvas;
-//    private Bitmap bpBackGround ;
 
     private void init() {
         mPaint = new Paint();
         mPaint.setColor(getResources().getColor(R.color.black));
         mPaint.setAntiAlias(true);
-        mPaint.setStrokeWidth(20);
+        mPaint.setStrokeWidth(mPaintWidth);
+        mPaint.setDither(true);
         mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
         mPaint.setStrokeCap(Paint.Cap.ROUND);
-
         mPath = new Path();
-        setDrawingCacheEnabled(true);
+
+        initCleaner();
     }
 
+    private void initCleaner() {
+        mCleanPath = new Path();
+        mCleanPaint = new Paint();
+        mCleanPaint.setColor(bgColor);
+        mCleanPaint.setAntiAlias(true);
+        mCleanPaint.setStrokeWidth(mPaintWidth);
+        mCleanPaint.setDither(true);
+        mCleanPaint.setStyle(Paint.Style.FILL_AND_STROKE);
+        mCleanPaint.setStrokeCap(Paint.Cap.ROUND);
+    }
 
     private float lastX = 0, lastY = 0;
 
@@ -127,24 +196,50 @@ public class DrawView extends android.support.v7.widget.AppCompatImageView {
     public boolean onTouchEvent(MotionEvent event) {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                if (lastX == 0 && lastY == 0) {
-                    lastX = event.getX();
-                    lastY = event.getY();
-                    mPath.moveTo(lastX, lastY);
+                //橡皮擦模式
+                if (isCleanMode) {
+                    if (lastY == 0 && lastX == 0) {
+                        lastX = event.getX();
+                        lastY = event.getY();
+                        mCleanPath.moveTo(event.getX(), event.getY());
+                    } else {
+                        mCleanPath.lineTo(event.getX(), event.getY());
+                    }
                 } else {
-                    mPath.lineTo(event.getX(), event.getY());
+                    //绘图模式
+                    if (lastX == 0 && lastY == 0) {
+                        lastX = event.getX();
+                        lastY = event.getY();
+                        mPath.moveTo(lastX, lastY);
+                    } else {
+                        mPath.lineTo(event.getX(), event.getY());
+                    }
                 }
                 postInvalidate();
                 return true;
             case MotionEvent.ACTION_MOVE:
-                if (lastX == 0 && lastY == 0) {
-                    lastX = event.getX();
-                    lastY = event.getY();
-                    mPath.moveTo(lastX, lastY);
+                //橡皮擦模式
+                if (isCleanMode) {
+                    if (lastY == 0 && lastX == 0) {
+                        lastX = event.getX();
+                        lastY = event.getY();
+                        mCleanPath.moveTo(lastX, lastY);
+                    } else {
+                        lastX = event.getX();
+                        lastY = event.getY();
+                        mCleanPath.lineTo(lastX, lastY);
+                    }
                 } else {
-                    lastX = event.getX();
-                    lastY = event.getY();
-                    mPath.lineTo(lastX, lastY);
+                    //绘图模式
+                    if (lastX == 0 && lastY == 0) {
+                        lastX = event.getX();
+                        lastY = event.getY();
+                        mPath.moveTo(lastX, lastY);
+                    } else {
+                        lastX = event.getX();
+                        lastY = event.getY();
+                        mPath.lineTo(lastX, lastY);
+                    }
                 }
                 postInvalidate();
                 return true;
@@ -155,6 +250,9 @@ public class DrawView extends android.support.v7.widget.AppCompatImageView {
             default:
                 return true;
         }
+    }
 
+    public interface OnCleanModeChangerListener {
+        void onChange(boolean isCleanMode);
     }
 }
