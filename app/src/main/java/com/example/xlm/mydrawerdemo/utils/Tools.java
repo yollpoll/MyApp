@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
@@ -28,6 +29,8 @@ import com.example.xlm.mydrawerdemo.view.SecretTextView;
 
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -304,5 +307,37 @@ public class Tools {
                 activity.startActivityForResult(intent, PIC_FROM_PHOTO);
             }
         });
+    }
+
+    /**
+     * 保存图片到本地
+     *
+     * @param context
+     * @param bitmap
+     */
+    public static String saveImage(Context context, Bitmap bitmap, String imageName) {
+        //替换/
+        String img = imageName.replace("/", "_");
+        File cacheDir = context.getExternalCacheDir();
+        File cacheImage = new File(cacheDir + "/"  + img);
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream(cacheImage);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
+            fos.flush();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (fos != null) {
+                try {
+                    fos.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return cacheImage.getAbsolutePath();
     }
 }

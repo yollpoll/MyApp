@@ -1,5 +1,12 @@
 package com.example.xlm.mydrawerdemo.http;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.squareup.okhttp.MediaType;
+import com.squareup.okhttp.RequestBody;
+
+import java.io.File;
+
 import retrofit.GsonConverterFactory;
 import retrofit.Retrofit;
 
@@ -7,11 +14,12 @@ import retrofit.Retrofit;
  * Created by xlm on 2015/11/24.
  */
 public class Httptools {
-    private static Httptools instance=null;
-    private static Retrofit retrofit=null;
-    public Retrofit getRetrofit(){
-        if(retrofit==null){
-             retrofit=new Retrofit.Builder()
+    private static Httptools instance = null;
+    private static Retrofit retrofit = null;
+
+    public Retrofit getRetrofit() {
+        if (retrofit == null) {
+            retrofit = new Retrofit.Builder()
                     .baseUrl(Port.HEAD_URL)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
@@ -20,9 +28,23 @@ public class Httptools {
     }
 
     public static Httptools getInstance() {
-        if(instance==null){
-            instance=new Httptools();
+        if (instance == null) {
+            instance = new Httptools();
         }
         return instance;
+    }
+
+
+    /**
+     * 根据文件创建requestbody
+     *
+     * @param file
+     * @return
+     */
+    public RequestBody getRequestBody(File file) {
+        // 创建 RequestBody，用于封装构建RequestBody
+        RequestBody requestFile =
+                RequestBody.create(MediaType.parse("multipart/form-data"), file);
+        return requestFile;
     }
 }

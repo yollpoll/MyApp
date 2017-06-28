@@ -1,8 +1,6 @@
 package com.example.xlm.mydrawerdemo.Activity;
 
 import android.animation.ObjectAnimator;
-import android.annotation.TargetApi;
-import android.app.Dialog;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
@@ -13,42 +11,27 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.design.widget.TextInputEditText;
 import android.support.v4.util.Pair;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.transition.ChangeBounds;
-import android.transition.ChangeImageTransform;
-import android.transition.ChangeTransform;
-import android.transition.Explode;
-import android.transition.Fade;
-import android.transition.Transition;
-import android.transition.TransitionManager;
-import android.transition.TransitionSet;
-import android.transition.TransitionValues;
-import android.transition.Visibility;
-import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.Window;
-import android.view.WindowManager;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
-import android.view.animation.AnimationSet;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
-import android.view.animation.TranslateAnimation;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.xlm.mydrawerdemo.API.FormListService;
+import com.example.xlm.mydrawerdemo.API.NewThreadService;
 import com.example.xlm.mydrawerdemo.R;
 import com.example.xlm.mydrawerdemo.base.BaseActivity;
 import com.example.xlm.mydrawerdemo.bean.ChildForm;
@@ -58,9 +41,12 @@ import com.example.xlm.mydrawerdemo.http.Httptools;
 import com.example.xlm.mydrawerdemo.utils.SPUtiles;
 import com.example.xlm.mydrawerdemo.utils.ToastUtils;
 import com.example.xlm.mydrawerdemo.utils.Tools;
+import com.squareup.okhttp.RequestBody;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.lang.reflect.Field;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -87,6 +73,9 @@ public class NewThreadActivity extends BaseActivity implements View.OnLongClickL
     private List<ChildForm> listTag = new ArrayList<>();
     private ImageView imgEmoji, imgPic, imgDraw, imgSend;
     private ImageView imgPicContent;
+    private String imgPath;
+    private TextInputEditText edtName, edtTitle, edtEmail;
+    private boolean isWater;
 
     public static void gotoNewThreadActivity(Context context, String tagName, String tagId) {
         Intent intent = new Intent(context, NewThreadActivity.class);
@@ -115,6 +104,7 @@ public class NewThreadActivity extends BaseActivity implements View.OnLongClickL
                 ContentResolver cr = this.getContentResolver();
                 try {
                     Bitmap bitmap = BitmapFactory.decodeStream(cr.openInputStream(uri));
+                    imgPath = Tools.saveImage(this, bitmap, "temp.jpg");
                     imgPicContent.setVisibility(View.VISIBLE);
                     imgPicContent.setImageBitmap(bitmap);
                 } catch (FileNotFoundException e) {
@@ -140,10 +130,36 @@ public class NewThreadActivity extends BaseActivity implements View.OnLongClickL
                 Bitmap bitmap;
                 try {
                     bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(Tools.imgUri));
+                    imgPath = Tools.imgUri.getPath();
                     imgPicContent.setVisibility(View.VISIBLE);
                     imgPicContent.setImageBitmap(bitmap);
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
+                }
+                break;
+            case DrawingActivity.REQUEST_DRAWING:
+                if (resultCode == RESULT_OK) {
+                    String drawPath = data.getStringExtra("path");
+                    imgPath = drawPath;
+                    Bitmap bitmapDraw;
+                    FileInputStream fileInputStream = null;
+                    try {
+                        File file = new File(drawPath);
+                        fileInputStream = new FileInputStream(file);
+                        bitmapDraw = BitmapFactory.decodeStream(fileInputStream);
+                        imgPicContent.setVisibility(View.VISIBLE);
+                        imgPicContent.setImageBitmap(bitmapDraw);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    } finally {
+                        if (null != fileInputStream) {
+                            try {
+                                fileInputStream.close();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
                 }
                 break;
         }
@@ -173,6 +189,9 @@ public class NewThreadActivity extends BaseActivity implements View.OnLongClickL
         imgDraw = (ImageView) findViewById(R.id.img_draw);
         imgSend = (ImageView) findViewById(R.id.img_send);
         imgPicContent = (ImageView) findViewById(R.id.img_pic_content);
+        edtName = (TextInputEditText) findViewById(R.id.txtEdt_name);
+        edtTitle = (TextInputEditText) findViewById(R.id.txtEdt_title);
+        edtEmail = (TextInputEditText) findViewById(R.id.txtEdt_email);
 
         imgPicContent.setOnLongClickListener(this);
         imgSend.setOnClickListener(this);
@@ -342,6 +361,40 @@ public class NewThreadActivity extends BaseActivity implements View.OnLongClickL
         Tools.showChoosePicDialog(this);
     }
 
+    private void send() {
+        int water = isWater ? 1 : 0;//水印
+        RequestBody requestBody = null;
+        if (!TextUtils.isEmpty(imgPath)) {
+            File file = new File(imgPath);
+            if (file.exists()) {
+                requestBody = Httptools.getInstance().getRequestBody(file);
+            }
+        }
+        NewThreadService newThreadService = retrofit.create(NewThreadService.class);
+        Call<String> call;
+        if (null == requestBody) {
+            call = newThreadService.newThread(tagId, edtName.getText().toString(),
+                    edtTitle.getText().toString(), edtEmail.getText().toString(), edtContent.getText().toString(),
+                    water + "");
+        } else {
+            call = newThreadService.newThread(tagId, edtName.getText().toString(),
+                    edtTitle.getText().toString(), edtEmail.getText().toString(), edtContent.getText().toString(),
+                    water + "", requestBody);
+        }
+
+        call.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Response<String> response, Retrofit retrofit) {
+                Log.d("spq", response.body());
+            }
+
+            @Override
+            public void onFailure(Throwable throwable) {
+                Log.d("spq", throwable.getMessage());
+            }
+        });
+    }
+
     @Override
     public void onClick(View v) {
         super.onClick(v);
@@ -366,7 +419,7 @@ public class NewThreadActivity extends BaseActivity implements View.OnLongClickL
                 DrawingActivity.gotoDrawingActivity(NewThreadActivity.this);
                 break;
             case R.id.img_send:
-
+                send();
                 break;
         }
     }

@@ -7,7 +7,7 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:textColorPrimary">#ffffff</item>
+        <!--<item name="android:textColorPrimary">#ffffff</item>-->
         <item name="android:navigationBarColor">@color/colorPrimary</item>
         <!--actionMode不不覆盖toolbar-->
         <item name="windowActionModeOverlay">true</item>
@@ -26,6 +26,10 @@
 
         <!--返回键样式-->
         <item name="drawerArrowStyle">@style/AppTheme.DrawerArrowToggle</item>
+    </style>
+
+    <style name="mainActivityStyle" parent="AppTheme">
+        <item name="android:textColorPrimary">#ffffff</item>
     </style>
 
     <style name="AppTheme.DrawerArrowToggle" parent="Base.Widget.AppCompat.DrawerArrowToggle">

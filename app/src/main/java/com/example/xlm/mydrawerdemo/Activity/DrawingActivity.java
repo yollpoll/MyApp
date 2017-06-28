@@ -1,5 +1,6 @@
 package com.example.xlm.mydrawerdemo.Activity;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -15,6 +16,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.transition.Transition;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -48,6 +50,7 @@ import me.imid.swipebacklayout.lib.app.SwipeBackActivity;
  */
 
 public class DrawingActivity extends BaseActivity implements View.OnLongClickListener {
+    public static final int REQUEST_DRAWING = 1234;
     private DrawView mDrawView;
     private FloatingActionButton flbMenu;
     private Toolbar mToolbar;
@@ -56,9 +59,9 @@ public class DrawingActivity extends BaseActivity implements View.OnLongClickLis
     //    private ImageView imgCache;
     private ImageView imgCleaner;
 
-    public static void gotoDrawingActivity(Context context) {
-        Intent intent = new Intent(context, DrawingActivity.class);
-        context.startActivity(intent);
+    public static void gotoDrawingActivity(Activity activity) {
+        Intent intent = new Intent(activity, DrawingActivity.class);
+        activity.startActivityForResult(intent, REQUEST_DRAWING);
     }
 
     @Override
@@ -71,7 +74,18 @@ public class DrawingActivity extends BaseActivity implements View.OnLongClickLis
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_submit:
-
+                new AlertDialog.Builder(this).setMessage(R.string.sure_submit)
+                        .setPositiveButton("提交", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                submit();
+                            }
+                        }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                }).create().show();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -84,6 +98,31 @@ public class DrawingActivity extends BaseActivity implements View.OnLongClickLis
         setContentView(R.layout.activity_drawing);
         initView();
         initData();
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            myFinsh();
+            return true;
+        } else {
+            return super.onKeyDown(keyCode, event);
+        }
+    }
+
+    private void myFinsh() {
+        new AlertDialog.Builder(DrawingActivity.this).setMessage(R.string.sure_exit)
+                .setPositiveButton("退出", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        DrawingActivity.this.finish();
+                    }
+                }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        }).create().show();
     }
 
     private void initView() {
@@ -112,11 +151,7 @@ public class DrawingActivity extends BaseActivity implements View.OnLongClickLis
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    DrawingActivity.this.finishAfterTransition();
-                } else {
-                    DrawingActivity.this.finish();
-                }
+                myFinsh();
             }
         });
     }
@@ -126,18 +161,6 @@ public class DrawingActivity extends BaseActivity implements View.OnLongClickLis
         super.onClick(v);
         switch (v.getId()) {
             case R.id.fb_menu:
-                break;
-            case R.id.img_color:
-                changeColor();
-                break;
-            case R.id.img_width:
-                changeWidth();
-                break;
-            case R.id.img_clear:
-                clear();
-                break;
-            case R.id.img_cleaner:
-                clean();
                 break;
         }
     }
@@ -235,6 +258,13 @@ public class DrawingActivity extends BaseActivity implements View.OnLongClickLis
         });
     }
 
+    private void submit() {
+        Intent intent = getIntent();
+        intent.putExtra("path", Tools.saveImage(this, mDrawView.getBitmapCache(), "draw_" + System.currentTimeMillis() + ".jpg"));
+        setResult(RESULT_OK, intent);
+        this.finish();
+    }
+
     private void changeWidth() {
         final Dialog dialog = new Dialog(this);
         dialog.setContentView(R.layout.dialog_brush_width);
@@ -293,7 +323,7 @@ public class DrawingActivity extends BaseActivity implements View.OnLongClickLis
 
     private void clear() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("确定要清空吗？")
+        builder.setMessage(R.string.sure_clear)
                 .setPositiveButton("清空", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

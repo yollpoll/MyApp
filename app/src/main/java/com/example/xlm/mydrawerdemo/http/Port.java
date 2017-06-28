@@ -14,9 +14,11 @@ public class Port {
     public final static String GET_ARTICLE = "Api/showf";
     public final static String GET_CHILD_ARTICLE = "Api/thread";
     public final static String GET_COOKIE = "/Api/getCookie";
-    public final static String NEW_OR_REPLY = HEAD_URL + "Home/Forum/doPostThread.html";
+    public final static String NEW_THREAD = HEAD_URL + "Home/Forum/doPostThread.html";
+    public final static String REPLY_THREAD = HEAD_URL + "Home/Forum/doReplyThread.html";
+
     //查看订阅
-    public static final String COLLECTION=HEAD_URL+"Api/feed";
-    public static final String ADD_COLLECTION=HEAD_URL+"Api/addFeed";
-    public static final String DEL_COLLECTION=HEAD_URL+"Api/delFeed";
+    public static final String COLLECTION = HEAD_URL + "Api/feed";
+    public static final String ADD_COLLECTION = HEAD_URL + "Api/addFeed";
+    public static final String DEL_COLLECTION = HEAD_URL + "Api/delFeed";
 }

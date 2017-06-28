@@ -10,4 +10,7 @@
     <item name="img_width" type="id" />
     <item name="img_cleaner" type="id" />
     <item name="img_clear" type="id" />
+    <string name="sure_exit">确认退出？</string>
+    <string name="sure_submit">确认提交？</string>
+    <string name="sure_clear">确定要清空吗？？</string>
 </resources>

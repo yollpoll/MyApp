@@ -118,7 +118,8 @@ public class DrawView extends View {
     }
 
     public Bitmap getBitmapCache() {
-        return imgCache;
+        fakeCache = Bitmap.createBitmap(imgCache);
+        return fakeCache;
     }
 
     public void clear() {
