@@ -20,6 +20,9 @@ import com.example.xlm.mydrawerdemo.http.Httptools;
 import com.example.xlm.mydrawerdemo.utils.SPUtiles;
 import com.example.xlm.mydrawerdemo.utils.ToastUtils;
 
+import java.net.CookieManager;
+import java.net.CookiePolicy;
+
 import retrofit.Call;
 import retrofit.Callback;
 import retrofit.Response;
@@ -61,7 +64,7 @@ public class SetActivity extends BaseSwipeActivity {
         cookie = SPUtiles.getCookie();
         if (TextUtils.isEmpty(cookie))
             cookie = "当前饼干是: 暂时没有饼干";
-        tvCurrentCookie.setText("当前饼干是:"+cookie);
+        tvCurrentCookie.setText("当前饼干是:" + cookie);
 
         retrofit = Httptools.getInstance().getRetrofit();
     }
@@ -92,6 +95,7 @@ public class SetActivity extends BaseSwipeActivity {
     private void getCookie() {
 //        retrofit.client().interceptors().add(new AddCookieInterceptor());
         retrofit.client().interceptors().add(new GetCookieInterceptor());
+        retrofit.client().getCookieHandler().setDefault(new CookieManager(null, CookiePolicy.ACCEPT_ALL));
         GetCookieService cookieService = retrofit.create(GetCookieService.class);
         Call<String> call = cookieService.getArticleList();
         call.enqueue(new Callback<String>() {
@@ -103,7 +107,7 @@ public class SetActivity extends BaseSwipeActivity {
                 } else {
                     cookie = SPUtiles.getCookie();
                 }
-                tvCurrentCookie.setText("当前饼干是："+cookie);
+                tvCurrentCookie.setText("当前饼干是：" + cookie);
                 ToastUtils.SnakeShowShort(llRoot, response.body());
             }
 

@@ -25,6 +25,7 @@ public class Httptools {
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
         }
+        retrofit.client().interceptors().add(new AddCookieInterceptor());
         return retrofit;
     }
 
@@ -45,7 +46,7 @@ public class Httptools {
     public static RequestBody getRequestBody(File file) {
         // 创建 RequestBody，用于封装构建RequestBody
         RequestBody requestFile =
-                RequestBody.create(MediaType.parse("image/jpeg"), file);
+                RequestBody.create(MediaType.parse("image/jpg"), file);
         return requestFile;
     }
 

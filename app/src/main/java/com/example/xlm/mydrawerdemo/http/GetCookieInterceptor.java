@@ -8,7 +8,12 @@ import com.squareup.okhttp.Response;
 
 import java.io.IOException;
 import java.net.CookieHandler;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 import rx.Observable;
 import rx.functions.Action1;
@@ -23,22 +28,31 @@ public class GetCookieInterceptor implements Interceptor {
     public Response intercept(Chain chain) throws IOException {
         Response originalResponse = chain.proceed(chain.request());
         if (!originalResponse.headers("Set-Cookie").isEmpty()) {
-            final StringBuffer cookieBuffer = new StringBuffer();
+            final Map<String, String> cookieMap = new HashMap<>();
+            String cookie = "";
             Observable.from(originalResponse.headers("Set-Cookie"))
-                    .map(new Func1<String, String>() {
+                    .flatMap(new Func1<String, Observable<String>>() {
                         @Override
-                        public String call(String s) {
+                        public Observable<String> call(String s) {
                             String[] cookieArray = s.split(";");
-                            return s+";";
+                            return Observable.from(cookieArray);
                         }
                     })
                     .subscribe(new Action1<String>() {
                         @Override
                         public void call(String cookie) {
-                            cookieBuffer.append(cookie);
+                            String[] cookieList = cookie.split("=");
+                            try {
+                                cookieMap.put(cookieList[0], cookieList[1]);
+                            } catch (Exception e) {
+
+                            }
                         }
                     });
-            SPUtiles.saveCookie(cookieBuffer.toString());
+            for (String key : cookieMap.keySet()) {
+                cookie += key + "=" + cookieMap.get(key) + ";";
+            }
+            SPUtiles.saveCookie(cookie);
         }
         return originalResponse;
     }

@@ -8,13 +8,17 @@ import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 
 /**
  * Created by 鹏祺 on 2017/6/1.
  */
 
 public class AddCookieInterceptor implements Interceptor {
+    final Map<String, String> cookieMap = new HashMap<>();
+
     @Override
     public Response intercept(Chain chain) throws IOException {
         String cookie = SPUtiles.getCookie();
