@@ -2,14 +2,20 @@ package com.example.xlm.mydrawerdemo.API;
 
 import com.example.xlm.mydrawerdemo.http.Port;
 import com.squareup.okhttp.RequestBody;
+import com.squareup.okhttp.ResponseBody;
+
+import java.util.Map;
 
 import retrofit.Call;
+import retrofit.Response;
 import retrofit.http.GET;
 import retrofit.http.Multipart;
 import retrofit.http.POST;
 import retrofit.http.Part;
+import retrofit.http.PartMap;
 import retrofit.http.Path;
 import retrofit.http.Query;
+import rx.Observable;
 
 /**
  * Created by 鹏祺 on 2017/5/25.
@@ -30,10 +36,9 @@ public interface NewThreadService {
      */
     @Multipart
     @POST(Port.NEW_THREAD)
-    Call<String> newThread(@Query("fid") String fid, @Query("name") String name, @Query("title") String title, @Query("email") String email,
-                           @Query("content") String content, @Query("water") String water, @Part("image") RequestBody file);
+    Call<ResponseBody> newThread(@Part("fid") RequestBody fid, @Part("name") RequestBody name, @Part("title") RequestBody title, @Part("email") RequestBody email,
+                                 @Part("content") RequestBody content, @Part("water") RequestBody water, @Part("image") RequestBody file);
 
-//    "/fid/{fid}/name/{name}/title/{title}/email/{email}/content/{content}/water/{water}/"
 
     /**
      * 不带图片
@@ -43,14 +48,41 @@ public interface NewThreadService {
      * @param title
      * @param email
      * @param content
-     * @param water
      * @return
      */
     @Multipart
     @POST(Port.NEW_THREAD)
-    Call<String> newThread(@Query("fid") String fid, @Query("name") String name, @Query("title") String title, @Query("email") String email,
-                           @Query("content") String content, @Query("water") String water);
+    Call<ResponseBody> newThread(@Part("fid") RequestBody fid, @Part("name") RequestBody name, @Part("title") RequestBody title, @Part("email") RequestBody email,
+                                 @Part("content") RequestBody content);
 
-    @POST(Port.REPLY_THREAD + "/fid/{fid}/name/{name}/title/{title}/email/{email}/content/{content}/water/{water}/image/{image}")
-    Call<String> replyThread();
+    /**
+     * 回复
+     *
+     * @param resto
+     * @param name
+     * @param title
+     * @param email
+     * @param content
+     * @return
+     */
+    @Multipart
+    @POST(Port.REPLY_THREAD)
+    Call<ResponseBody> replyThread(@Part("resto") RequestBody resto, @Part("content") RequestBody content, @Part("name") RequestBody name, @Part("title") RequestBody title,
+                                   @Part("email") RequestBody email);
+
+    /**
+     * 回复(帶圖片)
+     *
+     * @param resto
+     * @param name
+     * @param title
+     * @param email
+     * @param content
+     * @param water
+     * @return
+     */
+    @Multipart
+    @POST(Port.REPLY_THREAD)
+    Call<ResponseBody> replyThread(@Part("resto") RequestBody resto, @Part("content") RequestBody content, @Part("name") RequestBody name, @Part("title") RequestBody title,
+                                   @Part("email") RequestBody email, @Part("water") RequestBody water, @Part("image") RequestBody file);
 }

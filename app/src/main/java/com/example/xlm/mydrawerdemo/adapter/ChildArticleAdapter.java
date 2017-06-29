@@ -66,6 +66,8 @@ public class ChildArticleAdapter extends RecyclerView.Adapter<ChildArticleAdapte
         void onItemClick(View view, int position);
 
         void onImageClick(View view, int position);
+
+        void onLongClick(View view, int position);
     }
 
     @Override
@@ -105,6 +107,15 @@ public class ChildArticleAdapter extends RecyclerView.Adapter<ChildArticleAdapte
                 }
             });
         }
+        if (null != onItemClickListener) {
+            holder.layoutItem.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    onItemClickListener.onLongClick(v, holder.getAdapterPosition());
+                    return true;
+                }
+            });
+        }
         if ("".equals(item.getImg())) {
             holder.imgContent.setVisibility(View.GONE);
         } else {
@@ -126,7 +137,7 @@ public class ChildArticleAdapter extends RecyclerView.Adapter<ChildArticleAdapte
     }
 
     public void addAll(List<Reply> data) {
-        if(data==null)
+        if (data == null)
             return;
         int start = list.size();
         list.addAll(data);
@@ -134,7 +145,7 @@ public class ChildArticleAdapter extends RecyclerView.Adapter<ChildArticleAdapte
     }
 
     public void refresh(List<Reply> data) {
-        if(data==null)
+        if (data == null)
             return;
         list.clear();
         list.addAll(data);
@@ -164,7 +175,7 @@ public class ChildArticleAdapter extends RecyclerView.Adapter<ChildArticleAdapte
 
     public static Reply getRelay(String id) {
         for (Reply reply : list) {
-            if (("No."+reply.getId()).equals(id)) {
+            if (("No." + reply.getId()).equals(id)) {
                 return reply;
             }
         }

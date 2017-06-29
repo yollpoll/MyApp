@@ -1,9 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <item android:id="@+id/action_collect"
-        android:title="订阅"
+    <item
+        android:id="@+id/action_reply"
+        android:icon="@mipmap/icon_reply"
+        android:orderInCategory="1"
+        android:title="回复"
+        app:showAsAction="always"></item>
+    <item
+        android:id="@+id/action_collect"
         android:icon="@mipmap/icon_discollect"
-        app:showAsAction="always"
-        android:orderInCategory="1"></item>
+        android:orderInCategory="1"
+        android:title="订阅"
+        app:showAsAction="always"></item>
+
 </menu>

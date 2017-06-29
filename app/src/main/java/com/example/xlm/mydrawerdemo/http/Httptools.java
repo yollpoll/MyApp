@@ -2,6 +2,7 @@ package com.example.xlm.mydrawerdemo.http;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.stream.JsonReader;
 import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.RequestBody;
 
@@ -41,10 +42,23 @@ public class Httptools {
      * @param file
      * @return
      */
-    public RequestBody getRequestBody(File file) {
+    public static RequestBody getRequestBody(File file) {
         // 创建 RequestBody，用于封装构建RequestBody
         RequestBody requestFile =
-                RequestBody.create(MediaType.parse("multipart/form-data"), file);
+                RequestBody.create(MediaType.parse("image/jpeg"), file);
         return requestFile;
+    }
+
+    /**
+     * 根据文件创建requestbody
+     *
+     * @param content
+     * @return
+     */
+    public static RequestBody getRequestBody(String content) {
+        // 创建 RequestBody，用于封装构建RequestBody
+        RequestBody requestBody =
+                RequestBody.create(MediaType.parse("text/plain"), content);
+        return requestBody;
     }
 }

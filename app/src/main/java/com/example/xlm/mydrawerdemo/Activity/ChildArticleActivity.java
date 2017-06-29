@@ -124,6 +124,9 @@ public class ChildArticleActivity extends BaseSwipeActivity implements View.OnCl
                     });
                 }
                 return true;
+            case R.id.action_reply:
+                NewThreadActivity.gotoReplyThreadActivity(ChildArticleActivity.this, articleId);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -148,7 +151,7 @@ public class ChildArticleActivity extends BaseSwipeActivity implements View.OnCl
         ids = CollectionBean.getIds(MyApplication.getInstance().getUuId());
         for (String id : ids) {
             if (id.equals(articleId)) {
-                isCollected=true;
+                isCollected = true;
                 item.setIcon(R.mipmap.icon_collect);
             }
         }
@@ -188,6 +191,11 @@ public class ChildArticleActivity extends BaseSwipeActivity implements View.OnCl
 //                intent.putExtra("url",url);
 //                ChildArticleActivity.this.startActivity(intent);
                 ImageActivity.gotoImageActivity(ChildArticleActivity.this, url, data.get(position).getImg() + data.get(position).getExt(), view);
+            }
+
+            @Override
+            public void onLongClick(View view, int position) {
+
             }
         });
         recyclerChildArticle.setLayoutManager(linearLayoutManager);

@@ -10,6 +10,7 @@ import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.util.Pair;
@@ -38,15 +39,27 @@ import com.example.xlm.mydrawerdemo.bean.ChildForm;
 import com.example.xlm.mydrawerdemo.bean.Form;
 import com.example.xlm.mydrawerdemo.fragment.ChooseEmojiDialogFragment;
 import com.example.xlm.mydrawerdemo.http.Httptools;
+import com.example.xlm.mydrawerdemo.utils.Constant;
 import com.example.xlm.mydrawerdemo.utils.SPUtiles;
 import com.example.xlm.mydrawerdemo.utils.ToastUtils;
 import com.example.xlm.mydrawerdemo.utils.Tools;
+import com.squareup.okhttp.MediaType;
+import com.squareup.okhttp.MultipartBuilder;
 import com.squareup.okhttp.RequestBody;
+import com.squareup.okhttp.ResponseBody;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,12 +67,17 @@ import retrofit.Call;
 import retrofit.Callback;
 import retrofit.Response;
 import retrofit.Retrofit;
+import retrofit.http.Multipart;
+import retrofit.http.PartMap;
 
 /**
  * Created by 鹏祺 on 2017/6/7.
  */
 
 public class NewThreadActivity extends BaseActivity implements View.OnLongClickListener {
+    public static final int TYPE_REPLY = 1;
+    public static final int TYPE_NEW = 2;
+
     private ImageView imgShowMoreTitle;
     private LinearLayout llMoreTitle;
     private Toolbar mToolbar;
@@ -76,11 +94,24 @@ public class NewThreadActivity extends BaseActivity implements View.OnLongClickL
     private String imgPath;
     private TextInputEditText edtName, edtTitle, edtEmail;
     private boolean isWater;
+    private int type;
+    private String resto;
+    private TextView tvTagLeft;
+
 
     public static void gotoNewThreadActivity(Context context, String tagName, String tagId) {
         Intent intent = new Intent(context, NewThreadActivity.class);
+        intent.putExtra("type", TYPE_NEW);
         intent.putExtra("tagName", tagName);
         intent.putExtra("tagId", tagId);
+        context.startActivity(intent);
+    }
+
+    //reply
+    public static void gotoReplyThreadActivity(Context context, String resto) {
+        Intent intent = new Intent(context, NewThreadActivity.class);
+        intent.putExtra("type", TYPE_REPLY);
+        intent.putExtra("resto", resto);
         context.startActivity(intent);
     }
 
@@ -192,6 +223,7 @@ public class NewThreadActivity extends BaseActivity implements View.OnLongClickL
         edtName = (TextInputEditText) findViewById(R.id.txtEdt_name);
         edtTitle = (TextInputEditText) findViewById(R.id.txtEdt_title);
         edtEmail = (TextInputEditText) findViewById(R.id.txtEdt_email);
+        tvTagLeft = (TextView) findViewById(R.id.tv_tag_left);
 
         imgPicContent.setOnLongClickListener(this);
         imgSend.setOnClickListener(this);
@@ -200,15 +232,14 @@ public class NewThreadActivity extends BaseActivity implements View.OnLongClickL
         imgEmoji.setOnClickListener(this);
         imgPic.setOnClickListener(this);
         imgDraw.setOnClickListener(this);
-        initTitle();
     }
 
-    private void initTitle() {
+    private void initTitle(String title) {
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setTitle("发串");
+        getSupportActionBar().setTitle(title);
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -218,16 +249,39 @@ public class NewThreadActivity extends BaseActivity implements View.OnLongClickL
     }
 
     private void initData() {
+        type = getIntent().getIntExtra("type", TYPE_NEW);
+        retrofit = Httptools.getInstance().getRetrofit();
+        switch (type) {
+            case TYPE_NEW:
+                initNewThreadData();
+                break;
+            case TYPE_REPLY:
+                initReplyThreadData();
+                break;
+        }
+//        getKeyBoardHeight();
+    }
+
+    //初始化发表新串
+    private void initNewThreadData() {
         tagName = getIntent().getStringExtra("tagName");
         tagId = getIntent().getStringExtra("tagId");
 
-        retrofit = Httptools.getInstance().getRetrofit();
         tvTag.setText(tagName);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             tvTag.setTransitionName(tagId);
         }
+        tvTagLeft.setText("板块");
+        initTitle("发串");
         getTagData();
-        getKeyBoardHeight();
+    }
+
+    //初始化回复
+    private void initReplyThreadData() {
+        resto = getIntent().getStringExtra("resto");
+        tvTag.setVisibility(View.GONE);
+        tvTagLeft.setText("更多可填写项");
+        initTitle("回复");
     }
 
     private void getTagData() {
@@ -361,6 +415,7 @@ public class NewThreadActivity extends BaseActivity implements View.OnLongClickL
         Tools.showChoosePicDialog(this);
     }
 
+    //发表新串
     private void send() {
         int water = isWater ? 1 : 0;//水印
         RequestBody requestBody = null;
@@ -371,29 +426,175 @@ public class NewThreadActivity extends BaseActivity implements View.OnLongClickL
             }
         }
         NewThreadService newThreadService = retrofit.create(NewThreadService.class);
-        Call<String> call;
-        if (null == requestBody) {
-            call = newThreadService.newThread(tagId, edtName.getText().toString(),
-                    edtTitle.getText().toString(), edtEmail.getText().toString(), edtContent.getText().toString(),
-                    water + "");
-        } else {
-            call = newThreadService.newThread(tagId, edtName.getText().toString(),
-                    edtTitle.getText().toString(), edtEmail.getText().toString(), edtContent.getText().toString(),
-                    water + "", requestBody);
-        }
+        Call<ResponseBody> call;
 
-        call.enqueue(new Callback<String>() {
+        RequestBody tagIdBody = RequestBody.create(MediaType.parse("text/plain"), tagId);
+        RequestBody contentBody = RequestBody.create(MediaType.parse("text/plain"), edtContent.getText().toString());
+        RequestBody nameBody = RequestBody.create(MediaType.parse("text/plain"), edtName.getText().toString());
+        RequestBody titleBody = RequestBody.create(MediaType.parse("text/plain"), edtTitle.getText().toString());
+        RequestBody emailBody = RequestBody.create(MediaType.parse("text/plain"), edtEmail.getText().toString());
+        RequestBody waterBody = RequestBody.create(MediaType.parse("text/plain"), water + "");
+
+        if (null == requestBody) {
+            call = newThreadService.newThread(tagIdBody, nameBody, titleBody, emailBody, contentBody);
+        } else {
+            call = newThreadService.newThread(tagIdBody, nameBody, titleBody, emailBody, contentBody, waterBody, requestBody);
+        }
+        call.enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(Response<String> response, Retrofit retrofit) {
-                Log.d("spq", response.body());
+            public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
+                if (writeResponseBodyToDisk(response.body())) {
+                    File futureStudioIconFile = new File(
+                            Environment.getExternalStorageDirectory().getPath()
+                                    + Constant.SD_CACHE_DIR
+                                    + Constant.NEW_THREAD_RESPONSE_PATH);
+                    try {
+                        Document document = Jsoup.parse(futureStudioIconFile, "UTF-8");
+                        Elements content = document.getElementsByClass("system-message");
+                        for (Element element : content) {
+                            String success = element.getElementsByClass("success").text();
+                            if (!TextUtils.isEmpty(success)) {
+                                ToastUtils.showShort(success);
+                                NewThreadActivity.this.finish();
+                            }
+                            String error = element.getElementsByClass("error").text();
+                            if (!TextUtils.isEmpty(error)) {
+                                ToastUtils.SnakeShowShort(rlRoot, error);
+                                break;
+                            }
+                        }
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
 
             @Override
             public void onFailure(Throwable throwable) {
-                Log.d("spq", throwable.getMessage());
             }
         });
     }
+
+    //回复
+    private void reply() {
+        int water = isWater ? 1 : 0;//水印
+        RequestBody requestBody = null;
+
+        NewThreadService newThreadService = retrofit.create(NewThreadService.class);
+        Call<ResponseBody> call;
+
+        if (!TextUtils.isEmpty(imgPath)) {
+            File file = new File(imgPath);
+            if (file.exists()) {
+                requestBody = Httptools.getInstance().getRequestBody(file);
+            }
+        }
+        RequestBody restoBody = RequestBody.create(MediaType.parse("text/plain"), resto);
+        RequestBody contentBody = RequestBody.create(MediaType.parse("text/plain"), edtContent.getText().toString());
+        RequestBody nameBody = RequestBody.create(MediaType.parse("text/plain"), edtName.getText().toString());
+        RequestBody titleBody = RequestBody.create(MediaType.parse("text/plain"), edtTitle.getText().toString());
+        RequestBody emailBody = RequestBody.create(MediaType.parse("text/plain"), edtEmail.getText().toString());
+        RequestBody waterBody = RequestBody.create(MediaType.parse("text/plain"), water + "");
+        if (null == requestBody) {
+            call = newThreadService.replyThread(restoBody, contentBody, nameBody, titleBody, emailBody);
+        } else {
+            call = newThreadService.replyThread(restoBody, contentBody, nameBody, titleBody, emailBody, waterBody, requestBody);
+        }
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
+                if (writeResponseBodyToDisk(response.body())) {
+                    File futureStudioIconFile = new File(
+                            Environment.getExternalStorageDirectory().getPath()
+                                    + Constant.SD_CACHE_DIR
+                                    + Constant.NEW_THREAD_RESPONSE_PATH);
+                    try {
+                        Document document = Jsoup.parse(futureStudioIconFile, "UTF-8");
+                        Elements content = document.getElementsByClass("system-message");
+                        for (Element element : content) {
+                            String success = element.getElementsByClass("success").text();
+                            if (!TextUtils.isEmpty(success)) {
+                                ToastUtils.showShort(success);
+                                NewThreadActivity.this.finish();
+                            }
+                            String error = element.getElementsByClass("error").text();
+                            if (!TextUtils.isEmpty(error)) {
+                                ToastUtils.SnakeShowShort(rlRoot, error);
+                                break;
+                            }
+                        }
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable throwable) {
+                ToastUtils.SnakeShowShort(rlRoot, throwable.getMessage());
+            }
+        });
+    }
+
+    //返回结果写入本地文件夹中
+    private boolean writeResponseBodyToDisk(ResponseBody body) {
+        try {
+            // todo change the file location/name according to your needs
+            File sd = Environment.getExternalStorageDirectory();
+            String path = sd.getPath() + Constant.SD_CACHE_DIR;
+            File file = new File(path);
+            if (!file.exists())
+                file.mkdir();
+//            File cacheDir = getExternalCacheDir();
+            File futureStudioIconFile = new File(file + Constant.NEW_THREAD_RESPONSE_PATH);
+
+            InputStream inputStream = null;
+            OutputStream outputStream = null;
+
+            try {
+                byte[] fileReader = new byte[4096];
+
+                long fileSize = body.contentLength();
+                long fileSizeDownloaded = 0;
+
+                inputStream = body.byteStream();
+                outputStream = new FileOutputStream(futureStudioIconFile);
+
+                while (true) {
+                    int read = inputStream.read(fileReader);
+
+                    if (read == -1) {
+                        break;
+                    }
+
+                    outputStream.write(fileReader, 0, read);
+
+                    fileSizeDownloaded += read;
+
+                    Log.d("spq", "file download: " + fileSizeDownloaded + " of " + fileSize);
+                }
+
+                outputStream.flush();
+
+                return true;
+            } catch (IOException e) {
+                return false;
+            } finally {
+                if (inputStream != null) {
+                    inputStream.close();
+                }
+
+                if (outputStream != null) {
+                    outputStream.close();
+                }
+            }
+        } catch (IOException e) {
+            return false;
+        }
+    }
+
 
     @Override
     public void onClick(View v) {
@@ -419,7 +620,14 @@ public class NewThreadActivity extends BaseActivity implements View.OnLongClickL
                 DrawingActivity.gotoDrawingActivity(NewThreadActivity.this);
                 break;
             case R.id.img_send:
-                send();
+                switch (type) {
+                    case TYPE_NEW:
+                        send();
+                        break;
+                    case TYPE_REPLY:
+                        reply();
+                        break;
+                }
                 break;
         }
     }
