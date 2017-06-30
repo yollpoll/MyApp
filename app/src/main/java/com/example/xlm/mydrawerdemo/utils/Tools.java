@@ -166,6 +166,38 @@ public class Tools {
         return "未知异次元时间";
     }
 
+
+    /**
+     * 秒数变成具体时间
+     *
+     * @param timeStr
+     * @return
+     */
+    public static String changeTime(String timeStr) {
+        int time = 0;
+        try {
+            time = Integer.parseInt(timeStr);
+        } catch (Exception e) {
+            return "";
+        }
+        int day = time / (60 * 60 * 24);
+        int hour = (time % (day * 60 * 60 * 24)) / (60 * 60);
+        int min = (time - day * (60 * 60 * 24) - hour * (60 * 60)) / 60;
+        int second = time - day * (60 * 60 * 24) - hour * (60 * 60) - min * (60);
+        return day + "日" + hour + "时" + min + "分" + second + "秒";
+    }
+
+    /**
+     * 根据秒数返回日期
+     *
+     * @param time
+     * @return
+     */
+    public static String getDate(long time) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd_hh-mm-ss");
+        return simpleDateFormat.format(new Date(time));
+    }
+
     /**
      * 获取应用名
      *
@@ -319,7 +351,7 @@ public class Tools {
         //替换/
         String img = imageName.replace("/", "_");
         File cacheDir = context.getExternalCacheDir();
-        File cacheImage = new File(cacheDir + "/"  + img);
+        File cacheImage = new File(cacheDir + "/" + img);
         FileOutputStream fos = null;
         try {
             fos = new FileOutputStream(cacheImage);

@@ -7,5 +7,6 @@ package com.example.xlm.mydrawerdemo.utils;
 
 public class Constant {
     public static final String SD_CACHE_DIR = "/feizhaidao";
+    public static final String COOKIE = "cookie";
     public static final String NEW_THREAD_RESPONSE_PATH = "/new_thread.html";
 }

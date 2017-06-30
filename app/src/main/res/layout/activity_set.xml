@@ -1,42 +1,107 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent"
     android:id="@+id/ll_root"
-    >
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
     <android.support.v7.widget.Toolbar
-        android:layout_width="match_parent"
         android:id="@+id/toolbar"
         style="@style/Widget.MyTheme.HeaderBar"
-        android:layout_height="?attr/actionBarSize"
-        android:background="@color/colorPrimary"
-        />
-    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/colorPrimary" />
+
+    <RelativeLayout
         android:id="@+id/rl_get_cookie"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
         android:background="?android:attr/selectableItemBackground"
-        android:padding="10dp"
-        >
+        android:gravity="center_vertical"
+        android:paddingLeft="16dp">
+
         <TextView
+            android:id="@+id/tv_get_cookie"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/tv_get_cookie"
             android:text="获取饼干"
-            android:textColor="@color/ColorTextPrimary"
-            />
+            android:textColor="@color/ColorTextPrimary" />
+
         <TextView
+            android:id="@+id/tv_current_cookie"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/tv_get_cookie"
             android:text="当前饼干是:"
-            android:textSize="12sp"
-            android:id="@+id/tv_current_cookie"
-            />
+            android:textSize="12sp" />
     </RelativeLayout>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
-        android:background="@color/colorLine"
-        />
+        android:background="@color/colorLine" />
+
+    <RelativeLayout
+        android:id="@+id/rl_save_cookie"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/tv_save_cookie"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="16dp"
+            android:text="保存饼干到本地"
+            android:textColor="@color/ColorTextPrimary" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_save_cookie"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="16dp"
+            android:text="将饼干保存到本地磁盘"
+            android:textSize="12sp" />
+
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/colorLine" />
+
+    <RelativeLayout
+        android:id="@+id/rl_load_cookie"
+        android:layout_width="match_parent"
+        android:gravity="center_vertical"
+        android:layout_height="50dp">
+
+        <TextView
+            android:id="@+id/tv_load_loacl_cookie"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="16dp"
+            android:text="导入饼干"
+            android:textColor="@color/ColorTextPrimary" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_load_loacl_cookie"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="16dp"
+            android:text="导入本地磁盘上的饼干" />
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/colorLine" />
 </LinearLayout>
