@@ -1,6 +1,7 @@
 package com.example.xlm.mydrawerdemo.Activity;
 
 import android.animation.ObjectAnimator;
+import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
@@ -77,6 +78,8 @@ import retrofit.http.PartMap;
 public class NewThreadActivity extends BaseActivity implements View.OnLongClickListener {
     public static final int TYPE_REPLY = 1;
     public static final int TYPE_NEW = 2;
+    public static final int REQUEST_NEW_THREAD = 1234;
+    public static final int REQUEST_REPLY = 1235;
 
     private ImageView imgShowMoreTitle;
     private LinearLayout llMoreTitle;
@@ -99,20 +102,20 @@ public class NewThreadActivity extends BaseActivity implements View.OnLongClickL
     private TextView tvTagLeft;
 
 
-    public static void gotoNewThreadActivity(Context context, String tagName, String tagId) {
-        Intent intent = new Intent(context, NewThreadActivity.class);
+    public static void gotoNewThreadActivity(Activity activity, String tagName, String tagId) {
+        Intent intent = new Intent(activity, NewThreadActivity.class);
         intent.putExtra("type", TYPE_NEW);
         intent.putExtra("tagName", tagName);
         intent.putExtra("tagId", tagId);
-        context.startActivity(intent);
+        activity.startActivityForResult(intent, REQUEST_NEW_THREAD);
     }
 
     //reply
-    public static void gotoReplyThreadActivity(Context context, String resto) {
-        Intent intent = new Intent(context, NewThreadActivity.class);
+    public static void gotoReplyThreadActivity(Activity activity, String resto) {
+        Intent intent = new Intent(activity, NewThreadActivity.class);
         intent.putExtra("type", TYPE_REPLY);
         intent.putExtra("resto", resto);
-        context.startActivity(intent);
+        activity.startActivityForResult(intent, REQUEST_REPLY);
     }
 
     @Override
@@ -428,18 +431,14 @@ public class NewThreadActivity extends BaseActivity implements View.OnLongClickL
         NewThreadService newThreadService = retrofit.create(NewThreadService.class);
         Call<ResponseBody> call;
 
-        RequestBody tagIdBody = RequestBody.create(MediaType.parse("text/plain"), tagId);
-        RequestBody contentBody = RequestBody.create(MediaType.parse("text/plain"), edtContent.getText().toString());
-        RequestBody nameBody = RequestBody.create(MediaType.parse("text/plain"), edtName.getText().toString());
-        RequestBody titleBody = RequestBody.create(MediaType.parse("text/plain"), edtTitle.getText().toString());
-        RequestBody emailBody = RequestBody.create(MediaType.parse("text/plain"), edtEmail.getText().toString());
-        RequestBody waterBody = RequestBody.create(MediaType.parse("text/plain"), water + "");
+        RequestBody tagIdBody = Httptools.getInstance().getRequestBody(tagId);
+        RequestBody contentBody = Httptools.getInstance().getRequestBody(edtContent.getText().toString());
+        RequestBody nameBody = Httptools.getInstance().getRequestBody(edtName.getText().toString());
+        RequestBody titleBody = Httptools.getInstance().getRequestBody(edtTitle.getText().toString());
+        RequestBody emailBody = Httptools.getInstance().getRequestBody(edtEmail.getText().toString());
+        RequestBody waterBody = Httptools.getInstance().getRequestBody(edtEmail.getText().toString());
 
-        if (null == requestBody) {
-            call = newThreadService.newThread(tagIdBody, nameBody, titleBody, emailBody, contentBody);
-        } else {
-            call = newThreadService.newThread(tagIdBody, nameBody, titleBody, emailBody, contentBody, waterBody, requestBody);
-        }
+        call = newThreadService.newThread(tagIdBody, nameBody, titleBody, emailBody, contentBody, waterBody, requestBody);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
@@ -455,6 +454,7 @@ public class NewThreadActivity extends BaseActivity implements View.OnLongClickL
                             String success = element.getElementsByClass("success").text();
                             if (!TextUtils.isEmpty(success)) {
                                 ToastUtils.showShort(success);
+                                setResult(RESULT_OK);
                                 NewThreadActivity.this.finish();
                             }
                             String error = element.getElementsByClass("error").text();
@@ -490,17 +490,13 @@ public class NewThreadActivity extends BaseActivity implements View.OnLongClickL
                 requestBody = Httptools.getInstance().getRequestBody(file);
             }
         }
-        RequestBody restoBody = RequestBody.create(MediaType.parse("text/plain"), resto);
-        RequestBody contentBody = RequestBody.create(MediaType.parse("text/plain"), edtContent.getText().toString());
-        RequestBody nameBody = RequestBody.create(MediaType.parse("text/plain"), edtName.getText().toString());
-        RequestBody titleBody = RequestBody.create(MediaType.parse("text/plain"), edtTitle.getText().toString());
-        RequestBody emailBody = RequestBody.create(MediaType.parse("text/plain"), edtEmail.getText().toString());
-        RequestBody waterBody = RequestBody.create(MediaType.parse("text/plain"), water + "");
-        if (null == requestBody) {
-            call = newThreadService.replyThread(restoBody, contentBody, nameBody, titleBody, emailBody);
-        } else {
-            call = newThreadService.replyThread(restoBody, contentBody, nameBody, titleBody, emailBody, waterBody, requestBody);
-        }
+        RequestBody restoBody = Httptools.getInstance().getRequestBody(resto);
+        RequestBody contentBody = Httptools.getInstance().getRequestBody(edtContent.getText().toString());
+        RequestBody nameBody = Httptools.getInstance().getRequestBody(edtName.getText().toString());
+        RequestBody titleBody = Httptools.getInstance().getRequestBody(edtTitle.getText().toString());
+        RequestBody emailBody = Httptools.getInstance().getRequestBody(edtEmail.getText().toString());
+        RequestBody waterBody = Httptools.getInstance().getRequestBody(edtEmail.getText().toString());
+        call = newThreadService.replyThread(restoBody, contentBody, nameBody, titleBody, emailBody, waterBody, requestBody);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
@@ -516,6 +512,7 @@ public class NewThreadActivity extends BaseActivity implements View.OnLongClickL
                             String success = element.getElementsByClass("success").text();
                             if (!TextUtils.isEmpty(success)) {
                                 ToastUtils.showShort(success);
+                                setResult(RESULT_OK);
                                 NewThreadActivity.this.finish();
                             }
                             String error = element.getElementsByClass("error").text();

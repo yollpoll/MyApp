@@ -21,5 +21,6 @@
         android:layout_height="50dp"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="50dp"
+        android:visibility="gone"
         />
 </RelativeLayout>

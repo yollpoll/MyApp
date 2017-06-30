@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.util.Log;
@@ -160,7 +161,7 @@ public class ChildArticleAdapter extends RecyclerView.Adapter<ChildArticleAdapte
     public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView tvUsername, tvId, tvTime, tvContent;
         ImageView imgContent;
-        private RelativeLayout layoutItem;
+        private CardView layoutItem;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -168,7 +169,7 @@ public class ChildArticleAdapter extends RecyclerView.Adapter<ChildArticleAdapte
             tvId = (TextView) itemView.findViewById(R.id.tv_id);
             tvTime = (TextView) itemView.findViewById(R.id.tv_time);
             tvContent = (TextView) itemView.findViewById(R.id.tv_content);
-            layoutItem = (RelativeLayout) itemView.findViewById(R.id.layout_item);
+            layoutItem = (CardView) itemView.findViewById(R.id.layout_item);
             imgContent = (ImageView) itemView.findViewById(R.id.img_content);
         }
     }

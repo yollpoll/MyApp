@@ -60,6 +60,18 @@ public class ChildArticleActivity extends BaseSwipeActivity implements View.OnCl
     private List<String> ids;
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case NewThreadActivity.REQUEST_REPLY:
+                if (resultCode == RESULT_OK) {
+                    refresh();
+                }
+                break;
+        }
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_childarticle);
@@ -126,6 +138,9 @@ public class ChildArticleActivity extends BaseSwipeActivity implements View.OnCl
                 return true;
             case R.id.action_reply:
                 NewThreadActivity.gotoReplyThreadActivity(ChildArticleActivity.this, articleId);
+                return true;
+            case R.id.action_page:
+
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -267,9 +282,11 @@ public class ChildArticleActivity extends BaseSwipeActivity implements View.OnCl
                 }
                 if (isLoadingMore) {
                     //加载下一页不用和刷新一样处理
-                    if (data.get(1).getId().equals(response.body().getReplies().get(0).getId())) {
-                        //过滤掉重复的数据防止重复加载最后一页
-                        return;
+                    if (data.size() >= 2 && response.body().getReplies().size() >= 1) {
+                        if (data.get(1).getId().equals(response.body().getReplies().get(0).getId())) {
+                            //过滤掉重复的数据防止重复加载最后一页
+                            return;
+                        }
                     }
                     data.addAll(response.body().getReplies());
                     adapter.notifyItemRangeInserted(data.size() - response.body().getReplies().size(), data.size());

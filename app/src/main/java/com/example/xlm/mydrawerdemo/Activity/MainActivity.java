@@ -196,19 +196,6 @@ public class MainActivity extends BaseActivity {
         }
     };
 
-//    private void initFloatingActionButton() {
-//        SubActionButton.Builder builder = new SubActionButton.Builder(this);
-//        ImageView imageView=new ImageView(this);
-//        imageView.setImageResource(R.mipmap.icon_add);
-//
-//        SubActionButton subActionButton = builder.setContentView(imageView).build();
-//        FloatingActionMenu actionMenu = new FloatingActionMenu.Builder(this)
-//                .addSubActionView(subActionButton)
-//                // ...
-//                .attachTo(fbNew)
-//                .build();
-//    }
-
     //初始化左边抽屉
     private void initDrawerLayout() {
         left_menu1 = (RelativeLayout) findViewById(R.id.left_btn_layout1);
@@ -403,6 +390,18 @@ public class MainActivity extends BaseActivity {
                 if (resultCode == RESULT_OK) {
                     notifyTab();
                 }
+                break;
+            case NewThreadActivity.REQUEST_NEW_THREAD:
+                if (resultCode != RESULT_OK)
+                    break;
+                if (null == currentFragment) {
+                    if (listFragment.size() > 0) {
+                        currentFragment = (NormalContentFragment) listFragment.get(0);
+                    } else {
+                        break;
+                    }
+                }
+                currentFragment.refresh();
                 break;
         }
     }

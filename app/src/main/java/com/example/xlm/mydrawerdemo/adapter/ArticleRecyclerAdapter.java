@@ -1,6 +1,7 @@
 package com.example.xlm.mydrawerdemo.adapter;
 
 import android.content.Context;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.Spanned;
@@ -46,7 +47,8 @@ public class ArticleRecyclerAdapter extends RecyclerView.Adapter<ArticleRecycler
 
     public abstract interface OnItemClickListener {
         void onClick(View view, int position);
-        void onImageClick(View view,int position);
+
+        void onImageClick(View view, int position);
     }
 
     public List<Article> getData() {
@@ -103,21 +105,21 @@ public class ArticleRecyclerAdapter extends RecyclerView.Adapter<ArticleRecycler
                     replySpanneds.add(Html.fromHtml(r.getContent()));
                 }
                 Tools.changeText(holder.comment, replySpanneds, context);
-            }else {
+            } else {
                 holder.comment.setVisibility(View.GONE);
             }
-            holder.item_layout.setOnClickListener(new View.OnClickListener() {
+            holder.cardRoot.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     onItemClickListener.onClick(v, holder.getAdapterPosition());
                 }
             });
-            if("".equals(article.getImg())){
+            if ("".equals(article.getImg())) {
                 holder.imgContent.setVisibility(View.GONE);
-            }else {
+            } else {
                 holder.imgContent.setVisibility(View.VISIBLE);
                 Glide.with(context)
-                        .load(Port.IMG_THUMB_URL+article.getImg()+article.getExt())
+                        .load(Port.IMG_THUMB_URL + article.getImg() + article.getExt())
                         .centerCrop()
                         .crossFade()
                         .error(R.mipmap.icon_yygq)
@@ -125,7 +127,7 @@ public class ArticleRecyclerAdapter extends RecyclerView.Adapter<ArticleRecycler
                 holder.imgContent.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        onItemClickListener.onImageClick(v,holder.getAdapterPosition());
+                        onItemClickListener.onImageClick(v, holder.getAdapterPosition());
                     }
                 });
 
@@ -143,6 +145,7 @@ public class ArticleRecyclerAdapter extends RecyclerView.Adapter<ArticleRecycler
         RelativeLayout item_layout;
         TextSwitcher comment;
         ImageView imgContent;
+        CardView cardRoot;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -152,7 +155,8 @@ public class ArticleRecyclerAdapter extends RecyclerView.Adapter<ArticleRecycler
             comment = (TextSwitcher) itemView.findViewById(R.id.tv_comment);
             time = (TextView) itemView.findViewById(R.id.tv_time);
             sender = (TextView) itemView.findViewById(R.id.tv_sender_id);
-            imgContent= (ImageView) itemView.findViewById(R.id.img_content);
+            imgContent = (ImageView) itemView.findViewById(R.id.img_content);
+            cardRoot = (CardView) itemView.findViewById(R.id.card_root);
         }
     }
 }

@@ -2,23 +2,24 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
-<android.support.v7.widget.Toolbar
-    android:layout_width="match_parent"
-    android:layout_height="50dp"
-    android:background="@color/colorPrimary"
-    android:minHeight="?android:attr/actionBarSize"
-    android:id="@+id/toolbar"
-    style="@style/Widget.MyTheme.HeaderBar"
-    >
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="标题"
-        android:textColor="@color/white"
-        android:textSize="18sp"
-        android:layout_gravity="center"
-        android:id="@+id/tv_title"
-        />
-</android.support.v7.widget.Toolbar>
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        style="@style/Widget.MyTheme.HeaderBar"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/colorPrimary"
+        android:elevation="2dp"
+        android:minHeight="?android:attr/actionBarSize">
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="标题"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+    </android.support.v7.widget.Toolbar>
 </RelativeLayout>

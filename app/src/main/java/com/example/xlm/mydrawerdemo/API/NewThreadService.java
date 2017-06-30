@@ -41,36 +41,6 @@ public interface NewThreadService {
 
 
     /**
-     * 不带图片
-     *
-     * @param fid
-     * @param name
-     * @param title
-     * @param email
-     * @param content
-     * @return
-     */
-    @Multipart
-    @POST(Port.NEW_THREAD)
-    Call<ResponseBody> newThread(@Part("fid") RequestBody fid, @Part("name") RequestBody name, @Part("title") RequestBody title, @Part("email") RequestBody email,
-                                 @Part("content") RequestBody content);
-
-    /**
-     * 回复
-     *
-     * @param resto
-     * @param name
-     * @param title
-     * @param email
-     * @param content
-     * @return
-     */
-    @Multipart
-    @POST(Port.REPLY_THREAD)
-    Call<ResponseBody> replyThread(@Part("resto") RequestBody resto, @Part("content") RequestBody content, @Part("name") RequestBody name, @Part("title") RequestBody title,
-                                   @Part("email") RequestBody email);
-
-    /**
      * 回复(帶圖片)
      *
      * @param resto

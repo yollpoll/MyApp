@@ -3,35 +3,32 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/layout_childarticle"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/white"
-    >
+    android:layout_height="match_parent">
 
     <!--<include-->
-        <!--android:id="@+id/layout_title"-->
-        <!--layout="@layout/layout_head"-->
-        <!--/>-->
+    <!--android:id="@+id/layout_title"-->
+    <!--layout="@layout/layout_head"-->
+    <!--/>-->
     <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar_head"
+        style="@style/Widget.MyTheme.HeaderBar"
+        android:elevation="2dp"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/colorPrimary"
-        style="@style/Widget.MyTheme.HeaderBar"
-        android:id="@+id/toolbar_head"
-        >
-    </android.support.v7.widget.Toolbar>
+        android:background="@color/colorPrimary" />
 
     <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swip_childarticle"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/toolbar_head"
-        android:id="@+id/swip_childarticle"
 
         >
 
         <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerview_childarticle"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/recyclerview_childarticle"
-            ></android.support.v7.widget.RecyclerView>
+            android:background="@color/colorBackground" />
     </android.support.v4.widget.SwipeRefreshLayout>
 </RelativeLayout>
