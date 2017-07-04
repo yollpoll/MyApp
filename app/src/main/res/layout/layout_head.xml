@@ -4,19 +4,16 @@
     android:id="@+id/toolbar"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:visibility="gone"
-    app:layout_scrollFlags="scroll|enterAlways"
-    app:contentInsetStart="0dp"
-    app:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-    android:popupTheme="@style/ThemeOverlay.AppCompat.Light"
     android:background="?attr/colorPrimary"
-    >
+    android:elevation="10dp"
+    android:visibility="gone"
+    app:layout_scrollFlags="scroll|enterAlways">
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?attr/colorPrimary"
-        android:visibility="gone"
-        >
+        android:visibility="gone">
 
         <RelativeLayout
             android:id="@+id/head_btn_left"

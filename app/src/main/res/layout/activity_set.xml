@@ -5,18 +5,19 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
-        style="@style/Widget.MyTheme.HeaderBar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="@color/colorPrimary" />
+    <!--<android.support.v7.widget.Toolbar-->
+    <!--android:id="@+id/toolbar"-->
+    <!--style="@style/Widget.MyTheme.HeaderBar"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="?attr/actionBarSize"-->
+    <!--android:background="@color/colorPrimary" />-->
+    <include layout="@layout/toolbar" />
 
     <RelativeLayout
         android:id="@+id/rl_get_cookie"
+        style="@style/WhiteBgRipple"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="?android:attr/selectableItemBackground"
         android:gravity="center_vertical"
         android:paddingLeft="16dp">
 
@@ -43,6 +44,7 @@
 
     <RelativeLayout
         android:id="@+id/rl_save_cookie"
+        style="@style/WhiteBgRipple"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:gravity="center_vertical">
@@ -76,9 +78,10 @@
 
     <RelativeLayout
         android:id="@+id/rl_load_cookie"
+        style="@style/WhiteBgRipple"
         android:layout_width="match_parent"
-        android:gravity="center_vertical"
-        android:layout_height="50dp">
+        android:layout_height="50dp"
+        android:gravity="center_vertical">
 
         <TextView
             android:id="@+id/tv_load_loacl_cookie"

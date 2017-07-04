@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.example.xlm.mydrawerdemo.API.GetCookieService;
 import com.example.xlm.mydrawerdemo.R;
+import com.example.xlm.mydrawerdemo.base.BaseActivity;
 import com.example.xlm.mydrawerdemo.base.BaseSwipeActivity;
 import com.example.xlm.mydrawerdemo.fragment.FIleListFragment;
 import com.example.xlm.mydrawerdemo.http.AddCookieInterceptor;
@@ -43,7 +44,7 @@ import retrofit.Retrofit;
  * Created by 鹏祺 on 2017/5/24.
  */
 
-public class SetActivity extends BaseSwipeActivity {
+public class SetActivity extends BaseActivity {
     private Toolbar mToolbar;
     private RelativeLayout rlGetCookie, rlSaveCookie, rlLoadCookie;
     private TextView tvCurrentCookie;
@@ -71,8 +72,8 @@ public class SetActivity extends BaseSwipeActivity {
     }
 
     private void initData() {
-        initTitle();
         setCookie();
+        initToolbar("设置");
         retrofit = Httptools.getInstance().getRetrofit();
     }
 
@@ -106,19 +107,6 @@ public class SetActivity extends BaseSwipeActivity {
         rlLoadCookie.setOnClickListener(this);
     }
 
-    private void initTitle() {
-        setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setTitle("设置");
-        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                SetActivity.this.finish();
-            }
-        });
-    }
 
     private void getCookie() {
 //        retrofit.client().interceptors().add(new AddCookieInterceptor());

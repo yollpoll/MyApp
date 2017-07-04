@@ -9,19 +9,20 @@
     <!--android:id="@+id/layout_title"-->
     <!--layout="@layout/layout_head"-->
     <!--/>-->
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar_head"
-        style="@style/Widget.MyTheme.HeaderBar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="@color/colorPrimary"
-        android:elevation="2dp" />
+    <!--<android.support.v7.widget.Toolbar-->
+    <!--android:id="@+id/toolbar_head"-->
+    <!--style="@style/Widget.MyTheme.HeaderBar"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="?attr/actionBarSize"-->
+    <!--android:background="@color/colorPrimary"-->
+    <!--android:elevation="2dp" />-->
+    <include layout="@layout/toolbar" />
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swip_childarticle"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/toolbar_head"
+        android:layout_below="@+id/toolbar"
 
         >
 
@@ -34,8 +35,8 @@
 
     <android.support.v4.widget.ContentLoadingProgressBar
         android:id="@+id/progressBar"
-        android:layout_centerInParent="true"
         android:layout_width="wrap_content"
-        android:visibility="gone"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone" />
 </RelativeLayout>

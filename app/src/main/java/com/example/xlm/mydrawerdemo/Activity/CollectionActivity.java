@@ -29,6 +29,7 @@ import android.widget.ProgressBar;
 import com.example.xlm.mydrawerdemo.API.CollectionService;
 import com.example.xlm.mydrawerdemo.R;
 import com.example.xlm.mydrawerdemo.adapter.CollectionAdapter;
+import com.example.xlm.mydrawerdemo.base.BaseActivity;
 import com.example.xlm.mydrawerdemo.base.BaseSwipeActivity;
 import com.example.xlm.mydrawerdemo.base.MyApplication;
 import com.example.xlm.mydrawerdemo.bean.CollectionBean;
@@ -51,7 +52,7 @@ import retrofit.Retrofit;
  * Created by 鹏祺 on 2017/5/25.
  */
 
-public class CollectionActivity extends BaseSwipeActivity implements SwipeRefreshLayout.OnRefreshListener {
+public class CollectionActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener {
     private List<CollectionBean> list = new ArrayList<>();
     private List<CollectionBean> delList = new ArrayList<>();
     private List<String> ids = new ArrayList<>();
@@ -81,19 +82,6 @@ public class CollectionActivity extends BaseSwipeActivity implements SwipeRefres
         initData();
     }
 
-    private void initTitle() {
-        setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setTitle("订阅");
-        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                CollectionActivity.this.finish();
-            }
-        });
-    }
 
     private void initView() {
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -105,7 +93,7 @@ public class CollectionActivity extends BaseSwipeActivity implements SwipeRefres
     }
 
     private void initData() {
-        initTitle();
+        initToolbar("订阅");
         uuid = MyApplication.getInstance().getUuId();
         mAdapter = new CollectionAdapter(list, onItemClickListener);
         rvCollection.setAdapter(mAdapter);
@@ -114,8 +102,8 @@ public class CollectionActivity extends BaseSwipeActivity implements SwipeRefres
         rvCollection.setLayoutManager(layoutManager);
         rvCollection.setItemAnimator(new DefaultItemAnimator());
 
-        int spacingInPixels = getResources().getDimensionPixelSize(R.dimen.recycler_space);
-        rvCollection.addItemDecoration(new SpaceItemDecoration(spacingInPixels));
+//        int spacingInPixels = getResources().getDimensionPixelSize(R.dimen.recycler_space);
+//        rvCollection.addItemDecoration(new SpaceItemDecoration(spacingInPixels));
 
         mSwipFresh.setColorSchemeResources(android.R.color.holo_red_light,
                 android.R.color.holo_green_light,
@@ -153,6 +141,8 @@ public class CollectionActivity extends BaseSwipeActivity implements SwipeRefres
     }
 
     private void getData() {
+        if (isActionModeShow)
+            disMissCheckBox();
         isLoad = true;
         collectionService = retrofit.create(CollectionService.class);
         Call<List<CollectionBean>> call = collectionService.getCollection(page, uuid);

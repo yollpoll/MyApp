@@ -7,10 +7,9 @@
         android:id="@+id/toolbar"
         style="@style/Widget.MyTheme.HeaderBar"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="?android:attr/actionBarSize"
         android:background="@color/colorPrimary"
-        android:elevation="2dp"
-        android:minHeight="?android:attr/actionBarSize">
+        android:elevation="10dp">
 
         <TextView
             android:id="@+id/tv_title"

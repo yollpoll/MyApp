@@ -68,13 +68,13 @@ public class CollectionAdapter extends RecyclerView.Adapter<CollectionAdapter.Vi
             }
             holder.sender.setText(item.getUserid());
             holder.comment.setVisibility(View.GONE);
-            holder.item_layout.setOnClickListener(new View.OnClickListener() {
+            holder.cardRoot.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     onItemClickListener.onClick(v, holder.getAdapterPosition());
                 }
             });
-            holder.item_layout.setOnLongClickListener(new View.OnLongClickListener() {
+            holder.cardRoot.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
                     onItemClickListener.onLongClick(v, holder.getAdapterPosition());

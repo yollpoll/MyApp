@@ -45,8 +45,8 @@ public class ChoseForumActivity extends BaseActivity {
     private List<ChildForm> listForums = new ArrayList<>();
     //    private List<ChildForm> listChecked = new ArrayList<>();
     private ChoseForumAdapater adapater;
-    private Toolbar toolbar;
-    private TextView tvTitle;
+    private Toolbar mToolbar;
+    //    private TextView tvTitle;
     private DaoSession daoSession;
     private ChildFormDao childFormDao;
     private Cursor cursor;
@@ -82,24 +82,25 @@ public class ChoseForumActivity extends BaseActivity {
         this.finish();
     }
 
-    private void initToolbar() {
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-    }
+
+//    private void initToolbar() {
+//        setSupportActionBar(mToolbar);
+//        getSupportActionBar().setDisplayShowTitleEnabled(true);
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//        getSupportActionBar().setHomeButtonEnabled(true);
+//        getSupportActionBar().setTitle("板块设置");
+//        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                ChoseForumActivity.this.finish();
+//            }
+//        });
+//    }
 
     private void initView() {
         recyclerForum = (RecyclerView) findViewById(R.id.recycler_forum);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        tvTitle = (TextView) findViewById(R.id.tv_title);
-        tvTitle.setText("板块设置");
-        initToolbar();
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        initToolbar("板块设置");
     }
 
     private void initData() {
@@ -187,7 +188,7 @@ public class ChoseForumActivity extends BaseActivity {
         }
 
         @Override
-        public void onChcked( boolean isChecked,int position) {
+        public void onChcked(boolean isChecked, int position) {
             if (isChecked) {
                 listForums.get(position).setChecked(true);
             } else {

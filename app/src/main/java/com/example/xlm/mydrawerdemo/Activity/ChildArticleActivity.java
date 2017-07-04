@@ -171,7 +171,7 @@ public class ChildArticleActivity extends BaseSwipeActivity implements View.OnCl
         tvHeadTitle = (TextView) findViewById(R.id.tv_head_title);
         swipChildArticle = (SwipeRefreshLayout) findViewById(R.id.swip_childarticle);
         recyclerChildArticle = (RecyclerView) findViewById(R.id.recyclerview_childarticle);
-        toolbarHead = (Toolbar) findViewById(R.id.toolbar_head);
+        toolbarHead = (Toolbar) findViewById(R.id.toolbar);
         progressBar = (ContentLoadingProgressBar) findViewById(R.id.progressBar);
 
         setSupportActionBar(toolbarHead);

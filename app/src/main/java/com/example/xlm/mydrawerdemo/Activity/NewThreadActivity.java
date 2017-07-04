@@ -253,19 +253,6 @@ public class NewThreadActivity extends BaseActivity implements View.OnLongClickL
         imgDraw.setOnClickListener(this);
     }
 
-    private void initTitle(String title) {
-        setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setTitle(title);
-        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                NewThreadActivity.this.finish();
-            }
-        });
-    }
 
     private void initData() {
         type = getIntent().getIntExtra("type", TYPE_NEW);
@@ -294,7 +281,7 @@ public class NewThreadActivity extends BaseActivity implements View.OnLongClickL
             tvTag.setTransitionName(tagId);
         }
         tvTagLeft.setText("板块");
-        initTitle("发串");
+        initToolbar("发串");
         getTagData();
     }
 
@@ -306,7 +293,7 @@ public class NewThreadActivity extends BaseActivity implements View.OnLongClickL
         TransFormContent.trans(spannedContent, edtContent, null);
         tvTag.setVisibility(View.GONE);
         tvTagLeft.setText("更多可填写项");
-        initTitle("回复");
+        initToolbar("回复");
     }
 
     //初始化举报
@@ -319,7 +306,7 @@ public class NewThreadActivity extends BaseActivity implements View.OnLongClickL
 
         tvTag.setText(tagName);
         tvTag.setClickable(false);
-        initTitle("举报");
+        initToolbar("举报");
         ToastUtils.showShort("你的内容将发往值班室");
     }
 

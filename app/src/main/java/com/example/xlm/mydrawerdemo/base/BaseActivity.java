@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
+import com.example.xlm.mydrawerdemo.Activity.ChoseForumActivity;
 import com.example.xlm.mydrawerdemo.R;
 import com.example.xlm.mydrawerdemo.bean.Article;
 import com.example.xlm.mydrawerdemo.utils.Tools;
@@ -28,12 +29,21 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
         eventBus = EventBus.getDefault();
     }
 
-    private void initToolBar() {
+    protected void initToolbar(String title) {
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        if (null != mToolbar)
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                mToolbar.setElevation(Tools.calculateDpToPx(2, this));
+        if (mToolbar == null)
+            return;
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setTitle(title);
+        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                BaseActivity.this.finish();
             }
+        });
     }
 
     @Override
