@@ -16,4 +16,5 @@
     <color name="colorLine">#eeeeee</color>
     <color name="lightGreen">#7cb342</color>
     <color name="rippleYellow">#FFF5A100</color>
+    <color name="rippleGray">#80818181</color>
 </resources>

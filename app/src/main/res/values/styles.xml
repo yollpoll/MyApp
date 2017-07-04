@@ -30,6 +30,10 @@
 
     </style>
 
+    <style name="WhiteBgRipple">
+        <item name="android:background">@drawable/selector_white_bg</item>
+    </style>
+
     <style name="MySearchViewStyle" parent="Widget.AppCompat.SearchView">
         <!--
     Background for the search query section (e.g. EditText)

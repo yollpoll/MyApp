@@ -1,8 +1,12 @@
 package com.example.xlm.mydrawerdemo.fragment;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -20,6 +24,7 @@ import com.example.xlm.mydrawerdemo.API.ArticleService;
 import com.example.xlm.mydrawerdemo.API.FormListService;
 import com.example.xlm.mydrawerdemo.Activity.ChildArticleActivity;
 import com.example.xlm.mydrawerdemo.Activity.ImageActivity;
+import com.example.xlm.mydrawerdemo.Activity.NewThreadActivity;
 import com.example.xlm.mydrawerdemo.R;
 import com.example.xlm.mydrawerdemo.adapter.ArticleRecyclerAdapter;
 import com.example.xlm.mydrawerdemo.adapter.StringListRecyclerViewAdapter;
@@ -164,9 +169,48 @@ public class NormalContentFragment extends BaseFragment {
                 String url = Port.IMG_URL + data.get(position).getImg() + data.get(position).getExt();
                 ImageActivity.gotoImageActivity(getActivity(), url, data.get(position).getImg() + data.get(position).getExt(), view);
             }
+
+            @Override
+            public void onLongClick(View view, int position) {
+                showMenu(position);
+            }
         });
         getData(false);
     }
+
+    //长按显示子菜单
+    private void showMenu(int position) {
+        ThreadMenuFragment threadMenuFragment = new ThreadMenuFragment();
+        threadMenuFragment.setOnItemClickListener(onItemClickListener);
+        Bundle arg = new Bundle();
+        arg.putInt("position", position);
+        threadMenuFragment.setArguments(arg);
+        threadMenuFragment.show(getActivity().getSupportFragmentManager(), ThreadMenuFragment.REPLY);
+    }
+
+    private ThreadMenuFragment.OnItemClickListener onItemClickListener = new ThreadMenuFragment.OnItemClickListener() {
+        @Override
+        public void onClick(int id, int position, DialogFragment fragment) {
+            fragment.dismiss();
+            switch (id) {
+                case R.id.tv_report:
+                    NewThreadActivity.gotoReport(getActivity(), ">>No." + data.get(position).getId() + "\n");
+                    break;
+                case R.id.tv_reply:
+                    NewThreadActivity.gotoReplyThreadActivity(getActivity(), data.get(position).getId(), "");
+                    break;
+                case R.id.tv_copy:
+                    //获取剪贴板管理器：
+                    ClipboardManager cm = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+                    // 创建普通字符型ClipData
+                    ClipData mClipData = ClipData.newPlainText("Label", data.get(position).getContent());
+                    // 将ClipData内容放到系统剪贴板里。
+                    cm.setPrimaryClip(mClipData);
+                    ToastUtils.SnakeShowShort(mSwipRefreshLayout, "已经复制到剪贴板");
+                    break;
+            }
+        }
+    };
 
     public void onEventMainThread(Article obj) {
         data.add(obj);
@@ -199,8 +243,8 @@ public class NormalContentFragment extends BaseFragment {
                 }
                 data.addAll(response.body());
                 adapterArticle.notifyDataSetChanged();
-                if(!isLoad){
-                    mLinearLayoutManager.smoothScrollToPosition(mRecyclerView,null,0);
+                if (!isLoad) {
+                    mLinearLayoutManager.smoothScrollToPosition(mRecyclerView, null, 0);
                 }
             }
 

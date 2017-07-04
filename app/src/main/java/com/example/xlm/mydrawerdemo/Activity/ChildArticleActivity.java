@@ -4,8 +4,15 @@ package com.example.xlm.mydrawerdemo.Activity;
  * Created by 鹏祺 on 2016/1/1.
  */
 
+import android.app.Dialog;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.widget.ContentLoadingProgressBar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,7 +21,10 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.RelativeLayout;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.example.xlm.mydrawerdemo.API.ChildArticleService;
@@ -26,8 +36,10 @@ import com.example.xlm.mydrawerdemo.base.MyApplication;
 import com.example.xlm.mydrawerdemo.bean.ChildArticle;
 import com.example.xlm.mydrawerdemo.bean.CollectionBean;
 import com.example.xlm.mydrawerdemo.bean.Reply;
+import com.example.xlm.mydrawerdemo.fragment.ThreadMenuFragment;
 import com.example.xlm.mydrawerdemo.http.Httptools;
 import com.example.xlm.mydrawerdemo.http.Port;
+import com.example.xlm.mydrawerdemo.utils.Constant;
 import com.example.xlm.mydrawerdemo.utils.ToastUtils;
 import com.example.xlm.mydrawerdemo.utils.Tools;
 
@@ -58,6 +70,8 @@ public class ChildArticleActivity extends BaseSwipeActivity implements View.OnCl
     private int page = 0;
     private boolean isCollected;
     private List<String> ids;
+    private ChildArticle childArticle;
+    private ContentLoadingProgressBar progressBar;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -137,10 +151,10 @@ public class ChildArticleActivity extends BaseSwipeActivity implements View.OnCl
                 }
                 return true;
             case R.id.action_reply:
-                NewThreadActivity.gotoReplyThreadActivity(ChildArticleActivity.this, articleId);
+                NewThreadActivity.gotoReplyThreadActivity(ChildArticleActivity.this, articleId, "");
                 return true;
             case R.id.action_page:
-
+                choosePage();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -158,6 +172,8 @@ public class ChildArticleActivity extends BaseSwipeActivity implements View.OnCl
         swipChildArticle = (SwipeRefreshLayout) findViewById(R.id.swip_childarticle);
         recyclerChildArticle = (RecyclerView) findViewById(R.id.recyclerview_childarticle);
         toolbarHead = (Toolbar) findViewById(R.id.toolbar_head);
+        progressBar = (ContentLoadingProgressBar) findViewById(R.id.progressBar);
+
         setSupportActionBar(toolbarHead);
     }
 
@@ -210,7 +226,7 @@ public class ChildArticleActivity extends BaseSwipeActivity implements View.OnCl
 
             @Override
             public void onLongClick(View view, int position) {
-
+                showMenu(position);
             }
         });
         recyclerChildArticle.setLayoutManager(linearLayoutManager);
@@ -249,6 +265,40 @@ public class ChildArticleActivity extends BaseSwipeActivity implements View.OnCl
         refresh();
     }
 
+    //长按显示子菜单
+    private void showMenu(int position) {
+        ThreadMenuFragment threadMenuFragment = new ThreadMenuFragment();
+        threadMenuFragment.setOnItemClickListener(onItemClickListener);
+        Bundle arg = new Bundle();
+        arg.putInt("position", position);
+        threadMenuFragment.setArguments(arg);
+        threadMenuFragment.show(getSupportFragmentManager(), ThreadMenuFragment.REPLY);
+    }
+
+    private ThreadMenuFragment.OnItemClickListener onItemClickListener = new ThreadMenuFragment.OnItemClickListener() {
+        @Override
+        public void onClick(int id, int position, DialogFragment fragment) {
+            fragment.dismiss();
+            switch (id) {
+                case R.id.tv_report:
+                    NewThreadActivity.gotoReport(ChildArticleActivity.this, ">>No." + data.get(position).getId() + "\n");
+                    break;
+                case R.id.tv_reply:
+                    NewThreadActivity.gotoReplyThreadActivity(ChildArticleActivity.this, articleId, ">>No." + data.get(position).getId() + "\n");
+                    break;
+                case R.id.tv_copy:
+                    //获取剪贴板管理器：
+                    ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                    // 创建普通字符型ClipData
+                    ClipData mClipData = ClipData.newPlainText("Label", data.get(position).getContent());
+                    // 将ClipData内容放到系统剪贴板里。
+                    cm.setPrimaryClip(mClipData);
+                    ToastUtils.SnakeShowShort(swipChildArticle, "已经复制到剪贴板");
+                    break;
+            }
+        }
+    };
+
     /*
     访问网络
      */
@@ -258,6 +308,7 @@ public class ChildArticleActivity extends BaseSwipeActivity implements View.OnCl
         call.enqueue(new Callback<ChildArticle>() {
             @Override
             public void onResponse(Response<ChildArticle> response, Retrofit retrofit) {
+                childArticle = response.body();
                 if (isRefresh) {
                     //在replay列表中加入本串的信息，作为第一个数据
                     data.clear();
@@ -291,16 +342,33 @@ public class ChildArticleActivity extends BaseSwipeActivity implements View.OnCl
                     data.addAll(response.body().getReplies());
                     adapter.notifyItemRangeInserted(data.size() - response.body().getReplies().size(), data.size());
                 }
+                if ((!isLoadingMore) && (!isRefresh)) {
+                    progressBar.setVisibility(View.GONE);
+                    data.clear();
+                    data.addAll(response.body().getReplies());
+                    adapter.notifyDataSetChanged();
+                }
                 isLoadingMore = false;
                 isRefresh = false;
             }
 
             @Override
             public void onFailure(Throwable throwable) {
+                progressBar.setVisibility(View.GONE);
                 isRefresh = false;
                 isLoadingMore = false;
             }
         });
+    }
+
+    /**
+     * 跳轉到具體一頁,page参数全局已经赋值
+     */
+    private void gotoPage() {
+        progressBar.setVisibility(View.VISIBLE);
+        isRefresh = false;
+        isLoadingMore = false;
+        getData();
     }
 
     /*
@@ -328,6 +396,49 @@ public class ChildArticleActivity extends BaseSwipeActivity implements View.OnCl
                 scrollToFinishActivity();
                 break;
         }
+    }
+
+
+    private void choosePage() {
+        if (null == childArticle)
+            return;
+        final int allPage = (int) Math.ceil(((double) childArticle.getReplyCount()) / 19);//向上取整
+        final Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.dialog_choose_page);
+        Window window = dialog.getWindow();
+        WindowManager.LayoutParams layoutParams = window.getAttributes();
+        layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
+        layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        window.setAttributes(layoutParams);
+        dialog.show();
+        final TextView tvChoosePage = (TextView) dialog.findViewById(R.id.tv_page);
+        tvChoosePage.setText("第" + (page + 1) + "页");
+        SeekBar seekBar = (SeekBar) dialog.findViewById(R.id.seek_page);
+        seekBar.setMax(allPage);
+        seekBar.setProgress((page + 1));
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                page = progress - 1;
+                tvChoosePage.setText("第" + progress + "页");
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                gotoPage();
+            }
+        });
     }
 
     @Override

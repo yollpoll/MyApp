@@ -80,6 +80,10 @@
         <item name="android:background">?android:attr/selectableItemBackgroundBorderless</item>
     </style>
 
+    <style name="WhiteBgRipple">
+        <item name="android:background">@drawable/ripple_white_bg</item>
+    </style>
+
     <style name="NewThreadTagStyle">
         <item name="android:background">@drawable/ripple_new_thread_tag</item>
     </style>

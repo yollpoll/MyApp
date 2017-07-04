@@ -24,6 +24,7 @@ import com.example.xlm.mydrawerdemo.bean.Article;
 import com.example.xlm.mydrawerdemo.bean.Reply;
 import com.example.xlm.mydrawerdemo.http.Port;
 import com.example.xlm.mydrawerdemo.utils.Tools;
+import com.example.xlm.mydrawerdemo.utils.TransFormContent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,6 +50,8 @@ public class ArticleRecyclerAdapter extends RecyclerView.Adapter<ArticleRecycler
         void onClick(View view, int position);
 
         void onImageClick(View view, int position);
+
+        void onLongClick(View view, int position);
     }
 
     public List<Article> getData() {
@@ -87,7 +90,8 @@ public class ArticleRecyclerAdapter extends RecyclerView.Adapter<ArticleRecycler
         Article article = data.get(position);
         if (article != null) {
             Spanned contentSpanned = Html.fromHtml(article.getContent());
-            holder.content.setText(contentSpanned);
+//            holder.content.setText(contentSpanned);
+            TransFormContent.trans(contentSpanned, holder.content, null);
             holder.time.setText(Tools.replaceTime(article.getNow()));
             holder.id.setText("No." + article.getId());
             if ("0".equals(article.getAdmin())) {
@@ -112,6 +116,15 @@ public class ArticleRecyclerAdapter extends RecyclerView.Adapter<ArticleRecycler
                 @Override
                 public void onClick(View v) {
                     onItemClickListener.onClick(v, holder.getAdapterPosition());
+                }
+            });
+            holder.cardRoot.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    if (null != onItemClickListener) {
+                        onItemClickListener.onLongClick(v, holder.getAdapterPosition());
+                    }
+                    return true;
                 }
             });
             if ("".equals(article.getImg())) {

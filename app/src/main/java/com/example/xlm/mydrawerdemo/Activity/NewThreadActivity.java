@@ -17,6 +17,8 @@ import android.support.design.widget.TextInputEditText;
 import android.support.v4.util.Pair;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
+import android.text.Spanned;
+import android.text.SpannedString;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -44,6 +46,7 @@ import com.example.xlm.mydrawerdemo.utils.Constant;
 import com.example.xlm.mydrawerdemo.utils.SPUtiles;
 import com.example.xlm.mydrawerdemo.utils.ToastUtils;
 import com.example.xlm.mydrawerdemo.utils.Tools;
+import com.example.xlm.mydrawerdemo.utils.TransFormContent;
 import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.MultipartBuilder;
 import com.squareup.okhttp.RequestBody;
@@ -78,6 +81,7 @@ import retrofit.http.PartMap;
 public class NewThreadActivity extends BaseActivity implements View.OnLongClickListener {
     public static final int TYPE_REPLY = 1;
     public static final int TYPE_NEW = 2;
+    public static final int TYPE_REPORT = 3;
     public static final int REQUEST_NEW_THREAD = 1234;
     public static final int REQUEST_REPLY = 1235;
 
@@ -100,6 +104,7 @@ public class NewThreadActivity extends BaseActivity implements View.OnLongClickL
     private int type;
     private String resto;
     private TextView tvTagLeft;
+    private String foreContent;
 
 
     public static void gotoNewThreadActivity(Activity activity, String tagName, String tagId) {
@@ -111,11 +116,22 @@ public class NewThreadActivity extends BaseActivity implements View.OnLongClickL
     }
 
     //reply
-    public static void gotoReplyThreadActivity(Activity activity, String resto) {
+    public static void gotoReplyThreadActivity(Activity activity, String resto, String foreContent) {
         Intent intent = new Intent(activity, NewThreadActivity.class);
         intent.putExtra("type", TYPE_REPLY);
         intent.putExtra("resto", resto);
+        intent.putExtra("foreContent", foreContent);
         activity.startActivityForResult(intent, REQUEST_REPLY);
+    }
+
+    //举报，发往值班室
+    public static void gotoReport(Activity activity, String foreContent) {
+        Intent intent = new Intent(activity, NewThreadActivity.class);
+        intent.putExtra("type", TYPE_REPORT);
+        intent.putExtra("tagName", Constant.TAG_ZHIBANSHI_NAME);
+        intent.putExtra("tagId", Constant.TAG_ZHIBANSHI_ID);
+        intent.putExtra("foreContent", foreContent);
+        activity.startActivityForResult(intent, REQUEST_NEW_THREAD);
     }
 
     @Override
@@ -261,6 +277,9 @@ public class NewThreadActivity extends BaseActivity implements View.OnLongClickL
             case TYPE_REPLY:
                 initReplyThreadData();
                 break;
+            case TYPE_REPORT:
+                initReportData();
+                break;
         }
 //        getKeyBoardHeight();
     }
@@ -281,10 +300,27 @@ public class NewThreadActivity extends BaseActivity implements View.OnLongClickL
 
     //初始化回复
     private void initReplyThreadData() {
+        foreContent = getIntent().getStringExtra("foreContent");
         resto = getIntent().getStringExtra("resto");
+        Spanned spannedContent = new SpannedString(foreContent);
+        TransFormContent.trans(spannedContent, edtContent, null);
         tvTag.setVisibility(View.GONE);
         tvTagLeft.setText("更多可填写项");
         initTitle("回复");
+    }
+
+    //初始化举报
+    private void initReportData() {
+        tagName = getIntent().getStringExtra("tagName");
+        tagId = getIntent().getStringExtra("tagId");
+        foreContent = getIntent().getStringExtra("foreContent");
+        Spanned spannedContent = new SpannedString(foreContent);
+        TransFormContent.trans(spannedContent, edtContent, null);
+
+        tvTag.setText(tagName);
+        tvTag.setClickable(false);
+        initTitle("举报");
+        ToastUtils.showShort("你的内容将发往值班室");
     }
 
     private void getTagData() {
@@ -305,21 +341,6 @@ public class NewThreadActivity extends BaseActivity implements View.OnLongClickL
             @Override
             public void onFailure(Throwable throwable) {
 
-            }
-        });
-    }
-
-    //获得软键盘高度
-    private void getKeyBoardHeight() {
-        rlRoot.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                Rect r = new Rect();
-                rlRoot.getWindowVisibleDisplayFrame(r);
-
-                int screenHeight = rlRoot.getRootView().getHeight();
-                int heightDifference = screenHeight - (r.bottom - r.top);
-                Log.d("spq", "Size    " + heightDifference);
             }
         });
     }
@@ -416,6 +437,11 @@ public class NewThreadActivity extends BaseActivity implements View.OnLongClickL
 
     private void choosePhote() {
         Tools.showChoosePicDialog(this);
+    }
+
+    //举报
+    private void report() {
+        send();
     }
 
     //发表新串
@@ -623,6 +649,9 @@ public class NewThreadActivity extends BaseActivity implements View.OnLongClickL
                         break;
                     case TYPE_REPLY:
                         reply();
+                        break;
+                    case TYPE_REPORT:
+                        report();
                         break;
                 }
                 break;

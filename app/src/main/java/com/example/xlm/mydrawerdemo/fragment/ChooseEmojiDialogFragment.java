@@ -1,34 +1,23 @@
 package com.example.xlm.mydrawerdemo.fragment;
 
-import android.content.pm.ProviderInfo;
-import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.TextView;
 
 import com.example.xlm.mydrawerdemo.R;
 import com.example.xlm.mydrawerdemo.adapter.OnItemClickListenr;
 import com.example.xlm.mydrawerdemo.adapter.PicEmojiAdapter;
 import com.example.xlm.mydrawerdemo.adapter.WordEmojiAdapter;
+import com.example.xlm.mydrawerdemo.base.BaseDialogFragment;
 import com.example.xlm.mydrawerdemo.utils.EmojiUtils;
-import com.example.xlm.mydrawerdemo.utils.ToastUtils;
-import com.example.xlm.mydrawerdemo.utils.Tools;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,8 +25,7 @@ import java.util.List;
 /**
  * Created by 鹏祺 on 2017/6/15.
  */
-
-public class ChooseEmojiDialogFragment extends DialogFragment {
+public class ChooseEmojiDialogFragment extends BaseDialogFragment {
     private TabLayout tabEmoji;
     private ViewPager vpEmoji;
     private EmojiPageAdapter mAdapter;
@@ -60,19 +48,14 @@ public class ChooseEmojiDialogFragment extends DialogFragment {
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        Window window = getDialog().getWindow();
-        WindowManager.LayoutParams layoutParams = window.getAttributes();
-        layoutParams.dimAmount = 0.0f;
-        window.setAttributes(layoutParams);
-    }
-
-    @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initView(view);
         initData();
+    }
+
+    public ChooseEmojiDialogFragment() {
+
     }
 
     private void initData() {
