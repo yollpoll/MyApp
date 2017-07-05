@@ -46,7 +46,7 @@ public class Httptools {
     public static RequestBody getRequestBody(File file) {
         // 创建 RequestBody，用于封装构建RequestBody
         RequestBody requestFile =
-                RequestBody.create(MediaType.parse("image/jpg"), file);
+                RequestBody.create(MediaType.parse("image/*"), file);
         return requestFile;
     }
 

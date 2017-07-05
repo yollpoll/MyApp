@@ -28,6 +28,8 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -57,6 +59,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -105,6 +108,8 @@ public class NewThreadActivity extends BaseActivity implements View.OnLongClickL
     private String resto;
     private TextView tvTagLeft;
     private String foreContent;
+    private CardView cvPicContent;
+    private CheckBox cbWater;
 
 
     public static void gotoNewThreadActivity(Activity activity, String tagName, String tagId) {
@@ -155,7 +160,7 @@ public class NewThreadActivity extends BaseActivity implements View.OnLongClickL
                 try {
                     Bitmap bitmap = BitmapFactory.decodeStream(cr.openInputStream(uri));
                     imgPath = Tools.saveImage(this, bitmap, "temp.jpg");
-                    imgPicContent.setVisibility(View.VISIBLE);
+                    showPic(true);
                     imgPicContent.setImageBitmap(bitmap);
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
@@ -181,7 +186,7 @@ public class NewThreadActivity extends BaseActivity implements View.OnLongClickL
                 try {
                     bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(Tools.imgUri));
                     imgPath = Tools.imgUri.getPath();
-                    imgPicContent.setVisibility(View.VISIBLE);
+                    showPic(true);
                     imgPicContent.setImageBitmap(bitmap);
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
@@ -197,7 +202,7 @@ public class NewThreadActivity extends BaseActivity implements View.OnLongClickL
                         File file = new File(drawPath);
                         fileInputStream = new FileInputStream(file);
                         bitmapDraw = BitmapFactory.decodeStream(fileInputStream);
-                        imgPicContent.setVisibility(View.VISIBLE);
+                        showPic(true);
                         imgPicContent.setImageBitmap(bitmapDraw);
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -243,14 +248,18 @@ public class NewThreadActivity extends BaseActivity implements View.OnLongClickL
         edtTitle = (TextInputEditText) findViewById(R.id.txtEdt_title);
         edtEmail = (TextInputEditText) findViewById(R.id.txtEdt_email);
         tvTagLeft = (TextView) findViewById(R.id.tv_tag_left);
+        cvPicContent = (CardView) findViewById(R.id.card_pic_content);
+        cbWater = (CheckBox) findViewById(R.id.water);
 
-        imgPicContent.setOnLongClickListener(this);
         imgSend.setOnClickListener(this);
         imgShowMoreTitle.setOnClickListener(this);
         tvTag.setOnClickListener(this);
         imgEmoji.setOnClickListener(this);
         imgPic.setOnClickListener(this);
         imgDraw.setOnClickListener(this);
+        cvPicContent.setOnClickListener(this);
+        cvPicContent.setOnLongClickListener(this);
+        cbWater.setOnCheckedChangeListener(onCheckedChangeListener);
     }
 
 
@@ -414,7 +423,7 @@ public class NewThreadActivity extends BaseActivity implements View.OnLongClickL
                 if (id == 0)
                     return;
                 imgPicContent.setImageResource(id);
-                imgPicContent.setVisibility(View.VISIBLE);
+                showPic(false);
             } else {
                 //选择了文字
                 edtContent.append(word);
@@ -431,10 +440,13 @@ public class NewThreadActivity extends BaseActivity implements View.OnLongClickL
         send();
     }
 
+
     //发表新串
     private void send() {
         int water = isWater ? 1 : 0;//水印
         RequestBody requestBody = null;
+
+
         if (!TextUtils.isEmpty(imgPath)) {
             File file = new File(imgPath);
             if (file.exists()) {
@@ -648,10 +660,31 @@ public class NewThreadActivity extends BaseActivity implements View.OnLongClickL
     @Override
     public boolean onLongClick(View v) {
         switch (v.getId()) {
-            case R.id.img_pic_content:
-                imgPicContent.setVisibility(View.GONE);
+            case R.id.card_pic_content:
+                disPic();
                 break;
         }
         return false;
+    }
+
+    private CheckBox.OnCheckedChangeListener onCheckedChangeListener = new CompoundButton.OnCheckedChangeListener() {
+        @Override
+        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            isWater = isChecked;
+        }
+    };
+
+    private void disPic() {
+        imgPicContent.setVisibility(View.GONE);
+        cbWater.setVisibility(View.GONE);
+    }
+
+    private void showPic(boolean showWater) {
+        imgPicContent.setVisibility(View.VISIBLE);
+        if (showWater) {
+            cbWater.setVisibility(View.VISIBLE);
+        } else {
+            cbWater.setVisibility(View.GONE);
+        }
     }
 }

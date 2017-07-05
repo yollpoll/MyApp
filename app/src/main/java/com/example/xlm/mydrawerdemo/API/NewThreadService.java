@@ -37,7 +37,7 @@ public interface NewThreadService {
     @Multipart
     @POST(Port.NEW_THREAD)
     Call<ResponseBody> newThread(@Part("fid") RequestBody fid, @Part("name") RequestBody name, @Part("title") RequestBody title, @Part("email") RequestBody email,
-                                 @Part("content") RequestBody content, @Part("water") RequestBody water, @Part("image") RequestBody file);
+                                 @Part("content") RequestBody content, @Part("water") RequestBody water, @Part("image\"; filename=\"a.jpg\"") RequestBody file);
 
 
     /**
@@ -54,5 +54,5 @@ public interface NewThreadService {
     @Multipart
     @POST(Port.REPLY_THREAD)
     Call<ResponseBody> replyThread(@Part("resto") RequestBody resto, @Part("content") RequestBody content, @Part("name") RequestBody name, @Part("title") RequestBody title,
-                                   @Part("email") RequestBody email, @Part("water") RequestBody water, @Part("image") RequestBody file);
+                                   @Part("email") RequestBody email, @Part("water") RequestBody water, @Part("image\"; filename=\"a.jpg\"") RequestBody file);
 }
