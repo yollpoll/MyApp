@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.design.widget.TextInputEditText;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.util.Pair;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
@@ -417,8 +418,9 @@ public class NewThreadActivity extends BaseActivity implements View.OnLongClickL
 
     private ChooseEmojiDialogFragment.OnEmojiClickListener onEmojiClickListener = new ChooseEmojiDialogFragment.OnEmojiClickListener() {
         @Override
-        public void onClick(String word, int id) {
+        public void onClick(String word, int id, DialogFragment fragment) {
             if (TextUtils.isEmpty(word)) {
+                fragment.dismiss();
                 //选择了图片
                 if (id == 0)
                     return;

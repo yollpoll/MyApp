@@ -1,5 +1,6 @@
 package com.example.xlm.mydrawerdemo.Activity;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -14,6 +15,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -22,6 +24,8 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -31,12 +35,14 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.example.xlm.mydrawerdemo.API.AnnouncementService;
 import com.example.xlm.mydrawerdemo.API.FormListService;
 import com.example.xlm.mydrawerdemo.Dao.DaoSession;
 import com.example.xlm.mydrawerdemo.R;
 import com.example.xlm.mydrawerdemo.adapter.ArticlePagerAdapter;
 import com.example.xlm.mydrawerdemo.base.BaseActivity;
 import com.example.xlm.mydrawerdemo.base.MyApplication;
+import com.example.xlm.mydrawerdemo.bean.Announcement;
 import com.example.xlm.mydrawerdemo.bean.ChangeTitleEvent;
 import com.example.xlm.mydrawerdemo.bean.ChildForm;
 import com.example.xlm.mydrawerdemo.bean.Form;
@@ -44,6 +50,7 @@ import com.example.xlm.mydrawerdemo.fragment.NormalContentFragment;
 import com.example.xlm.mydrawerdemo.http.Httptools;
 import com.example.xlm.mydrawerdemo.http.Port;
 import com.example.xlm.mydrawerdemo.utils.ToastUtils;
+import com.example.xlm.mydrawerdemo.utils.Tools;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
 import com.oguzdev.circularfloatingactionmenu.library.SubActionButton;
 
@@ -82,6 +89,7 @@ public class MainActivity extends BaseActivity {
     private FloatingActionButton fbNew;
     private CoordinatorLayout cdlContent;
     private String currentTagName, currentTagId;//当前板块名字和id
+    private Announcement mAnnouncement;
 
 
     @Override
@@ -96,6 +104,7 @@ public class MainActivity extends BaseActivity {
         initView();
         initData();
         notifyTab();
+        getAnnouncement();
     }
 
     //
@@ -116,6 +125,21 @@ public class MainActivity extends BaseActivity {
         fbNew.setOnClickListener(this);
         fbNew.setOnTouchListener(onTouchListener);
 //        initFloatingActionButton();
+    }
+
+    private void showAnnouncement() {
+        if (null == mAnnouncement)
+            return;
+        final Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.dialog_announcement);
+        Window window = dialog.getWindow();
+        WindowManager.LayoutParams layoutParams = window.getAttributes();
+        layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
+        layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        window.setAttributes(layoutParams);
+        dialog.show();
+        TextView tvAnnouncement = (TextView) dialog.findViewById(R.id.tv_announcement);
+        tvAnnouncement.setText(Html.fromHtml(mAnnouncement.getContent()));
     }
 
     private View.OnTouchListener onTouchListener = new View.OnTouchListener() {
@@ -148,19 +172,11 @@ public class MainActivity extends BaseActivity {
 
         @Override
         public void onLongPress(MotionEvent e) {
-//            ToastUtils.SnakeShowShort(mViewPager, "显示菜单");
+            showAnnouncement();
         }
 
         @Override
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-//            if (null == currentFragment) {
-//                if (listFragment.size() > 0) {
-//                    currentFragment = (NormalContentFragment) listFragment.get(0);
-//                } else {
-//                    return false;
-//                }
-//            }
-//            currentFragment.refresh();
             NewThreadActivity.gotoNewThreadActivity(MainActivity.this, currentTagName, currentTagId);
             return false;
         }
@@ -253,6 +269,8 @@ public class MainActivity extends BaseActivity {
     }
 
     private void initData() {
+        mAnnouncement = Announcement.load();
+
         retrofit = Httptools.getInstance().getRetrofit();
         getForumTab();
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -273,6 +291,34 @@ public class MainActivity extends BaseActivity {
 
             @Override
             public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+    }
+
+    private void getAnnouncement() {
+        Retrofit retrofitAnnouncement = Httptools.getInstance().getNoHeadRetrofit();
+        AnnouncementService service = retrofitAnnouncement.create(AnnouncementService.class);
+        Call<Announcement> call = service.getAnnouncement();
+        call.enqueue(new Callback<Announcement>() {
+            @Override
+            public void onResponse(Response<Announcement> response, Retrofit retrofit) {
+                //需要更新数据
+                if (null == mAnnouncement) {
+                    response.body().save();
+                    mAnnouncement = response.body();
+                    showAnnouncement();
+                }
+                if (response.body().getDate() > mAnnouncement.getDate()) {
+                    response.body().save();
+                    mAnnouncement = response.body();
+                    showAnnouncement();
+                }
+                showAnnouncement();
+            }
+
+            @Override
+            public void onFailure(Throwable throwable) {
 
             }
         });

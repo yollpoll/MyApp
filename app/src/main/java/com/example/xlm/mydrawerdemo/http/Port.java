@@ -8,6 +8,7 @@ public class Port {
     public final static String IMG_URL = "http://img6.nimingban.com/image/";
     public final static String HEAD_URL = "https://h.nimingban.com/";
     public final static String COVER = "http://cover.acfunwiki.org/cover.php";
+    public static final String ANNOUNCEMENT = "http://cover.acfunwiki.org/nmb-notice.json";  //公告
     //获取板块列表
     public final static String GET_ForumList = "Api/getForumList";
     //获取串
@@ -21,4 +22,5 @@ public class Port {
     public static final String COLLECTION = HEAD_URL + "Api/feed";
     public static final String ADD_COLLECTION = HEAD_URL + "Api/addFeed";
     public static final String DEL_COLLECTION = HEAD_URL + "Api/delFeed";
+
 }

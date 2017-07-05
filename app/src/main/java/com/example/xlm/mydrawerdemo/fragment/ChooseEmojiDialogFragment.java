@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.GridLayoutManager;
@@ -93,14 +94,14 @@ public class ChooseEmojiDialogFragment extends BaseDialogFragment {
         @Override
         public void onItemClick(View view, int position) {
             if (null != onEmojiClickListener)
-                onEmojiClickListener.onClick(listWordEmoji.get(position), 0);
+                onEmojiClickListener.onClick(listWordEmoji.get(position), 0,ChooseEmojiDialogFragment.this);
         }
     };
     private OnItemClickListenr onPicEmojiItemClicklistener = new OnItemClickListenr() {
         @Override
         public void onItemClick(View view, int position) {
             if (null != onEmojiClickListener)
-                onEmojiClickListener.onClick("", listPicEmoji.get(position));
+                onEmojiClickListener.onClick("", listPicEmoji.get(position),ChooseEmojiDialogFragment.this);
         }
     };
 
@@ -109,7 +110,7 @@ public class ChooseEmojiDialogFragment extends BaseDialogFragment {
     }
 
     public interface OnEmojiClickListener {
-        void onClick(String word, int id);
+        void onClick(String word, int id, DialogFragment fragment);
     }
 
     private class EmojiPageAdapter extends PagerAdapter {

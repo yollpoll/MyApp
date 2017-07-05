@@ -29,6 +29,16 @@ public class Httptools {
         return retrofit;
     }
 
+    public Retrofit getNoHeadRetrofit() {
+        if (retrofit == null) {
+            retrofit = new Retrofit.Builder()
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+        }
+        retrofit.client().interceptors().add(new AddCookieInterceptor());
+        return retrofit;
+    }
+
     public static Httptools getInstance() {
         if (instance == null) {
             instance = new Httptools();
