@@ -1,108 +1,138 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
     android:background="@android:color/white"
-    android:weightSum="5"
-    >
-<RelativeLayout
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    >
-    <ImageView
-        android:layout_width="250dp"
-        android:layout_height="200dp"
-        android:id="@+id/img_cover"
-        android:scaleType="fitXY"
-        />
-</RelativeLayout>
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:background="@drawable/btn_selector"
-    >
-<RelativeLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="80dp"
-    android:id="@+id/left_btn_layout1"
-    android:gravity="left"
-    android:paddingTop="5dp"
-    android:paddingBottom="5dp"
-    android:background="?android:attr/selectableItemBackground">
-    <ImageView
-        android:layout_width="25dp"
-        android:layout_height="25dp"
-        android:id="@+id/img_btn1"
-        android:src="@mipmap/icon_form"
-        android:layout_marginLeft="16dp"
-        />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/tv_btn1"
-        android:text="按钮1"
-        android:textSize="16sp"
-        android:layout_centerVertical="true"
-        android:layout_toRightOf="@+id/img_btn1"
-        android:layout_marginLeft="40dp"
-        />
-</RelativeLayout>
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:id="@+id/left_btn_layout2"
-        android:paddingTop="5dp"
-        android:paddingBottom="5dp"
-        android:background="?android:attr/selectableItemBackground">
-        <ImageView
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:id="@+id/img_btn2"
-            android:src="@mipmap/icon_set"
-            android:layout_marginLeft="16dp"
-            />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/tv_btn2"
-            android:text="设置"
-            android:textSize="16sp"
-            android:layout_centerVertical="true"
-            android:layout_toRightOf="@+id/img_btn2"
-            android:layout_marginLeft="40dp"
+    android:clickable="true"
+    android:orientation="vertical">
 
-            />
-    </RelativeLayout>
     <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/img_cover"
+            android:layout_width="250dp"
+            android:layout_height="200dp"
+            android:scaleType="fitXY" />
+    </RelativeLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:paddingBottom="5dp"
-        android:paddingTop="5dp"
-        android:id="@+id/left_btn_layout3"
-        android:background="?android:attr/selectableItemBackground">
-        <ImageView
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:id="@+id/img_btn3"
-            android:src="@mipmap/icon_collection"
-            android:layout_marginLeft="16dp"
-            />
-        <TextView
-            android:layout_width="wrap_content"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/left_btn_layout1"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/tv_btn3"
-            android:text="订阅"
-            android:textSize="16sp"
-            android:layout_centerVertical="true"
-            android:layout_toRightOf="@+id/img_btn3"
-            android:layout_marginLeft="40dp"
-            />
-    </RelativeLayout>
-</LinearLayout>
+            android:layout_marginTop="80dp"
+            android:background="?android:attr/selectableItemBackground"
+            android:gravity="left"
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp">
+
+            <ImageView
+                android:id="@+id/img_btn1"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginLeft="16dp"
+                android:src="@mipmap/icon_form" />
+
+            <TextView
+                android:id="@+id/tv_btn1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="40dp"
+                android:layout_toRightOf="@+id/img_btn1"
+                android:text="按钮1"
+                android:textSize="16sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/left_btn_layout2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="?android:attr/selectableItemBackground"
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp">
+
+            <ImageView
+                android:id="@+id/img_btn2"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginLeft="16dp"
+                android:src="@mipmap/icon_set" />
+
+            <TextView
+                android:id="@+id/tv_btn2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="40dp"
+                android:layout_toRightOf="@+id/img_btn2"
+                android:text="设置"
+                android:textSize="16sp"
+
+                />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/left_btn_layout3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="?android:attr/selectableItemBackground"
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp">
+
+            <ImageView
+                android:id="@+id/img_btn3"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginLeft="16dp"
+                android:src="@mipmap/icon_collection" />
+
+            <TextView
+                android:id="@+id/tv_btn3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="40dp"
+                android:layout_toRightOf="@+id/img_btn3"
+                android:text="订阅"
+                android:textSize="16sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/left_btn_layout4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="100dp"
+            android:background="?android:attr/selectableItemBackground"
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp">
+
+            <ImageView
+                android:id="@+id/img_btn4"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginLeft="16dp"
+                android:src="@mipmap/icon_git" />
+
+            <TextView
+                android:id="@+id/tv_btn4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="40dp"
+                android:layout_toRightOf="@+id/img_btn4"
+                android:text="作者"
+                android:textSize="16sp" />
+        </RelativeLayout>
+    </LinearLayout>
+
 
 </LinearLayout>

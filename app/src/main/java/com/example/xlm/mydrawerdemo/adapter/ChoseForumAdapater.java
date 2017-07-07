@@ -20,7 +20,7 @@ import java.util.List;
 /**
  * Created by 鹏祺 on 2016/3/31.
  */
-public class ChoseForumAdapater extends RecyclerView.Adapter<ChoseForumAdapater.ViewHolder>{
+public class ChoseForumAdapater extends RecyclerView.Adapter<ChoseForumAdapater.ViewHolder> {
     private List<ChildForm> forms;
     private Context context;
     private OnClickListener onClickListener;
@@ -36,23 +36,23 @@ public class ChoseForumAdapater extends RecyclerView.Adapter<ChoseForumAdapater.
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view= LayoutInflater.from(context).inflate(R.layout.item_recycler_chose_forum, null);
+        View view = LayoutInflater.from(context).inflate(R.layout.item_recycler_chose_forum, null);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        final ChildForm item=forms.get(position);
+        final ChildForm item = forms.get(position);
         holder.tvChoseForum.setText(item.getName());
-        if(item.getId().equals("-1")){
-            holder.checkBoxForum.setEnabled(false);
-            holder.checkBoxForum.setClickable(false);
-            holder.rlRoot.setClickable(false);
-        }else {
-            holder.checkBoxForum.setEnabled(true);
-            holder.checkBoxForum.setClickable(true);
-            holder.rlRoot.setClickable(true);
-        }
+//        if(item.getId().equals("-1")){
+//            holder.checkBoxForum.setEnabled(false);
+//            holder.checkBoxForum.setClickable(false);
+//            holder.rlRoot.setClickable(false);
+//        }else {
+        holder.checkBoxForum.setEnabled(true);
+        holder.checkBoxForum.setClickable(true);
+        holder.rlRoot.setClickable(true);
+//        }
         holder.rlRoot.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -61,17 +61,17 @@ public class ChoseForumAdapater extends RecyclerView.Adapter<ChoseForumAdapater.
                 }
             }
         });
-        if(item.isChecked()){
+        if (item.isChecked()) {
             holder.checkBoxForum.setChecked(true);
-        }else {
+        } else {
             holder.checkBoxForum.setChecked(false);
         }
         holder.checkBoxForum.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(onClickListener!=null)
+                if (onClickListener != null)
 
-                    onClickListener.onChcked(isChecked,holder.getAdapterPosition());
+                    onClickListener.onChcked(isChecked, holder.getAdapterPosition());
             }
         });
     }
@@ -82,19 +82,22 @@ public class ChoseForumAdapater extends RecyclerView.Adapter<ChoseForumAdapater.
     }
 
 
-    public class ViewHolder extends RecyclerView.ViewHolder{
+    public class ViewHolder extends RecyclerView.ViewHolder {
         TextView tvChoseForum;
         CheckBox checkBoxForum;
         RelativeLayout rlRoot;
+
         public ViewHolder(View itemView) {
             super(itemView);
-            rlRoot= (RelativeLayout) itemView.findViewById(R.id.rl_root);
-            tvChoseForum= (TextView) itemView.findViewById(R.id.tv_forum);
-            checkBoxForum= (CheckBox) itemView.findViewById(R.id.check_forum);
+            rlRoot = (RelativeLayout) itemView.findViewById(R.id.rl_root);
+            tvChoseForum = (TextView) itemView.findViewById(R.id.tv_forum);
+            checkBoxForum = (CheckBox) itemView.findViewById(R.id.check_forum);
         }
     }
-    public interface OnClickListener{
-        void onItemClick(View view,int position,CheckBox checkBox);
-        void onChcked(boolean isChecked,int position);
+
+    public interface OnClickListener {
+        void onItemClick(View view, int position, CheckBox checkBox);
+
+        void onChcked(boolean isChecked, int position);
     }
 }

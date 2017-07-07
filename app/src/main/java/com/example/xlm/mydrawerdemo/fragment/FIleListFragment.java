@@ -19,6 +19,7 @@ import java.io.File;
 /**
  * Created by 鹏祺 on 2017/6/30.
  */
+@SuppressLint("ValidFragment")
 public class FIleListFragment extends BaseDialogFragment {
     View rootView;
     private RecyclerView rvFileList;

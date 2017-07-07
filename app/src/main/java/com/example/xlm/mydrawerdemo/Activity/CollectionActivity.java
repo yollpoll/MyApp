@@ -1,12 +1,7 @@
 package com.example.xlm.mydrawerdemo.Activity;
 
-import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.TypedArray;
-import android.graphics.Canvas;
-import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.view.ActionMode;
@@ -14,31 +9,23 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.AccelerateDecelerateInterpolator;
-import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.view.animation.TranslateAnimation;
 import android.widget.ProgressBar;
 
-import com.example.xlm.mydrawerdemo.API.CollectionService;
+import com.example.xlm.mydrawerdemo.retrofitService.CollectionService;
 import com.example.xlm.mydrawerdemo.R;
 import com.example.xlm.mydrawerdemo.adapter.CollectionAdapter;
 import com.example.xlm.mydrawerdemo.base.BaseActivity;
-import com.example.xlm.mydrawerdemo.base.BaseSwipeActivity;
 import com.example.xlm.mydrawerdemo.base.MyApplication;
 import com.example.xlm.mydrawerdemo.bean.CollectionBean;
 import com.example.xlm.mydrawerdemo.http.Httptools;
 import com.example.xlm.mydrawerdemo.http.Port;
-import com.example.xlm.mydrawerdemo.utils.SpaceItemDecoration;
 import com.example.xlm.mydrawerdemo.utils.ToastUtils;
-
-import org.androidannotations.annotations.ItemSelect;
 
 import java.util.ArrayList;
 import java.util.List;

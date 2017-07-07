@@ -3,11 +3,9 @@ package com.example.xlm.mydrawerdemo.Activity;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.ContentResolver;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -23,7 +21,6 @@ import android.text.SpannedString;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
@@ -37,8 +34,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.example.xlm.mydrawerdemo.API.FormListService;
-import com.example.xlm.mydrawerdemo.API.NewThreadService;
+import com.example.xlm.mydrawerdemo.retrofitService.FormListService;
+import com.example.xlm.mydrawerdemo.retrofitService.NewThreadService;
 import com.example.xlm.mydrawerdemo.R;
 import com.example.xlm.mydrawerdemo.base.BaseActivity;
 import com.example.xlm.mydrawerdemo.bean.ChildForm;
@@ -50,8 +47,6 @@ import com.example.xlm.mydrawerdemo.utils.SPUtiles;
 import com.example.xlm.mydrawerdemo.utils.ToastUtils;
 import com.example.xlm.mydrawerdemo.utils.Tools;
 import com.example.xlm.mydrawerdemo.utils.TransFormContent;
-import com.squareup.okhttp.MediaType;
-import com.squareup.okhttp.MultipartBuilder;
 import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.ResponseBody;
 
@@ -60,7 +55,6 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -75,8 +69,6 @@ import retrofit.Call;
 import retrofit.Callback;
 import retrofit.Response;
 import retrofit.Retrofit;
-import retrofit.http.Multipart;
-import retrofit.http.PartMap;
 
 /**
  * Created by 鹏祺 on 2017/6/7.

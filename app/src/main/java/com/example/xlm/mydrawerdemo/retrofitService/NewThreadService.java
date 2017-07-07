@@ -1,21 +1,13 @@
-package com.example.xlm.mydrawerdemo.API;
+package com.example.xlm.mydrawerdemo.retrofitService;
 
 import com.example.xlm.mydrawerdemo.http.Port;
 import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.ResponseBody;
 
-import java.util.Map;
-
 import retrofit.Call;
-import retrofit.Response;
-import retrofit.http.GET;
 import retrofit.http.Multipart;
 import retrofit.http.POST;
 import retrofit.http.Part;
-import retrofit.http.PartMap;
-import retrofit.http.Path;
-import retrofit.http.Query;
-import rx.Observable;
 
 /**
  * Created by 鹏祺 on 2017/5/25.

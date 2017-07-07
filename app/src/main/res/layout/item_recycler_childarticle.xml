@@ -57,6 +57,7 @@
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:layout_below="@+id/tv_content"
+            android:scaleType="centerCrop"
             android:layout_marginLeft="10dp" />
 
         <View

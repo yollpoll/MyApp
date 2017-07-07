@@ -2,42 +2,26 @@ package com.example.xlm.mydrawerdemo.Activity;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.util.Pair;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.TextView;
 
-import com.example.xlm.mydrawerdemo.API.FormListService;
 import com.example.xlm.mydrawerdemo.R;
-import com.example.xlm.mydrawerdemo.adapter.ChooseTagAdapter;
 import com.example.xlm.mydrawerdemo.base.BaseActivity;
 import com.example.xlm.mydrawerdemo.bean.ChildForm;
-import com.example.xlm.mydrawerdemo.bean.Form;
-import com.example.xlm.mydrawerdemo.http.Httptools;
 import com.example.xlm.mydrawerdemo.utils.SPUtiles;
 import com.example.xlm.mydrawerdemo.view.ChangeLineViewGroup;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.zip.Inflater;
-
-import retrofit.Call;
-import retrofit.Callback;
-import retrofit.Response;
-import retrofit.Retrofit;
 
 /**
  * Created by 鹏祺 on 2017/6/13.
@@ -76,7 +60,7 @@ public class ChooseTagActivity extends BaseActivity {
     private void initData() {
         tagId = getIntent().getStringExtra("tagId");
         listForums = SPUtiles.getTags();
-        removeTimeLine();
+//        removeTimeLine();
         for (int i = 0; i < listForums.size(); i++) {
             TextView tvTag = (TextView) LayoutInflater.from(this).inflate(R.layout.item_tag, null, false).findViewById(R.id.tv_tag);
             ViewGroup viewGroup = (ViewGroup) tvTag.getParent();

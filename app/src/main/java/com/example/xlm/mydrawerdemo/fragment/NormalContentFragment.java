@@ -7,34 +7,27 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.example.xlm.mydrawerdemo.API.ArticleService;
-import com.example.xlm.mydrawerdemo.API.FormListService;
+import com.example.xlm.mydrawerdemo.retrofitService.ArticleService;
 import com.example.xlm.mydrawerdemo.Activity.ChildArticleActivity;
 import com.example.xlm.mydrawerdemo.Activity.ImageActivity;
 import com.example.xlm.mydrawerdemo.Activity.NewThreadActivity;
 import com.example.xlm.mydrawerdemo.R;
 import com.example.xlm.mydrawerdemo.adapter.ArticleRecyclerAdapter;
-import com.example.xlm.mydrawerdemo.adapter.StringListRecyclerViewAdapter;
 import com.example.xlm.mydrawerdemo.base.BaseFragment;
 import com.example.xlm.mydrawerdemo.bean.Article;
-import com.example.xlm.mydrawerdemo.bean.ChangeTitleEvent;
-import com.example.xlm.mydrawerdemo.bean.ChildForm;
-import com.example.xlm.mydrawerdemo.bean.Form;
 import com.example.xlm.mydrawerdemo.http.Httptools;
 import com.example.xlm.mydrawerdemo.http.Port;
+import com.example.xlm.mydrawerdemo.utils.Constant;
 import com.example.xlm.mydrawerdemo.utils.SpaceItemDecoration;
 import com.example.xlm.mydrawerdemo.utils.ToastUtils;
 
@@ -229,9 +222,15 @@ public class NormalContentFragment extends BaseFragment {
         getData(false);
     }
 
+
     private void getData(final boolean isLoad) {
         ArticleService articleService = retrofit.create(ArticleService.class);
-        Call<List<Article>> articleCall = articleService.getArticleList(page + "", formId);
+        Call<List<Article>> articleCall;
+        if (formId.equals(Constant.TIME_LINE)) {
+            articleCall = articleService.getTimeLine();
+        } else {
+            articleCall = articleService.getArticleList(page + "", formId);
+        }
         articleCall.enqueue(new Callback<List<Article>>() {
             @Override
             public void onResponse(Response<List<Article>> response, Retrofit retrofit) {

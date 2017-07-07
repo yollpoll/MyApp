@@ -22,5 +22,6 @@ public class Port {
     public static final String COLLECTION = HEAD_URL + "Api/feed";
     public static final String ADD_COLLECTION = HEAD_URL + "Api/addFeed";
     public static final String DEL_COLLECTION = HEAD_URL + "Api/delFeed";
-
+    //时间线
+    public static final String TIME_LINE = HEAD_URL + "Api/timeline";
 }

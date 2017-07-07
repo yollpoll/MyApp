@@ -17,18 +17,16 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import com.example.xlm.mydrawerdemo.API.ChildArticleService;
-import com.example.xlm.mydrawerdemo.API.CollectionService;
+import com.example.xlm.mydrawerdemo.retrofitService.ChildArticleService;
+import com.example.xlm.mydrawerdemo.retrofitService.CollectionService;
 import com.example.xlm.mydrawerdemo.R;
 import com.example.xlm.mydrawerdemo.adapter.ChildArticleAdapter;
 import com.example.xlm.mydrawerdemo.base.BaseSwipeActivity;
@@ -39,15 +37,12 @@ import com.example.xlm.mydrawerdemo.bean.Reply;
 import com.example.xlm.mydrawerdemo.fragment.ThreadMenuFragment;
 import com.example.xlm.mydrawerdemo.http.Httptools;
 import com.example.xlm.mydrawerdemo.http.Port;
-import com.example.xlm.mydrawerdemo.utils.Constant;
 import com.example.xlm.mydrawerdemo.utils.ToastUtils;
-import com.example.xlm.mydrawerdemo.utils.Tools;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import me.imid.swipebacklayout.lib.app.SwipeBackActivity;
 import retrofit.Call;
 import retrofit.Callback;
 import retrofit.Response;

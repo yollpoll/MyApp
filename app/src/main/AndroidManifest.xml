@@ -39,6 +39,7 @@
             android:name=".Activity.ChooseTagActivity"
             android:theme="@style/TransparentStyle" />
         <activity android:name=".Activity.WebActivity"></activity>
+        <activity android:name=".Activity.AboutAuthorActivity"/>
     </application>
 
 </manifest>

@@ -14,6 +14,7 @@ import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,7 +22,9 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.Request;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
@@ -29,6 +32,7 @@ import com.bumptech.glide.request.target.Target;
 import com.example.xlm.mydrawerdemo.R;
 import com.example.xlm.mydrawerdemo.base.BaseActivity;
 import com.example.xlm.mydrawerdemo.base.BaseSwipeActivity;
+import com.example.xlm.mydrawerdemo.http.Port;
 import com.example.xlm.mydrawerdemo.utils.DownLoadImageThread;
 import com.example.xlm.mydrawerdemo.utils.ToastUtils;
 import com.example.xlm.mydrawerdemo.utils.Tools;
@@ -44,7 +48,7 @@ public class ImageActivity extends BaseActivity {
     private String url;
     private ImageView imgView;
     private static Bitmap mBitmap;
-    private ProgressBar mProgressBar;
+    //    private ProgressBar mProgressBar;
     private Toolbar mToolbar;
     private String imageName;
     private String mSharePath;
@@ -67,12 +71,18 @@ public class ImageActivity extends BaseActivity {
     }
 
     public static void gotoImageActivity(Activity activity, String url, String imageName, View shareView) {
-        ActivityOptionsCompat options = ActivityOptionsCompat
-                .makeSceneTransitionAnimation(activity, shareView, "img");
-        Intent intent = new Intent(activity, ImageActivity.class);
-        intent.putExtra("url", url);
-        intent.putExtra("imageName", imageName);
-        activity.startActivity(intent, options.toBundle());
+        if (url.endsWith("gif")) {
+            //动态图的情况下使用一般的跳转方式
+            gotoImageActivity(activity, url, imageName);
+        } else {
+            //金泰图使用transition
+            ActivityOptionsCompat options = ActivityOptionsCompat
+                    .makeSceneTransitionAnimation(activity, shareView, "img");
+            Intent intent = new Intent(activity, ImageActivity.class);
+            intent.putExtra("url", url);
+            intent.putExtra("imageName", imageName);
+            activity.startActivity(intent, options.toBundle());
+        }
     }
 
     @Override
@@ -118,7 +128,7 @@ public class ImageActivity extends BaseActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setTitle("大图赏析(　^ω^)");
+        getSupportActionBar().setTitle("大图赏析");
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -134,7 +144,7 @@ public class ImageActivity extends BaseActivity {
     private void loadImage() {
         url = getIntent().getStringExtra("url");
         if (!TextUtils.isEmpty(url)) {
-            onDown(url, true, true);
+//            onDown(url, true, true);
 //            Glide.with(this)
 //                    .load(url)
 //                    .asBitmap()
@@ -143,18 +153,24 @@ public class ImageActivity extends BaseActivity {
 //                    .into(new SimpleTarget<Bitmap>() {
 //                        @Override
 //                        public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-//                            mProgressBar.setVisibility(View.GONE);
 //                            imgView.setImageBitmap(resource);
 //                        }
 //                    });
+            if (url.endsWith("gif")) {
+                Glide.with(this).load(url).asGif().diskCacheStrategy(DiskCacheStrategy.SOURCE).into(imgView);
+            } else {
+                Glide.with(this).load(url).into(imgView);
+            }
+            Log.d("spq", "getUrl>>>>>");
         } else {
             imgView.setImageBitmap(mBitmap);
+            Log.d("spq", "getBitmap>>>>>");
         }
     }
 
     private void initView() {
         imgView = (ImageView) findViewById(R.id.img);
-        mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
+//        mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
     }
 

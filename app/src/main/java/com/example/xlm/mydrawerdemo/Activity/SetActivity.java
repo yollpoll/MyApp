@@ -6,19 +6,16 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.example.xlm.mydrawerdemo.API.GetCookieService;
+import com.example.xlm.mydrawerdemo.retrofitService.GetCookieService;
 import com.example.xlm.mydrawerdemo.R;
 import com.example.xlm.mydrawerdemo.base.BaseActivity;
-import com.example.xlm.mydrawerdemo.base.BaseSwipeActivity;
 import com.example.xlm.mydrawerdemo.fragment.FIleListFragment;
-import com.example.xlm.mydrawerdemo.http.AddCookieInterceptor;
 import com.example.xlm.mydrawerdemo.http.GetCookieInterceptor;
 import com.example.xlm.mydrawerdemo.http.Httptools;
 import com.example.xlm.mydrawerdemo.utils.Constant;
@@ -28,12 +25,8 @@ import com.example.xlm.mydrawerdemo.utils.ToastUtils;
 import com.example.xlm.mydrawerdemo.utils.Tools;
 
 import java.io.File;
-import java.io.UnsupportedEncodingException;
 import java.net.CookieManager;
 import java.net.CookiePolicy;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
-import java.text.SimpleDateFormat;
 
 import retrofit.Call;
 import retrofit.Callback;
@@ -51,6 +44,7 @@ public class SetActivity extends BaseActivity {
     private String cookie;
     private Retrofit retrofit;
     private LinearLayout llRoot;
+    private TextView tvVersionCodeValue;
 
     public static void gotoSetActivity(Context context) {
         Intent intent = new Intent(context, SetActivity.class);
@@ -74,7 +68,12 @@ public class SetActivity extends BaseActivity {
     private void initData() {
         setCookie();
         initToolbar("设置");
+        initVersionCode();
         retrofit = Httptools.getInstance().getRetrofit();
+    }
+
+    private void initVersionCode() {
+        tvVersionCodeValue.setText(Constant.VersionName);
     }
 
     private void setCookie() {
@@ -101,10 +100,12 @@ public class SetActivity extends BaseActivity {
         llRoot = (LinearLayout) findViewById(R.id.ll_root);
         rlSaveCookie = (RelativeLayout) findViewById(R.id.rl_save_cookie);
         rlLoadCookie = (RelativeLayout) findViewById(R.id.rl_load_cookie);
+        tvVersionCodeValue = (TextView) findViewById(R.id.tv_version_code_value);
 
         rlGetCookie.setOnClickListener(this);
         rlSaveCookie.setOnClickListener(this);
         rlLoadCookie.setOnClickListener(this);
+        tvVersionCodeValue.setOnClickListener(this);
     }
 
 

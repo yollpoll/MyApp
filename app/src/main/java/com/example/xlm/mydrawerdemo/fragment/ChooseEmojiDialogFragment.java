@@ -26,6 +26,7 @@ import java.util.List;
 /**
  * Created by 鹏祺 on 2017/6/15.
  */
+@SuppressLint("ValidFragment")
 public class ChooseEmojiDialogFragment extends BaseDialogFragment {
     private TabLayout tabEmoji;
     private ViewPager vpEmoji;
