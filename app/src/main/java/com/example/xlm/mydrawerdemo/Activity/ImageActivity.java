@@ -36,6 +36,7 @@ import com.example.xlm.mydrawerdemo.http.Port;
 import com.example.xlm.mydrawerdemo.utils.DownLoadImageThread;
 import com.example.xlm.mydrawerdemo.utils.ToastUtils;
 import com.example.xlm.mydrawerdemo.utils.Tools;
+import com.github.chrisbanes.photoview.PhotoView;
 
 import java.io.File;
 
@@ -46,7 +47,7 @@ import me.imid.swipebacklayout.lib.app.SwipeBackActivity;
  */
 public class ImageActivity extends BaseActivity {
     private String url;
-    private ImageView imgView;
+    private PhotoView imgView;
     private static Bitmap mBitmap;
     //    private ProgressBar mProgressBar;
     private Toolbar mToolbar;
@@ -169,7 +170,7 @@ public class ImageActivity extends BaseActivity {
     }
 
     private void initView() {
-        imgView = (ImageView) findViewById(R.id.img);
+        imgView = (PhotoView) findViewById(R.id.img);
 //        mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
     }

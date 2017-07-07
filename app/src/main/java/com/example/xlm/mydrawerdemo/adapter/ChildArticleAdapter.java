@@ -2,6 +2,7 @@ package com.example.xlm.mydrawerdemo.adapter;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
@@ -84,7 +85,11 @@ public class ChildArticleAdapter extends RecyclerView.Adapter<ChildArticleAdapte
         if ("1".equals(item.getAdmin())) {
             holder.tvUsername.setTextColor(context.getResources().getColor(R.color.textRed));
         } else {
-            holder.tvUsername.setTextColor(context.getResources().getColor(R.color.textGrey));
+            if (list.size() > 0 && item.getUserid().equals(list.get(0).getUserid())) {
+                holder.tvUsername.setTextColor(Color.parseColor("#7cb342"));
+            } else {
+                holder.tvUsername.setTextColor(context.getResources().getColor(R.color.textGrey));
+            }
         }
         holder.tvUsername.setText(item.getUserid());
         holder.tvId.setText("No." + item.getId());
