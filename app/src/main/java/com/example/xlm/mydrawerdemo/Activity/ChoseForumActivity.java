@@ -130,6 +130,7 @@ public class ChoseForumActivity extends BaseActivity {
             @Override
             public void onResponse(Response<List<Form>> response, Retrofit retrofit) {
                 List<Form> forms = response.body();
+                Form.saveList(forms);
                 if (forms != null) {
                     for (int i = 0; i < forms.size(); i++) {
                         listForums.addAll(forms.get(i).getForums());

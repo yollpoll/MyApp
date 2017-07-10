@@ -73,4 +73,5 @@ public class MyApplication extends Application {
     public void setCookie(String cookie) {
         SPUtiles.saveCookie(cookie);
     }
+
 }

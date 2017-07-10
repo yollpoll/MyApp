@@ -364,7 +364,8 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onResponse(Response<List<Form>> response, Retrofit retrofit) {
                 listTab = (ArrayList<ChildForm>) response.body().get(0).getForums();
-//                removeTimeLine();
+                //存储到本地
+                Form.saveList(response.body());
                 bindTab();
             }
 

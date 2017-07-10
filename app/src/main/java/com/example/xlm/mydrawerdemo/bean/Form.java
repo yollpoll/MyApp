@@ -1,5 +1,7 @@
 package com.example.xlm.mydrawerdemo.bean;
 
+import com.example.xlm.mydrawerdemo.utils.SPUtiles;
+
 import java.util.List;
 
 /**
@@ -58,5 +60,13 @@ public class Form {
 
     public void setForums(List<ChildForm> forums) {
         this.forums = forums;
+    }
+
+    public static void saveList(List<Form> forms) {
+        SPUtiles.saveForms(forms);
+    }
+
+    public static List<Form> getList() {
+        return SPUtiles.getForms();
     }
 }

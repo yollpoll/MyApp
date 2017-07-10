@@ -17,6 +17,7 @@ public class Article {
     private String content;
     private String admin;//是否红名
     private String replayCount;
+    private String fid;
     private List<Reply> replys;
 
     public String getId() {
@@ -37,6 +38,14 @@ public class Article {
 
     public String getExt() {
         return ext;
+    }
+
+    public String getFid() {
+        return fid;
+    }
+
+    public void setFid(String fid) {
+        this.fid = fid;
     }
 
     public void setExt(String ext) {

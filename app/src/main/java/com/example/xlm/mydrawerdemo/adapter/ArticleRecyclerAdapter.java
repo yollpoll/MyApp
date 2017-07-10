@@ -21,6 +21,8 @@ import android.widget.ViewSwitcher;
 import com.bumptech.glide.Glide;
 import com.example.xlm.mydrawerdemo.R;
 import com.example.xlm.mydrawerdemo.bean.Article;
+import com.example.xlm.mydrawerdemo.bean.ChildForm;
+import com.example.xlm.mydrawerdemo.bean.Form;
 import com.example.xlm.mydrawerdemo.bean.Reply;
 import com.example.xlm.mydrawerdemo.http.Port;
 import com.example.xlm.mydrawerdemo.utils.Tools;
@@ -88,6 +90,24 @@ public class ArticleRecyclerAdapter extends RecyclerView.Adapter<ArticleRecycler
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         Article article = data.get(position);
+        if (!TextUtils.isEmpty(article.getFid()) || null != article.getFid()) {
+            holder.tvForm.setVisibility(View.VISIBLE);
+            List<Form> listForms = Form.getList();
+            String formName = article.getFid();
+            if (null != listForms) {
+                for (Form form : listForms) {
+                    for (ChildForm childForm : form.getForums()) {
+                        if (childForm.getId().equals(article.getFid())) {
+                            formName = childForm.getName();
+                            break;
+                        }
+                    }
+                }
+            }
+            holder.tvForm.setText("(" + formName + ")");
+        } else {
+            holder.tvForm.setVisibility(View.GONE);
+        }
         if (article != null) {
             Spanned contentSpanned = Html.fromHtml(article.getContent());
 //            holder.content.setText(contentSpanned);
@@ -154,7 +174,7 @@ public class ArticleRecyclerAdapter extends RecyclerView.Adapter<ArticleRecycler
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView content, id, time, sender;
+        TextView content, id, time, sender, tvForm;
         RelativeLayout item_layout;
         TextSwitcher comment;
         ImageView imgContent;
@@ -170,6 +190,7 @@ public class ArticleRecyclerAdapter extends RecyclerView.Adapter<ArticleRecycler
             sender = (TextView) itemView.findViewById(R.id.tv_sender_id);
             imgContent = (ImageView) itemView.findViewById(R.id.img_content);
             cardRoot = (CardView) itemView.findViewById(R.id.card_root);
+            tvForm = (TextView) itemView.findViewById(R.id.tv_form);
         }
     }
 }

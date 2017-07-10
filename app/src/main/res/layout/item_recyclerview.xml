@@ -18,26 +18,42 @@
         android:background="?attr/selectableItemBackground"
         android:paddingBottom="20dp">
 
-        <TextView
-            android:id="@+id/tv_show_id"
+        <RelativeLayout
+            android:id="@+id/rl_show_id"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
-            android:layout_margin="10dp"
-            android:text="Id:"
-            android:textSize="16sp"
+            android:layout_margin="10dp">
 
-            />
+            <TextView
+                android:id="@+id/tv_show_id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Id:"
+                android:textSize="16sp"
 
-        <TextView
-            android:id="@+id/tv_sender_id"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/tv_show_id"
-            android:layout_toRightOf="@+id/tv_show_id"
-            android:textColor="@android:color/holo_red_light"
-            android:textSize="16sp" />
+                />
+
+            <TextView
+                android:id="@+id/tv_form"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/tv_show_id"
+                android:layout_below="@+id/tv_show_id"
+                android:layout_marginTop="5dp"
+                android:text="" />
+
+            <TextView
+                android:id="@+id/tv_sender_id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/tv_show_id"
+                android:layout_toRightOf="@+id/tv_show_id"
+                android:textColor="@android:color/holo_red_light"
+                android:textSize="16sp" />
+        </RelativeLayout>
+
 
         <TextView
             android:id="@+id/tv_time"
@@ -48,19 +64,21 @@
             android:layout_margin="10dp"
             android:textSize="16sp" />
 
+
         <TextView
             android:id="@+id/tv_id"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/tv_sender_id"
+            android:layout_alignBaseline="@+id/rl_show_id"
             android:layout_centerHorizontal="true"
             android:text="" />
+
 
         <TextView
             android:id="@+id/tv_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/tv_show_id"
+            android:layout_below="@+id/rl_show_id"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
             android:ellipsize="end"
@@ -86,8 +104,8 @@
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:layout_below="@+id/tv_title"
-            android:scaleType="centerCrop"
             android:layout_marginLeft="16dp"
+            android:scaleType="centerCrop"
             android:transitionName="img" />
     </RelativeLayout>
 

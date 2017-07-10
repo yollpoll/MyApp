@@ -6,6 +6,7 @@ import com.example.xlm.mydrawerdemo.Activity.MainActivity;
 import com.example.xlm.mydrawerdemo.base.MyApplication;
 import com.example.xlm.mydrawerdemo.bean.Announcement;
 import com.example.xlm.mydrawerdemo.bean.ChildForm;
+import com.example.xlm.mydrawerdemo.bean.Form;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -26,6 +27,7 @@ public class SPUtiles {
     public static final String CONNECTION = "connection";
     public static final String TAGS = "tags";//板块
     public static final String ANNOUNCEMENT = "announcement";
+    public static final String FORMS = "forms";
 
     public static List<ChildForm> getTags() {
         List<ChildForm> result = new ArrayList<>();
@@ -36,6 +38,23 @@ public class SPUtiles {
             }.getType());
         }
         return result;
+    }
+
+    public static List<Form> getForms() {
+        String json = SharePreferencesUtils.getString(MyApplication.getInstance(), FORMS);
+        List<Form> result = new ArrayList<>();
+        if (!TextUtils.isEmpty(json)) {
+            Gson gson = new Gson();
+            result = gson.fromJson(json, new TypeToken<List<Form>>() {
+            }.getType());
+        }
+        return result;
+    }
+
+    public static void saveForms(List<Form> form) {
+        Gson gson = new Gson();
+        String json = gson.toJson(form);
+        SharePreferencesUtils.putString(MyApplication.getInstance(), FORMS, json);
     }
 
     public static void saveAnnouncement(Announcement announcement) {
