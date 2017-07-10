@@ -15,4 +15,6 @@
     <string name="sure_exit">确认退出？</string>
     <string name="sure_submit">确认提交？</string>
     <string name="sure_clear">确定要清空吗？？</string>
+    <string name="explain_permission_save_cookie">保存饼干需要使用磁盘写入权限</string>
+    <string name="result_permission_save_cookie">未获得权限，无法保存饼干</string>
 </resources>

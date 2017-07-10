@@ -15,6 +15,8 @@ import com.example.xlm.mydrawerdemo.adapter.OnItemClickListenr;
 import com.example.xlm.mydrawerdemo.base.BaseDialogFragment;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by 鹏祺 on 2017/6/30.
@@ -24,7 +26,7 @@ public class FIleListFragment extends BaseDialogFragment {
     View rootView;
     private RecyclerView rvFileList;
     private FileListAdapter mAdapter;
-    private File[] files;
+    private List<File> listFiles = new ArrayList<>();
     private OnFileClickListener onFileClickListener;
 
     @Nullable
@@ -42,8 +44,12 @@ public class FIleListFragment extends BaseDialogFragment {
     }
 
     public FIleListFragment(File[] files, OnFileClickListener onFileClickListener) {
-        this.files = files;
         this.onFileClickListener = onFileClickListener;
+        if (null == files)
+            return;
+        for (int i = 0; i < files.length; i++) {
+            listFiles.add(files[i]);
+        }
     }
 
     @Override
@@ -60,7 +66,7 @@ public class FIleListFragment extends BaseDialogFragment {
     private void initData() {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        mAdapter = new FileListAdapter(files, onItemClickListenr);
+        mAdapter = new FileListAdapter(listFiles, onItemClickListenr);
         rvFileList.setLayoutManager(layoutManager);
         rvFileList.setAdapter(mAdapter);
     }
@@ -69,7 +75,7 @@ public class FIleListFragment extends BaseDialogFragment {
         @Override
         public void onItemClick(View view, int position) {
             if (null != onFileClickListener) {
-                onFileClickListener.onClick(files[position]);
+                onFileClickListener.onClick(listFiles.get(position));
             }
         }
     };

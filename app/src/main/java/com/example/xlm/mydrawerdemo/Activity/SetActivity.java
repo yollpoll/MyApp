@@ -1,9 +1,11 @@
 package com.example.xlm.mydrawerdemo.Activity;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -20,6 +22,7 @@ import com.example.xlm.mydrawerdemo.http.GetCookieInterceptor;
 import com.example.xlm.mydrawerdemo.http.Httptools;
 import com.example.xlm.mydrawerdemo.utils.Constant;
 import com.example.xlm.mydrawerdemo.utils.FileUtils;
+import com.example.xlm.mydrawerdemo.utils.PermissionUtils;
 import com.example.xlm.mydrawerdemo.utils.SPUtiles;
 import com.example.xlm.mydrawerdemo.utils.ToastUtils;
 import com.example.xlm.mydrawerdemo.utils.Tools;
@@ -38,6 +41,7 @@ import retrofit.Retrofit;
  */
 
 public class SetActivity extends BaseActivity {
+    public static final int REQUESET_SAVE_COOKIE = 1;
     private Toolbar mToolbar;
     private RelativeLayout rlGetCookie, rlSaveCookie, rlLoadCookie;
     private TextView tvCurrentCookie;
@@ -65,6 +69,20 @@ public class SetActivity extends BaseActivity {
         return true;
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case REQUESET_SAVE_COOKIE:
+                if (PermissionUtils.changeRequestResult(grantResults)) {
+                    saveCookie();
+                } else {
+                    ToastUtils.SnakeShowShort(llRoot, getResources().getString(R.string.result_permission_save_cookie));
+                }
+                break;
+        }
+    }
+
     private void initData() {
         setCookie();
         initToolbar("设置");
@@ -82,7 +100,7 @@ public class SetActivity extends BaseActivity {
         String[] cookieList = cookies.split(";");
         for (int i = 0; i < cookieList.length; i++) {
             if (cookieList[i].contains("Max-Age")) {
-                cookie += cookieList[i].substring(9, cookieList[i].length() - 1);
+                cookie += cookieList[i].substring(9, cookieList[i].length());
             }
         }
         if (TextUtils.isEmpty(cookie)) {
@@ -164,6 +182,21 @@ public class SetActivity extends BaseActivity {
         }
     };
 
+    //申请权限通过
+    private PermissionUtils.OnPermissionGet onPermissionGet = new PermissionUtils.OnPermissionGet() {
+        @Override
+        public void onGet() {
+            saveCookie();
+        }
+    };
+
+    private PermissionUtils.OnExplainPermission onExplainPermission = new PermissionUtils.OnExplainPermission() {
+        @Override
+        public void onExplain() {
+            ToastUtils.SnakeShowShort(llRoot, getResources().getString(R.string.explain_permission_save_cookie));
+        }
+    };
+
     @Override
     public void onClick(View v) {
         super.onClick(v);
@@ -172,7 +205,9 @@ public class SetActivity extends BaseActivity {
                 getCookie();
                 break;
             case R.id.rl_save_cookie:
-                saveCookie();
+                PermissionUtils.checkAndRequestPermission(SetActivity.this,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE, REQUESET_SAVE_COOKIE,
+                        onExplainPermission, onPermissionGet);
                 break;
             case R.id.rl_load_cookie:
                 loadCookie();

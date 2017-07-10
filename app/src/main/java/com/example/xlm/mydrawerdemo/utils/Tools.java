@@ -180,11 +180,15 @@ public class Tools {
         } catch (Exception e) {
             return "";
         }
-        int day = time / (60 * 60 * 24);
-        int hour = (time % (day * 60 * 60 * 24)) / (60 * 60);
-        int min = (time - day * (60 * 60 * 24) - hour * (60 * 60)) / 60;
-        int second = time - day * (60 * 60 * 24) - hour * (60 * 60) - min * (60);
-        return day + "日" + hour + "时" + min + "分" + second + "秒";
+        try {
+            int day = time / (60 * 60 * 24);
+            int hour = (time % (day * 60 * 60 * 24)) / (60 * 60);
+            int min = (time - day * (60 * 60 * 24) - hour * (60 * 60)) / 60;
+            int second = time - day * (60 * 60 * 24) - hour * (60 * 60) - min * (60);
+            return day + "日" + hour + "时" + min + "分" + second + "秒";
+        } catch (ArithmeticException e) {
+            return "未知时间";
+        }
     }
 
     /**

@@ -88,7 +88,6 @@ public class FileUtils {
     }
 
     /**
-     * @param context
      * @return
      */
     public static String readFromFile(File file) {
