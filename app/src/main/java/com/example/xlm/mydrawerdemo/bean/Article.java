@@ -16,7 +16,7 @@ public class Article {
     private String title;
     private String content;
     private String admin;//是否红名
-    private String replayCount;
+    private String replyCount;
     private String fid;
     private List<Reply> replys;
 
@@ -108,12 +108,12 @@ public class Article {
         this.admin = admin;
     }
 
-    public String getReplayCount() {
-        return replayCount;
+    public String getReplyCount() {
+        return replyCount;
     }
 
-    public void setReplayCount(String replayCount) {
-        this.replayCount = replayCount;
+    public void setReplyCount(String replyCount) {
+        this.replyCount = replyCount;
     }
 
     public List<Reply> getReplies() {
@@ -125,7 +125,7 @@ public class Article {
     }
 
     public Article(String id, String img, String ext, String now, String userid,
-                   String name, String email, String title, String content, String admin, String replayCount,
+                   String name, String email, String title, String content, String admin, String replyCount,
                    List<Reply> replys) {
         this.id = id;
         this.img = img;
@@ -137,7 +137,7 @@ public class Article {
         this.title = title;
         this.content = content;
         this.admin = admin;
-        this.replayCount = replayCount;
+        this.replyCount = replyCount;
         this.replys = replys;
     }
 

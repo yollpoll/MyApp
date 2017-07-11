@@ -2,20 +2,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <!--<android.support.v7.widget.Toolbar-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:id="@+id/toolbar"-->
-    <!--style="@style/Widget.MyTheme.HeaderBar"-->
-    <!--android:layout_height="?attr/actionBarSize"-->
-    <!--android:background="@color/colorPrimary"-->
-    <!--/>-->
+
     <include layout="@layout/toolbar" />
 
-    <!--<ProgressBar-->
-        <!--android:id="@+id/progressBar"-->
-        <!--android:layout_width="60dp"-->
-        <!--android:layout_height="60dp"-->
-        <!--android:layout_centerInParent="true" />-->
 
     <com.github.chrisbanes.photoview.PhotoView
         android:id="@+id/img"
@@ -24,4 +13,5 @@
         android:layout_below="@+id/toolbar"
         android:layout_centerInParent="true"
         android:transitionName="img" />
+
 </RelativeLayout>

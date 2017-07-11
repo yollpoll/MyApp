@@ -6,5 +6,9 @@
         android:icon="@mipmap/icon_share"
         android:title="share"
         app:showAsAction="always"/>
-
+    <item
+        android:id="@+id/menu_save"
+        android:icon="@mipmap/icon_save_img"
+        android:title="save"
+        app:showAsAction="always"/>
 </menu>

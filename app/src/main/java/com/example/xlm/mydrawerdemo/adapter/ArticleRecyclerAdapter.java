@@ -166,6 +166,7 @@ public class ArticleRecyclerAdapter extends RecyclerView.Adapter<ArticleRecycler
 
             }
         }
+        holder.tvReplyCount.setText("replys: "+article.getReplyCount());
     }
 
     @Override
@@ -174,7 +175,7 @@ public class ArticleRecyclerAdapter extends RecyclerView.Adapter<ArticleRecycler
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView content, id, time, sender, tvForm;
+        TextView content, id, time, sender, tvForm, tvReplyCount;
         RelativeLayout item_layout;
         TextSwitcher comment;
         ImageView imgContent;
@@ -191,6 +192,7 @@ public class ArticleRecyclerAdapter extends RecyclerView.Adapter<ArticleRecycler
             imgContent = (ImageView) itemView.findViewById(R.id.img_content);
             cardRoot = (CardView) itemView.findViewById(R.id.card_root);
             tvForm = (TextView) itemView.findViewById(R.id.tv_form);
+            tvReplyCount = (TextView) itemView.findViewById(R.id.tv_reply_count);
         }
     }
 }

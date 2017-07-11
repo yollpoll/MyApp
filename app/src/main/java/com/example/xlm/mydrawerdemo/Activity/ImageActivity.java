@@ -4,12 +4,15 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.provider.MediaStore;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -39,6 +42,9 @@ import com.example.xlm.mydrawerdemo.utils.Tools;
 import com.github.chrisbanes.photoview.PhotoView;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 import me.imid.swipebacklayout.lib.app.SwipeBackActivity;
 
@@ -104,6 +110,9 @@ public class ImageActivity extends BaseActivity {
                     isShareing = true;
                     onDown(url, false, true);
                 }
+                return true;
+            case R.id.menu_save:
+                onDown(url, false, true);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -232,6 +241,8 @@ public class ImageActivity extends BaseActivity {
                         Tools.shareMsg(Tools.getApplicationName(ImageActivity.this), mToolbar.getTitle().toString()
                                 , "", path, ImageActivity.this);
                         isShareing = false;
+                    } else {
+                        ToastUtils.showShort("保存成功");
                     }
                     break;
                 case DownLoadImageThread.DOWN_FAILED:
