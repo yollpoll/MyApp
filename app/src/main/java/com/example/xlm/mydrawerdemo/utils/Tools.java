@@ -7,6 +7,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
@@ -346,7 +347,7 @@ public class Tools {
     }
 
     /**
-     * 保存图片到本地
+     * 保存图片到缓存目录
      *
      * @param context
      * @param bitmap
@@ -375,5 +376,53 @@ public class Tools {
             }
         }
         return cacheImage.getAbsolutePath();
+    }
+
+    /**
+     * 保存图片到SD卡目录
+     *
+     * @param bitmap
+     */
+    public static String saveImageToSd(Bitmap bitmap, String imageName) {
+        //替换/
+        String img = imageName.replace("/", "_");
+        File cacheDir = new File(Environment.getExternalStorageDirectory() + Constant.SD_CACHE_DIR + Constant.IMG_CACHE);
+        if (!cacheDir.exists())
+            cacheDir.mkdir();
+        File cacheImage = new File(cacheDir + "/" + img);
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream(cacheImage);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+            fos.flush();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (fos != null) {
+                try {
+                    fos.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return cacheImage.getAbsolutePath();
+    }
+
+    /**
+     * 更新图片库
+     */
+    public static void updatePhoto(Context context, String path, String fileName) {
+        // 其次把文件插入到系统图库
+        try {
+            MediaStore.Images.Media.insertImage(context.getContentResolver(),
+                    path, fileName, null);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
+                Uri.fromFile(new File(path))));
     }
 }

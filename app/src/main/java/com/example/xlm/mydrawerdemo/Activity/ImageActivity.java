@@ -13,6 +13,7 @@ import android.os.Message;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -23,6 +24,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -37,6 +39,7 @@ import com.example.xlm.mydrawerdemo.base.BaseActivity;
 import com.example.xlm.mydrawerdemo.base.BaseSwipeActivity;
 import com.example.xlm.mydrawerdemo.http.Port;
 import com.example.xlm.mydrawerdemo.utils.DownLoadImageThread;
+import com.example.xlm.mydrawerdemo.utils.PermissionUtils;
 import com.example.xlm.mydrawerdemo.utils.ToastUtils;
 import com.example.xlm.mydrawerdemo.utils.Tools;
 import com.github.chrisbanes.photoview.PhotoView;
@@ -52,6 +55,7 @@ import me.imid.swipebacklayout.lib.app.SwipeBackActivity;
  * Created by 鹏祺 on 2016/1/16.
  */
 public class ImageActivity extends BaseActivity {
+    private static final int REQUEST_WRITE_SD = 1;
     private String url;
     private PhotoView imgView;
     private static Bitmap mBitmap;
@@ -60,6 +64,7 @@ public class ImageActivity extends BaseActivity {
     private String imageName;
     private String mSharePath;
     private boolean isShareing;
+    private RelativeLayout rlRoot;
 
     public static void gotoImageActivity(Activity activity, Bitmap bitmap, View shareView) {
         ActivityOptionsCompat options = ActivityOptionsCompat
@@ -99,6 +104,20 @@ public class ImageActivity extends BaseActivity {
     }
 
     @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case REQUEST_WRITE_SD:
+                if (PermissionUtils.changeRequestResult(grantResults)) {
+                    onDown(url);
+                } else {
+                    ToastUtils.SnakeShowShort(rlRoot, "获取权限失败，无法 保存/分享");
+                }
+                break;
+        }
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_share:
@@ -108,11 +127,15 @@ public class ImageActivity extends BaseActivity {
                 } else {
                     //这种情况是用户进入直接分享图，图片还没有下载完成
                     isShareing = true;
-                    onDown(url, false, true);
+//                    onDown(url);
+                    PermissionUtils.checkAndRequestPermission(ImageActivity.this, PermissionUtils.WRITE_EXTERNAL_STORAGE,
+                            REQUEST_WRITE_SD, onExplainPermission, onPermissionGet);
                 }
                 return true;
             case R.id.menu_save:
-                onDown(url, false, true);
+                PermissionUtils.checkAndRequestPermission(ImageActivity.this, PermissionUtils.WRITE_EXTERNAL_STORAGE,
+                        REQUEST_WRITE_SD, onExplainPermission, onPermissionGet);
+//                onDown(url);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -154,42 +177,26 @@ public class ImageActivity extends BaseActivity {
     private void loadImage() {
         url = getIntent().getStringExtra("url");
         if (!TextUtils.isEmpty(url)) {
-//            onDown(url, true, true);
-//            Glide.with(this)
-//                    .load(url)
-//                    .asBitmap()
-////                    .crossFade()
-//                    .error(R.mipmap.icon_yygq)
-//                    .into(new SimpleTarget<Bitmap>() {
-//                        @Override
-//                        public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-//                            imgView.setImageBitmap(resource);
-//                        }
-//                    });
             if (url.endsWith("gif")) {
                 Glide.with(this).load(url).asGif().diskCacheStrategy(DiskCacheStrategy.SOURCE).into(imgView);
             } else {
                 Glide.with(this).load(url).into(imgView);
             }
-            Log.d("spq", "getUrl>>>>>");
         } else {
             imgView.setImageBitmap(mBitmap);
-            Log.d("spq", "getBitmap>>>>>");
         }
     }
 
     private void initView() {
         imgView = (PhotoView) findViewById(R.id.img);
-//        mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        rlRoot = (RelativeLayout) findViewById(R.id.rl_root);
     }
 
     /**
      * @param url
-     * @param isShow 是否是第一次显示
-     * @param isSave 是保存还是分享
      */
-    private void onDown(String url, final boolean isShow, boolean isSave) {
+    private void onDown(String url) {
         //下载图片
         final DownloadHandler handler = new DownloadHandler();
         DownLoadImageThread downLoadImageThread = new DownLoadImageThread(url, this, new DownLoadImageThread.ImageDownCallback() {
@@ -218,7 +225,7 @@ public class ImageActivity extends BaseActivity {
             public void onDownFailed() {
                 handler.sendEmptyMessage(DownLoadImageThread.DOWN_FAILED);
             }
-        }, isSave, imageName);
+        }, imageName);
         new Thread(downLoadImageThread).start();
     }
 
@@ -229,7 +236,6 @@ public class ImageActivity extends BaseActivity {
             super.handleMessage(msg);
             switch (msg.what) {
                 case DownLoadImageThread.DOWN_SUCCESS_WITH_BITMIP:
-//                    Bitmap bitmap=msg.getData().getParcelable("bitmap");
                     if (null != mBitmap)
                         imgView.setImageBitmap(mBitmap);
                     break;
@@ -243,6 +249,7 @@ public class ImageActivity extends BaseActivity {
                         isShareing = false;
                     } else {
                         ToastUtils.showShort("保存成功");
+                        Tools.updatePhoto(ImageActivity.this, path, imageName.replace("/", "_"));
                     }
                     break;
                 case DownLoadImageThread.DOWN_FAILED:
@@ -250,4 +257,19 @@ public class ImageActivity extends BaseActivity {
             }
         }
     }
+
+    private PermissionUtils.OnPermissionGet onPermissionGet = new PermissionUtils.OnPermissionGet() {
+        @Override
+        public void onGet() {
+            onDown(url);
+        }
+    };
+    private PermissionUtils.OnExplainPermission onExplainPermission = new PermissionUtils.OnExplainPermission() {
+        @Override
+        public void onExplain() {
+            if (isShareing) {
+                ToastUtils.SnakeShowShort(rlRoot, "分享/保存 图片需要SD卡读写权限");
+            }
+        }
+    };
 }

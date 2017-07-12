@@ -1,5 +1,6 @@
 package com.example.xlm.mydrawerdemo.utils;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
@@ -10,6 +11,8 @@ import android.support.v4.content.ContextCompat;
  */
 
 public class PermissionUtils {
+    public static String WRITE_EXTERNAL_STORAGE = Manifest.permission.WRITE_EXTERNAL_STORAGE;//SD 卡读写
+
     /**
      * 检查权限
      *

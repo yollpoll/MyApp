@@ -28,21 +28,19 @@ public class DownLoadImageThread implements Runnable {
     private Context context;
     private ImageDownCallback callback;
     private File downFile;
-    private boolean isSave;//是否是保存还是分享图片
     private String imageName;
 
     public DownLoadImageThread(String url, Context context, ImageDownCallback callback,
-                               boolean isSave, String imageName) {
+                               String imageName) {
         this.url = url;
         this.imageName = imageName;
-        this.isSave = isSave;
         this.context = context;
         this.callback = callback;
     }
 
     @Override
     public void run() {
-        File file = null;
+        String fileName = "";
         Bitmap bitmap = null;
         try {
             bitmap = Glide.with(context)
@@ -51,14 +49,9 @@ public class DownLoadImageThread implements Runnable {
                     .into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
                     .get();
             if (bitmap != null) {
-                //TODO 这里需要优化，saveImage应该应该用在外部回调中，不应该在这里全部完成，应当保持这个类功能的单一性即下载图片
-                if (isSave) {
-                    //保存图片，文件名跟随图片名
-                    saveImage(context, bitmap, imageName, isSave);
-                } else {
-                    //分享图片，文件名固定
-                    saveImage(context, bitmap, "save.jpg", isSave);
-                }
+                //保存图片，文件名跟随图片名
+                fileName = Tools.saveImageToSd(bitmap, imageName);
+                downFile = new File(fileName);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -69,51 +62,6 @@ public class DownLoadImageThread implements Runnable {
             } else {
                 callback.onDownFailed();
             }
-        }
-    }
-
-    /**
-     * 保存图片到本地
-     *
-     * @param context
-     * @param bitmap
-     */
-    private void saveImage(Context context, Bitmap bitmap, String imageName, boolean isSave) {
-        //替换/
-        String img = imageName.replace("/", "_");
-        File cacheDir = new File(Environment.getExternalStorageDirectory() + Constant.SD_CACHE_DIR + Constant.IMG_CACHE);
-        if (!cacheDir.exists())
-            cacheDir.mkdir();
-        File cacheImage = new File(cacheDir + "/" + img);
-        downFile = cacheImage;
-        FileOutputStream fos = null;
-        try {
-            fos = new FileOutputStream(cacheImage);
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
-            fos.flush();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (fos != null) {
-                try {
-                    fos.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        if (isSave) {
-            // 其次把文件插入到系统图库
-            try {
-                MediaStore.Images.Media.insertImage(context.getContentResolver(),
-                        cacheImage.getAbsolutePath(), img, null);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-            context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
-                    Uri.fromFile(cacheImage)));
         }
     }
 
