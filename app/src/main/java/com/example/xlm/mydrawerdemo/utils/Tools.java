@@ -25,6 +25,7 @@ import android.widget.TextSwitcher;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
+import com.example.xlm.mydrawerdemo.Activity.DrawingActivity;
 import com.example.xlm.mydrawerdemo.R;
 import com.example.xlm.mydrawerdemo.view.SecretTextView;
 
@@ -36,8 +37,16 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
+
+import rx.Observable;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.schedulers.Schedulers;
 
 import static com.example.xlm.mydrawerdemo.R.layout.alert_choose_photo;
 
@@ -346,6 +355,37 @@ public class Tools {
         });
     }
 
+    public interface OnSaveImageCallback {
+        void callback(String path);
+    }
+
+    /**
+     * rxJava实现
+     * 异步的方式存储图片
+     *
+     * @param context
+     * @param bitmap
+     * @param imageName
+     * @param callback
+     */
+    public static void saveImageViaAsyncTask(final Context context, final Bitmap bitmap, final String imageName, final OnSaveImageCallback callback) {
+        Observable.create(new Observable.OnSubscribe<String>() {
+            @Override
+            public void call(Subscriber<? super String> subscriber) {
+                subscriber.onNext(saveImage(context, bitmap, imageName));
+                subscriber.onCompleted();
+            }
+        })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<String>() {
+                    @Override
+                    public void call(String s) {
+                        callback.callback(s);
+                    }
+                });
+    }
+
     /**
      * 保存图片到缓存目录
      *
@@ -360,7 +400,7 @@ public class Tools {
         FileOutputStream fos = null;
         try {
             fos = new FileOutputStream(cacheImage);
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
             fos.flush();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -378,9 +418,37 @@ public class Tools {
         return cacheImage.getAbsolutePath();
     }
 
+
+    /**
+     * rxJava实现
+     * 异步方式存储图片
+     *
+     * @param bitmap
+     * @param imageName
+     * @param callback
+     */
+    public static void saveImageToSdViaAsyncTask(final Bitmap bitmap, final String imageName, final OnSaveImageCallback callback) {
+        Observable.create(new Observable.OnSubscribe<String>() {
+            @Override
+            public void call(Subscriber<? super String> subscriber) {
+                subscriber.onNext(saveImageToSd(bitmap, imageName));
+                subscriber.onCompleted();
+            }
+        })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<String>() {
+                    @Override
+                    public void call(String s) {
+                        callback.callback(s);
+                    }
+                });
+    }
+
     /**
      * 保存图片到SD卡目录
-     *这个方法应当写在子线程
+     * 这个方法应当写在子线程
+     *
      * @param bitmap
      */
     public static String saveImageToSd(Bitmap bitmap, String imageName) {

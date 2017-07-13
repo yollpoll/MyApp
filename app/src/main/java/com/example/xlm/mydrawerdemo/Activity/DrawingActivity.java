@@ -331,10 +331,16 @@ public class DrawingActivity extends BaseActivity implements View.OnLongClickLis
     }
 
     private void submit() {
-        Intent intent = getIntent();
-        intent.putExtra("path", Tools.saveImage(this, mDrawView.getBitmapCache(), "draw_" + System.currentTimeMillis() + ".jpg"));
-        setResult(RESULT_OK, intent);
-        this.finish();
+        Tools.saveImageViaAsyncTask(this, mDrawView.getBitmapCache(),
+                "draw_" + System.currentTimeMillis() + ".jpg", new Tools.OnSaveImageCallback() {
+                    @Override
+                    public void callback(String path) {
+                        Intent intent = getIntent();
+                        intent.putExtra("path", path);
+                        setResult(RESULT_OK, intent);
+                        DrawingActivity.this.finish();
+                    }
+                });
     }
 
     /**

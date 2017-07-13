@@ -14,6 +14,7 @@ import android.provider.MediaStore;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.util.Pair;
+import android.support.v4.widget.ContentLoadingProgressBar;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.text.Spanned;
@@ -31,6 +32,7 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -43,6 +45,7 @@ import com.example.xlm.mydrawerdemo.bean.Form;
 import com.example.xlm.mydrawerdemo.fragment.ChooseEmojiDialogFragment;
 import com.example.xlm.mydrawerdemo.http.Httptools;
 import com.example.xlm.mydrawerdemo.utils.Constant;
+import com.example.xlm.mydrawerdemo.utils.RxTools;
 import com.example.xlm.mydrawerdemo.utils.SPUtiles;
 import com.example.xlm.mydrawerdemo.utils.ToastUtils;
 import com.example.xlm.mydrawerdemo.utils.Tools;
@@ -103,6 +106,7 @@ public class NewThreadActivity extends BaseActivity implements View.OnLongClickL
     private String foreContent;
     private CardView cvPicContent;
     private CheckBox cbWater;
+    private ProgressBar progressBarPic;
 
 
     public static void gotoNewThreadActivity(Activity activity, String tagName, String tagId) {
@@ -151,10 +155,16 @@ public class NewThreadActivity extends BaseActivity implements View.OnLongClickL
                 Uri uri = data.getData();
                 ContentResolver cr = this.getContentResolver();
                 try {
-                    Bitmap bitmap = BitmapFactory.decodeStream(cr.openInputStream(uri));
-                    imgPath = Tools.saveImage(this, bitmap, "temp.jpg");
-                    showPic(true);
-                    imgPicContent.setImageBitmap(bitmap);
+                    final Bitmap bitmap = BitmapFactory.decodeStream(cr.openInputStream(uri));
+                    progressBarPic.setVisibility(View.VISIBLE);
+                    Tools.saveImageViaAsyncTask(this, bitmap, "temp.jpg", new Tools.OnSaveImageCallback() {
+                        @Override
+                        public void callback(String path) {
+                            showPic(true);
+                            imgPicContent.setImageBitmap(bitmap);
+                        }
+                    });
+
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
@@ -175,12 +185,17 @@ public class NewThreadActivity extends BaseActivity implements View.OnLongClickL
                     ToastUtils.SnakeShowShort(rlRoot, "剪裁失败");
                     break;
                 }
-                Bitmap bitmap;
+                final Bitmap bitmap;
                 try {
                     bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(Tools.imgUri));
-                    imgPath = Tools.imgUri.getPath();
-                    showPic(true);
-                    imgPicContent.setImageBitmap(bitmap);
+                    progressBarPic.setVisibility(View.VISIBLE);
+                    Tools.saveImageViaAsyncTask(this, bitmap, "temp.jpg", new Tools.OnSaveImageCallback() {
+                        @Override
+                        public void callback(String path) {
+                            showPic(true);
+                            imgPicContent.setImageBitmap(bitmap);
+                        }
+                    });
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
@@ -243,6 +258,7 @@ public class NewThreadActivity extends BaseActivity implements View.OnLongClickL
         tvTagLeft = (TextView) findViewById(R.id.tv_tag_left);
         cvPicContent = (CardView) findViewById(R.id.card_pic_content);
         cbWater = (CheckBox) findViewById(R.id.water);
+        progressBarPic = (ProgressBar) findViewById(R.id.progressBar_pic);
 
         imgSend.setOnClickListener(this);
         imgShowMoreTitle.setOnClickListener(this);
@@ -671,10 +687,12 @@ public class NewThreadActivity extends BaseActivity implements View.OnLongClickL
     private void disPic() {
         imgPicContent.setVisibility(View.GONE);
         cbWater.setVisibility(View.GONE);
+        progressBarPic.setVisibility(View.GONE);
     }
 
     private void showPic(boolean showWater) {
         imgPicContent.setVisibility(View.VISIBLE);
+        progressBarPic.setVisibility(View.GONE);
         if (showWater) {
             cbWater.setVisibility(View.VISIBLE);
         } else {
