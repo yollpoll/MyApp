@@ -2,6 +2,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
+        android:id="@+id/menu_set_bg"
+        android:title="背景"
+        app:showAsAction="always" />
+    <item
         android:id="@+id/menu_save"
         android:title="保存"
         app:showAsAction="always" />

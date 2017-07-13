@@ -38,7 +38,7 @@ public class DrawView extends View {
     private int bgColor = Color.WHITE;
     private Canvas mCanvas;
     private OnCleanModeChangerListener onCleanModeChangerListener;
-//    private Bitmap bpBackGround ;
+    private Bitmap bpBackGround;
 
     public DrawView(Context context) {
         super(context);
@@ -84,6 +84,12 @@ public class DrawView extends View {
     }
 
     public void setBackGround(Bitmap bitmap) {
+        bpBackGround = bitmap;
+        Rect rectF = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
+        mCanvas.drawBitmap(bitmap, rectF, rectF, mPaint);
+        //取出缓存
+        fakeCache = Bitmap.createBitmap(imgCache);
+        postInvalidate();
     }
 
     public void setCleanModeListener(OnCleanModeChangerListener onCleanModeChangerListener) {
@@ -133,7 +139,13 @@ public class DrawView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+        //画背景颜色
         canvas.drawColor(bgColor);
+//        //画背景图片
+//        if (null != bpBackGround) {
+//            Rect rectF = new Rect(0, 0, fakeCache.getWidth(), fakeCache.getHeight());
+//            canvas.drawBitmap(bpBackGround, rectF, rectF, mPaint);
+//        }
         if (null == mCanvas) {
             //新建一个canvas 模仿自带的画一样的图
             imgCache = Bitmap.createBitmap(getMeasuredWidth(), getMeasuredHeight(), Bitmap.Config.ARGB_8888);

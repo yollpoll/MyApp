@@ -78,5 +78,8 @@
     <style name="CouponStyle">
         <item name="android:background">@drawable/shape_coupon</item>
     </style>
+    <style name="DrawActivityStyle" parent="AppTheme">
+        <item name="android:actionMenuTextColor">@color/ColorTextPrimary</item>
+    </style>
 
 </resources>

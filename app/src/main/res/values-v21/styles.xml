@@ -59,7 +59,7 @@
     </style>
 
     <style name="menuOverflow" parent="Widget.AppCompat.Light.ActionButton.Overflow">
-        <item name="actionOverflowButtonStyle">@style/menuOverflow</item>
+        <item name="android:actionMenuTextColor">@color/ColorTextPrimary</item>
     </style>
 
     <style name="MyToolBar" parent="Theme.AppCompat.Light.NoActionBar">
@@ -75,6 +75,7 @@
     <style name="Widget.MyTheme.HeaderBar" parent="Widget.AppCompat.Light.Spinner.DropDown.ActionBar">
         <item name="android:theme">@style/ActionBarThemeOverlay</item>
     </style>
+
 
     <style name="BackGroundRipple">
         <item name="android:background">?android:attr/selectableItemBackgroundBorderless</item>
@@ -97,5 +98,9 @@
 
     <style name="CouponStyle">
         <item name="android:background">@drawable/ripple_coupon</item>
+    </style>
+
+    <style name="DrawActivityStyle" parent="AppTheme">
+        <item name="android:textColorPrimary">@color/ColorTextPrimary</item>
     </style>
 </resources>

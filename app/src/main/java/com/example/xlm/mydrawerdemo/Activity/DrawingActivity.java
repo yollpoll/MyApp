@@ -2,16 +2,19 @@ package com.example.xlm.mydrawerdemo.Activity;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.MediaStore;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
@@ -45,7 +48,19 @@ import com.example.xlm.mydrawerdemo.view.DrawView;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
 import com.oguzdev.circularfloatingactionmenu.library.SubActionButton;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
 import me.imid.swipebacklayout.lib.app.SwipeBackActivity;
+import rx.Observable;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by 鹏祺 on 2017/6/19.
@@ -94,9 +109,58 @@ public class DrawingActivity extends BaseActivity implements View.OnLongClickLis
             case R.id.menu_save:
                 save();
                 return true;
+            case R.id.menu_set_bg:
+                setBackground();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case Tools.PIC_FROM_PHOTO:
+                if (resultCode != RESULT_OK) {
+                    ToastUtils.SnakeShowShort(rlRoot, "获取图片失败");
+                    break;
+                }
+                Uri uri = data.getData();
+                ContentResolver cr = this.getContentResolver();
+                try {
+                    Bitmap bitmap = BitmapFactory.decodeStream(cr.openInputStream(uri));
+                    mDrawView.setBackGround(bitmap);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+                break;
+            case Tools.PIC_FROM_CAMERA:
+                if (resultCode != RESULT_OK) {
+                    ToastUtils.SnakeShowShort(rlRoot, "拍照失败");
+                    break;
+                }
+                Intent intent = new Intent("com.android.camera.action.CROP");
+                intent.setDataAndType(Tools.imgUri, "image/*");
+                intent.putExtra("scale", true);
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, Tools.imgUri);
+                DrawingActivity.this.startActivityForResult(intent, Tools.CROP_PHOTO);
+                break;
+            case Tools.CROP_PHOTO:
+                if (resultCode != RESULT_OK) {
+                    ToastUtils.SnakeShowShort(rlRoot, "剪裁失败");
+                    break;
+                }
+                Bitmap bitmap;
+                try {
+                    bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(Tools.imgUri));
+                    mDrawView.setBackGround(bitmap);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+                break;
+        }
+
     }
 
     @Override
@@ -273,39 +337,37 @@ public class DrawingActivity extends BaseActivity implements View.OnLongClickLis
         this.finish();
     }
 
+    /**
+     * 用rxJava实行异步
+     */
     private void save() {
-        ToastUtils.SnakeShowShort(rlRoot, "保存成功");
-        new Runnable() {
+        Observable.create(new Observable.OnSubscribe<Map<String, String>>() {
             @Override
-            public void run() {
+            public void call(Subscriber<? super Map<String, String>> subscriber) {
                 String path;
                 String fileName = "draw_" + System.currentTimeMillis() + ".jpg";
                 path = Tools.saveImageToSd(mDrawView.getBitmapCache(), fileName);
-//                imgCache.setVisibility(View.VISIBLE);
-//                imgCache.setImageBitmap(mDrawView.getBitmapCache());
-                MyHandler myHandler = new MyHandler();
-                Message message = myHandler.obtainMessage();
-                Bundle bundle = new Bundle();
-                bundle.putString("path", path);
-                bundle.putString("fileName", fileName);
-                message.setData(bundle);
-                myHandler.sendMessage(message);
-                Log.d("spq", "发送>>>>>>>>>>>>>");
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("path", path);
+                params.put("fileName", fileName);
+                subscriber.onNext(params);
+                subscriber.onCompleted();
             }
-        }.run();
+        })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<Map<String, String>>() {
+                    @Override
+                    public void call(Map<String, String> s) {
+                        Tools.updatePhoto(DrawingActivity.this, s.get("path"), s.get("fileName"));
+                        ToastUtils.SnakeShowShort(rlRoot, "保存成功");
+                    }
+                });
     }
 
-    private class MyHandler extends Handler {
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            String path = msg.getData().getString("path");
-            String fileName = msg.getData().getString("fileName");
-            Tools.updatePhoto(DrawingActivity.this, path, fileName);
-            ToastUtils.SnakeShowShort(rlRoot, "保存成功");
-        }
+    private void setBackground() {
+        Tools.showChoosePicDialog(this);
     }
-
 
     private void changeWidth() {
         final Dialog dialog = new Dialog(this);

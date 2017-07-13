@@ -34,7 +34,9 @@
         <activity
             android:name=".Activity.NewThreadActivity"
             android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".Activity.DrawingActivity" />
+        <activity android:name=".Activity.DrawingActivity"
+            android:theme="@style/DrawActivityStyle"
+            />
         <activity
             android:name=".Activity.ChooseTagActivity"
             android:theme="@style/TransparentStyle" />

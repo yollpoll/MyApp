@@ -380,7 +380,7 @@ public class Tools {
 
     /**
      * 保存图片到SD卡目录
-     *
+     *这个方法应当写在子线程
      * @param bitmap
      */
     public static String saveImageToSd(Bitmap bitmap, String imageName) {
