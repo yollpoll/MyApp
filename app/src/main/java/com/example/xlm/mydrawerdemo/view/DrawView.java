@@ -138,6 +138,7 @@ public class DrawView extends View {
             //新建一个canvas 模仿自带的画一样的图
             imgCache = Bitmap.createBitmap(getMeasuredWidth(), getMeasuredHeight(), Bitmap.Config.ARGB_8888);
             mCanvas = new Canvas(imgCache);
+            mCanvas.drawColor(bgColor);
         }
         if (null != fakeCache) {
             //每次绘制都会把缓存中的绘制一遍

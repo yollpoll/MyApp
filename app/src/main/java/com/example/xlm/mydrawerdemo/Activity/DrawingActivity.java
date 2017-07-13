@@ -10,6 +10,8 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
@@ -36,6 +38,7 @@ import android.widget.TextView;
 
 import com.example.xlm.mydrawerdemo.R;
 import com.example.xlm.mydrawerdemo.base.BaseActivity;
+import com.example.xlm.mydrawerdemo.utils.ToastUtils;
 import com.example.xlm.mydrawerdemo.utils.Tools;
 import com.example.xlm.mydrawerdemo.view.ChangeBurshWidthView;
 import com.example.xlm.mydrawerdemo.view.DrawView;
@@ -56,8 +59,9 @@ public class DrawingActivity extends BaseActivity implements View.OnLongClickLis
     private Toolbar mToolbar;
     private FloatingActionMenu actionMenu;
     private CoordinatorLayout clRoot;
-    //    private ImageView imgCache;
+    private ImageView imgCache;
     private ImageView imgCleaner;
+    private RelativeLayout rlRoot;
 
     public static void gotoDrawingActivity(Activity activity) {
         Intent intent = new Intent(activity, DrawingActivity.class);
@@ -86,6 +90,9 @@ public class DrawingActivity extends BaseActivity implements View.OnLongClickLis
                         dialog.dismiss();
                     }
                 }).create().show();
+                return true;
+            case R.id.menu_save:
+                save();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -128,9 +135,10 @@ public class DrawingActivity extends BaseActivity implements View.OnLongClickLis
     private void initView() {
         mDrawView = (DrawView) findViewById(R.id.draw_view);
         flbMenu = (FloatingActionButton) findViewById(R.id.fb_menu);
-//        imgCache = (ImageView) findViewById(R.id.img_cache);
+        imgCache = (ImageView) findViewById(R.id.img_cache);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         clRoot = (CoordinatorLayout) findViewById(R.id.cl_root);
+        rlRoot = (RelativeLayout) findViewById(R.id.rl_root);
 
         flbMenu.setOnLongClickListener(this);
         flbMenu.setOnClickListener(this);
@@ -264,6 +272,40 @@ public class DrawingActivity extends BaseActivity implements View.OnLongClickLis
         setResult(RESULT_OK, intent);
         this.finish();
     }
+
+    private void save() {
+        ToastUtils.SnakeShowShort(rlRoot, "保存成功");
+        new Runnable() {
+            @Override
+            public void run() {
+                String path;
+                String fileName = "draw_" + System.currentTimeMillis() + ".jpg";
+                path = Tools.saveImageToSd(mDrawView.getBitmapCache(), fileName);
+//                imgCache.setVisibility(View.VISIBLE);
+//                imgCache.setImageBitmap(mDrawView.getBitmapCache());
+                MyHandler myHandler = new MyHandler();
+                Message message = myHandler.obtainMessage();
+                Bundle bundle = new Bundle();
+                bundle.putString("path", path);
+                bundle.putString("fileName", fileName);
+                message.setData(bundle);
+                myHandler.sendMessage(message);
+                Log.d("spq", "发送>>>>>>>>>>>>>");
+            }
+        }.run();
+    }
+
+    private class MyHandler extends Handler {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            String path = msg.getData().getString("path");
+            String fileName = msg.getData().getString("fileName");
+            Tools.updatePhoto(DrawingActivity.this, path, fileName);
+            ToastUtils.SnakeShowShort(rlRoot, "保存成功");
+        }
+    }
+
 
     private void changeWidth() {
         final Dialog dialog = new Dialog(this);
