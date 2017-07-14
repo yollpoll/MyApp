@@ -19,8 +19,8 @@ android {
         applicationId "com.yollpoll.feizhaidao"
         minSdkVersion 19
         targetSdkVersion 23
-        versionCode 20170707
-        versionName "1.0.0"
+        versionCode 20170713
+        versionName "1.1.0"
     }
     buildTypes {
         release {

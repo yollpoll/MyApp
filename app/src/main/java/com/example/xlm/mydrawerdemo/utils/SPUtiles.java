@@ -6,6 +6,8 @@ import com.example.xlm.mydrawerdemo.Activity.MainActivity;
 import com.example.xlm.mydrawerdemo.base.MyApplication;
 import com.example.xlm.mydrawerdemo.bean.Announcement;
 import com.example.xlm.mydrawerdemo.bean.ChildForm;
+import com.example.xlm.mydrawerdemo.bean.Draft;
+import com.example.xlm.mydrawerdemo.bean.DraftWithPath;
 import com.example.xlm.mydrawerdemo.bean.Form;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -28,6 +30,24 @@ public class SPUtiles {
     public static final String TAGS = "tags";//板块
     public static final String ANNOUNCEMENT = "announcement";
     public static final String FORMS = "forms";
+    public static final String DRAFT = "draft";
+
+    public static void saveDrafts(List<DraftWithPath> list) {
+        Gson gson = new Gson();
+        String json = gson.toJson(list);
+        SharePreferencesUtils.putString(MyApplication.getInstance().getApplicationContext(), DRAFT, "");
+    }
+
+    public static List<DraftWithPath> getDrafts() {
+        List<DraftWithPath> result = new ArrayList<>();
+        Gson gson = new Gson();
+        String data = SharePreferencesUtils.getString(MyApplication.getInstance(), DRAFT, "");
+        if (!TextUtils.isEmpty(data)) {
+            result = gson.fromJson(data, new TypeToken<List<DraftWithPath>>() {
+            }.getType());
+        }
+        return result;
+    }
 
     public static List<ChildForm> getTags() {
         List<ChildForm> result = new ArrayList<>();

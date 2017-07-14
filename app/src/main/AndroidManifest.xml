@@ -34,14 +34,15 @@
         <activity
             android:name=".Activity.NewThreadActivity"
             android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".Activity.DrawingActivity"
-            android:theme="@style/DrawActivityStyle"
-            />
+        <activity
+            android:name=".Activity.DrawingActivity"
+            android:theme="@style/DrawActivityStyle" />
         <activity
             android:name=".Activity.ChooseTagActivity"
             android:theme="@style/TransparentStyle" />
         <activity android:name=".Activity.WebActivity"></activity>
         <activity android:name=".Activity.AboutAuthorActivity" />
+        <activity android:name=".Activity.DraftActivity"></activity>
     </application>
 
 </manifest>
