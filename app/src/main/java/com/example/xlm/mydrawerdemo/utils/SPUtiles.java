@@ -35,7 +35,7 @@ public class SPUtiles {
     public static void saveDrafts(List<DraftWithPath> list) {
         Gson gson = new Gson();
         String json = gson.toJson(list);
-        SharePreferencesUtils.putString(MyApplication.getInstance().getApplicationContext(), DRAFT, "");
+        SharePreferencesUtils.putString(MyApplication.getInstance().getApplicationContext(), DRAFT, json);
     }
 
     public static List<DraftWithPath> getDrafts() {

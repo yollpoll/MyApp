@@ -3,6 +3,7 @@ package com.example.xlm.mydrawerdemo.Activity;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.ContentResolver;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -15,6 +16,7 @@ import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.util.Pair;
 import android.support.v4.widget.ContentLoadingProgressBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.text.Spanned;
@@ -38,6 +40,8 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.example.xlm.mydrawerdemo.bean.Draft;
+import com.example.xlm.mydrawerdemo.bean.DraftWithPath;
 import com.example.xlm.mydrawerdemo.retrofitService.FormListService;
 import com.example.xlm.mydrawerdemo.retrofitService.NewThreadService;
 import com.example.xlm.mydrawerdemo.R;
@@ -67,7 +71,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import retrofit.Call;
@@ -99,6 +105,7 @@ public class NewThreadActivity extends BaseActivity implements View.OnLongClickL
     private List<ChildForm> listTag = new ArrayList<>();
     private ImageView imgEmoji, imgPic, imgDraw, imgSend;
     private ImageView imgPicContent;
+    private Bitmap cacheBitmap;
     private String imgPath;
     private TextInputEditText edtName, edtTitle, edtEmail;
     private boolean isWater;
@@ -163,6 +170,7 @@ public class NewThreadActivity extends BaseActivity implements View.OnLongClickL
                         @Override
                         public void callback(String path) {
                             showPic(true);
+                            cacheBitmap = Bitmap.createBitmap(bitmap);
                             imgPicContent.setImageBitmap(bitmap);
                         }
                     });
@@ -195,6 +203,7 @@ public class NewThreadActivity extends BaseActivity implements View.OnLongClickL
                         @Override
                         public void callback(String path) {
                             showPic(true);
+                            cacheBitmap = Bitmap.createBitmap(bitmap);
                             imgPicContent.setImageBitmap(bitmap);
                         }
                     });
@@ -213,6 +222,7 @@ public class NewThreadActivity extends BaseActivity implements View.OnLongClickL
                         fileInputStream = new FileInputStream(file);
                         bitmapDraw = BitmapFactory.decodeStream(fileInputStream);
                         showPic(true);
+                        cacheBitmap = Bitmap.createBitmap(bitmapDraw);
                         imgPicContent.setImageBitmap(bitmapDraw);
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -226,6 +236,22 @@ public class NewThreadActivity extends BaseActivity implements View.OnLongClickL
                         }
                     }
                 }
+                break;
+            case DraftActivity.GET_DRAFT:
+                if (resultCode != RESULT_OK)
+                    break;
+                final String content = data.getStringExtra("content");
+                String picPath = data.getStringExtra("picPath");
+                String date = data.getStringExtra("date");
+                DraftWithPath draftWithPath = new DraftWithPath(date, content, picPath);
+                Draft.changePathToBitmap(draftWithPath, new RxTools.BitmapCallback() {
+                    @Override
+                    public void callback(Bitmap bitmap) {
+                        edtContent.setText(content);
+                        showPic(true);
+                        imgPicContent.setImageBitmap(bitmap);
+                    }
+                });
                 break;
         }
 
@@ -245,6 +271,35 @@ public class NewThreadActivity extends BaseActivity implements View.OnLongClickL
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_new_article, menu);
         return true;
+    }
+
+    @Override
+    protected void myFinish() {
+        if (!TextUtils.isEmpty(edtContent.getText().toString()) || imgPicContent.getVisibility() == View.VISIBLE) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage("有内容尚未保存，确定要退出吗").setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            }).setPositiveButton("退出", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    NewThreadActivity.this.finish();
+                }
+            }).setNeutralButton("存为草稿", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    String date = Tools.getDate(new Date().getTime());
+                    Draft draft = new Draft(date, edtContent.getText().toString(), cacheBitmap);
+                    Draft.saveDrafts(draft);
+                    NewThreadActivity.this.finish();
+                }
+            }).create().show();
+        } else {
+            //没有东西要保存
+            NewThreadActivity.this.finish();
+        }
     }
 
     @Override
@@ -450,6 +505,7 @@ public class NewThreadActivity extends BaseActivity implements View.OnLongClickL
                 //选择了图片
                 if (id == 0)
                     return;
+                cacheBitmap = Bitmap.createBitmap(BitmapFactory.decodeResource(getResources(), id));
                 imgPicContent.setImageResource(id);
                 showPic(false);
             } else {
@@ -706,6 +762,7 @@ public class NewThreadActivity extends BaseActivity implements View.OnLongClickL
         imgPicContent.setVisibility(View.GONE);
         cbWater.setVisibility(View.GONE);
         progressBarPic.setVisibility(View.GONE);
+        cacheBitmap = null;
     }
 
     private void showPic(boolean showWater) {
@@ -717,4 +774,6 @@ public class NewThreadActivity extends BaseActivity implements View.OnLongClickL
             cbWater.setVisibility(View.GONE);
         }
     }
+
+
 }

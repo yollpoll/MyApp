@@ -165,13 +165,14 @@
                     <RelativeLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content">
+                        <!--style="@style/CouponStyle"-->
 
                         <ImageView
                             android:id="@+id/img_pic_content"
-                            style="@style/CouponStyle"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:scaleType="center" />
+                            android:layout_width="100dp"
+                            android:layout_height="100dp"
+                            android:visibility="gone"
+                            android:scaleType="centerCrop" />
 
                         <ProgressBar
                             android:id="@+id/progressBar_pic"
@@ -186,6 +187,7 @@
                             android:layout_alignRight="@+id/img_pic_content"
                             android:layout_below="@+id/img_pic_content"
                             android:layout_marginRight="5dp"
+                            android:visibility="gone"
                             android:layout_marginTop="5dp"
                             android:text="水印" />
                     </RelativeLayout>

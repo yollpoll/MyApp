@@ -7,6 +7,7 @@ import android.os.PersistableBundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.KeyEvent;
 import android.view.View;
 
 import com.example.xlm.mydrawerdemo.Activity.ChoseForumActivity;
@@ -41,7 +42,7 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                BaseActivity.this.finish();
+                myFinish();
             }
         });
     }
@@ -61,9 +62,25 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
+    protected void myFinish() {
+        BaseActivity.this.finish();
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
         eventBus.register(this);
+    }
+
+    protected boolean flag_key;
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK &&!flag_key) {
+            myFinish();
+            return true;
+        } else {
+            return super.onKeyDown(keyCode, event);
+        }
     }
 }

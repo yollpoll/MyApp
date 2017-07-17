@@ -9,7 +9,7 @@ public class DraftWithPath {
     private String content;
     private String picture;
 
-    DraftWithPath(String date, String content, String picture) {
+    public DraftWithPath(String date, String content, String picture) {
         this.date = date;
         this.content = content;
         this.picture = picture;

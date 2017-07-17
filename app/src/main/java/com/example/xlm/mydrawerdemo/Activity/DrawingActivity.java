@@ -171,17 +171,9 @@ public class DrawingActivity extends BaseActivity implements View.OnLongClickLis
         initData();
     }
 
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK) {
-            myFinsh();
-            return true;
-        } else {
-            return super.onKeyDown(keyCode, event);
-        }
-    }
 
-    private void myFinsh() {
+    @Override
+    protected void myFinish() {
         new AlertDialog.Builder(DrawingActivity.this).setMessage(R.string.sure_exit)
                 .setPositiveButton("退出", new DialogInterface.OnClickListener() {
                     @Override
@@ -211,21 +203,8 @@ public class DrawingActivity extends BaseActivity implements View.OnLongClickLis
 
     private void initData() {
         initFloatingActionButton();
-        initTitle();
-    }
-
-    private void initTitle() {
-        setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setTitle("涂鸦");
-        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                myFinsh();
-            }
-        });
+//        initTitle();
+        initToolbar("涂鸦");
     }
 
     @Override

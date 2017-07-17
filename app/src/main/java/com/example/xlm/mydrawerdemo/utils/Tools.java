@@ -201,6 +201,7 @@ public class Tools {
         }
     }
 
+
     /**
      * 根据秒数返回日期
      *
@@ -452,6 +453,8 @@ public class Tools {
      * @param bitmap
      */
     public static String saveImageToSd(Bitmap bitmap, String imageName) {
+        if (null == bitmap)
+            return "";
         //替换/
         String img = imageName.replace("/", "_");
         File cacheDir = new File(Environment.getExternalStorageDirectory() + Constant.SD_CACHE_DIR + Constant.IMG_CACHE);

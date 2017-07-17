@@ -17,11 +17,29 @@ public class Draft {
     private String date;
     private String content;
     private Bitmap picture;
+    private boolean isShowCheck;
+    private boolean isCheck;
 
     public Draft(String date, String content, Bitmap picture) {
         this.date = date;
         this.content = content;
         this.picture = picture;
+    }
+
+    public boolean isCheck() {
+        return isCheck;
+    }
+
+    public void setCheck(boolean check) {
+        isCheck = check;
+    }
+
+    public boolean isShowCheck() {
+        return isShowCheck;
+    }
+
+    public void setShowCheck(boolean showCheck) {
+        isShowCheck = showCheck;
     }
 
     public String getDate() {
