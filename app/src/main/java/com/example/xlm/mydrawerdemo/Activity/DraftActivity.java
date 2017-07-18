@@ -23,7 +23,9 @@ import com.example.xlm.mydrawerdemo.adapter.OnItemLongClickListener;
 import com.example.xlm.mydrawerdemo.base.BaseActivity;
 import com.example.xlm.mydrawerdemo.bean.CollectionBean;
 import com.example.xlm.mydrawerdemo.bean.Draft;
+import com.example.xlm.mydrawerdemo.bean.DraftWithPath;
 import com.example.xlm.mydrawerdemo.utils.RxTools;
+import com.example.xlm.mydrawerdemo.utils.SPUtiles;
 import com.example.xlm.mydrawerdemo.utils.Tools;
 
 import java.util.ArrayList;
@@ -63,6 +65,7 @@ public class DraftActivity extends BaseActivity {
         Draft.loadDrafts(new RxTools.DraftCallback() {
             @Override
             public void callback(List<Draft> drafts) {
+                listDraft.clear();
                 listDraft.addAll(drafts);
                 mAdapter.notifyDataSetChanged();
             }
@@ -148,28 +151,23 @@ public class DraftActivity extends BaseActivity {
         @Override
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             switch (item.getItemId()) {
-//                case R.id.menu_del_collection:
-//                    for (int i = 0; i < list.size(); i++) {
-//                        if (list.get(i).isCheck()) {
-//                            delList.add(list.get(i));
-//                        }
-//                    }
-//                    delCollection();
-//                    break;
-//                case R.id.menu_clear_collection:
-//                    if (item.getTitle().equals("全选")) {
-//                        item.setTitle("取消");
-//                        for (CollectionBean bean : list) {
-//                            bean.setCheck(true);
-//                        }
-//                    } else if (item.getTitle().equals("取消")) {
-//                        item.setTitle("全选");
-//                        for (CollectionBean bean : list) {
-//                            bean.setCheck(false);
-//                        }
-//                    }
-//                    mAdapter.notifyDataSetChanged();
-//                    break;
+                case R.id.menu_del_collection:
+                    resetDraft();
+                    break;
+                case R.id.menu_clear_collection:
+                    if (item.getTitle().equals("全选")) {
+                        item.setTitle("取消");
+                        for (Draft bean : listDraft) {
+                            bean.setCheck(true);
+                        }
+                    } else if (item.getTitle().equals("取消")) {
+                        item.setTitle("全选");
+                        for (Draft bean : listDraft) {
+                            bean.setCheck(false);
+                        }
+                    }
+                    mAdapter.notifyDataSetChanged();
+                    break;
             }
             return false;
         }
@@ -246,4 +244,20 @@ public class DraftActivity extends BaseActivity {
 
         }
     };
+
+    private void resetDraft() {
+        List<Draft> newDrafts = new ArrayList<>();
+        for (Draft draft : listDraft) {
+            if (!draft.isCheck())
+                newDrafts.add(draft);
+        }
+        Draft.saveDrafts(newDrafts, this, new RxTools.DraftWithPathCallback() {
+            @Override
+            public void callback(List<DraftWithPath> draftWithPaths) {
+                SPUtiles.saveDrafts(draftWithPaths);
+                actionMode.finish();
+                getData();
+            }
+        });
+    }
 }

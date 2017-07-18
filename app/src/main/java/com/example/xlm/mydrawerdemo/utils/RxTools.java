@@ -1,6 +1,7 @@
 package com.example.xlm.mydrawerdemo.utils;
 
 import android.content.ContentResolver;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -16,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import rx.Observable;
+import rx.Scheduler;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
@@ -135,11 +137,51 @@ public class RxTools {
                 });
     }
 
+    /**
+     * 变化整个队列
+     *
+     * @param context
+     * @param drafts
+     * @param callback
+     */
+    public static void ChangeBitmapToPath(final Context context, final List<Draft> drafts, final DraftWithPathCallback callback) {
+        Observable.create(new Observable.OnSubscribe<List<Draft>>() {
+            @Override
+            public void call(Subscriber<? super List<Draft>> subscriber) {
+                subscriber.onNext(drafts);
+                subscriber.onCompleted();
+            }
+        }).flatMap(new Func1<List<Draft>, Observable<List<DraftWithPath>>>() {
+            @Override
+            public Observable<List<DraftWithPath>> call(List<Draft> drafts) {
+                List<DraftWithPath> draftWithPathList = new ArrayList<DraftWithPath>();
+                for (int i = 0; i < drafts.size(); i++) {
+                    String path = Tools.saveImage(context, drafts.get(i).getPicture(), "draft_" + System.currentTimeMillis() + ".jpg");
+                    draftWithPathList.add(new DraftWithPath(drafts.get(i).getDate(), drafts.get(i).getContent(), path));
+                }
+                List<List<DraftWithPath>> result = new ArrayList<List<DraftWithPath>>();
+                result.add(draftWithPathList);
+                return Observable.from(result);
+            }
+        }).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<List<DraftWithPath>>() {
+                    @Override
+                    public void call(List<DraftWithPath> draftWithPaths) {
+                        callback.callback(draftWithPaths);
+                    }
+                });
+    }
+
     public interface BitmapCallback {
         void callback(Bitmap bitmap);
     }
 
     public interface DraftCallback {
         void callback(List<Draft> drafts);
+    }
+
+    public interface DraftWithPathCallback {
+        void callback(List<DraftWithPath> draftWithPaths);
     }
 }

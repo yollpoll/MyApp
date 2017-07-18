@@ -394,6 +394,8 @@ public class Tools {
      * @param bitmap
      */
     public static String saveImage(Context context, Bitmap bitmap, String imageName) {
+        if (null == bitmap)
+            return "";
         //替换/
         String img = imageName.replace("/", "_");
         File cacheDir = context.getExternalCacheDir();

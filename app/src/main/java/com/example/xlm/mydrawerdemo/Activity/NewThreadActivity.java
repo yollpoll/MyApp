@@ -292,7 +292,7 @@ public class NewThreadActivity extends BaseActivity implements View.OnLongClickL
                 public void onClick(DialogInterface dialog, int which) {
                     String date = Tools.getDate(new Date().getTime());
                     Draft draft = new Draft(date, edtContent.getText().toString(), cacheBitmap);
-                    Draft.saveDrafts(draft);
+                    Draft.saveDraft(draft);
                     NewThreadActivity.this.finish();
                 }
             }).create().show();

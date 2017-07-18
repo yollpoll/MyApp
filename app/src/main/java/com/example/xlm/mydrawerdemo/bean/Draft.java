@@ -1,5 +1,6 @@
 package com.example.xlm.mydrawerdemo.bean;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 
 import com.example.xlm.mydrawerdemo.utils.RxTools;
@@ -84,7 +85,7 @@ public class Draft {
      * @param callback
      */
     public static void changeBitmapToPath(Draft draft, Tools.OnSaveImageCallback callback) {
-        Tools.saveImageToSdViaAsyncTask(draft.getPicture(), "draft" + System.currentTimeMillis() + ".jpg", callback);
+        Tools.saveImageToSdViaAsyncTask(draft.getPicture(), "draft_" + System.currentTimeMillis() + ".jpg", callback);
     }
 
     /**
@@ -92,7 +93,7 @@ public class Draft {
      *
      * @param draft
      */
-    public static void saveDrafts(final Draft draft) {
+    public static void saveDraft(final Draft draft) {
         //先转换
         changeBitmapToPath(draft, new Tools.OnSaveImageCallback() {
             @Override
@@ -106,6 +107,16 @@ public class Draft {
     }
 
     /**
+     * 转化成path以后保存整个队列到sp中
+     *
+     * @param drafts
+     * @param context
+     */
+    public static void saveDrafts(List<Draft> drafts, Context context, RxTools.DraftWithPathCallback callback) {
+        RxTools.ChangeBitmapToPath(context, drafts, callback);
+    }
+
+    /**
      * 从SP中获取DraftWithPath转化成Draft
      *
      * @param callback
@@ -115,5 +126,4 @@ public class Draft {
         List<DraftWithPath> draftWithPaths = SPUtiles.getDrafts();
         RxTools.DecodeStreamList(draftWithPaths, callback);
     }
-
 }
