@@ -51,6 +51,7 @@ import com.example.xlm.mydrawerdemo.bean.Form;
 import com.example.xlm.mydrawerdemo.fragment.ChooseEmojiDialogFragment;
 import com.example.xlm.mydrawerdemo.http.Httptools;
 import com.example.xlm.mydrawerdemo.utils.Constant;
+import com.example.xlm.mydrawerdemo.utils.FileUtils;
 import com.example.xlm.mydrawerdemo.utils.RxTools;
 import com.example.xlm.mydrawerdemo.utils.SPUtiles;
 import com.example.xlm.mydrawerdemo.utils.ToastUtils;
@@ -148,6 +149,8 @@ public class NewThreadActivity extends BaseActivity implements View.OnLongClickL
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        final Bitmap bitmap;
+        String path;
         switch (requestCode) {
             case ChooseTagActivity.CHOOSE_TAG:
                 if (resultCode == RESULT_OK) {
@@ -162,22 +165,20 @@ public class NewThreadActivity extends BaseActivity implements View.OnLongClickL
                     break;
                 }
                 Uri uri = data.getData();
-                ContentResolver cr = this.getContentResolver();
-                try {
-                    final Bitmap bitmap = BitmapFactory.decodeStream(cr.openInputStream(uri));
-                    progressBarPic.setVisibility(View.VISIBLE);
-                    Tools.saveImageViaAsyncTask(this, bitmap, "temp.jpg", new Tools.OnSaveImageCallback() {
-                        @Override
-                        public void callback(String path) {
-                            showPic(true);
-                            cacheBitmap = Bitmap.createBitmap(bitmap);
-                            imgPicContent.setImageBitmap(bitmap);
-                        }
-                    });
+                path = FileUtils.getPathByUri(uri, this);
+                bitmap = Tools.compressBitmap(path, 1024, 1024);
+                progressBarPic.setVisibility(View.VISIBLE);
+                Tools.saveImageViaAsyncTask(this, bitmap, "temp.jpg", new Tools.OnSaveImageCallback() {
+                    @Override
+                    public void callback(String path) {
+                        showPic(true);
+                        if (null == bitmap)
+                            return;
+                        cacheBitmap = Bitmap.createBitmap(bitmap);
+                        imgPicContent.setImageBitmap(bitmap);
+                    }
+                });
 
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                }
                 break;
             case Tools.PIC_FROM_CAMERA:
                 if (resultCode != RESULT_OK) {
@@ -195,46 +196,45 @@ public class NewThreadActivity extends BaseActivity implements View.OnLongClickL
                     ToastUtils.SnakeShowShort(rlRoot, "剪裁失败");
                     break;
                 }
-                final Bitmap bitmap;
-                try {
-                    bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(Tools.imgUri));
-                    progressBarPic.setVisibility(View.VISIBLE);
-                    Tools.saveImageViaAsyncTask(this, bitmap, "temp.jpg", new Tools.OnSaveImageCallback() {
-                        @Override
-                        public void callback(String path) {
-                            showPic(true);
-                            cacheBitmap = Bitmap.createBitmap(bitmap);
-                            imgPicContent.setImageBitmap(bitmap);
-                        }
-                    });
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                }
+                path = FileUtils.getPathByUri(Tools.imgUri, this);
+                bitmap = Tools.compressBitmap(path, 1024, 1024);
+//                    bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(Tools.imgUri));
+                progressBarPic.setVisibility(View.VISIBLE);
+                Tools.saveImageViaAsyncTask(this, bitmap, "temp.jpg", new Tools.OnSaveImageCallback() {
+                    @Override
+                    public void callback(String path) {
+                        showPic(true);
+                        cacheBitmap = Bitmap.createBitmap(bitmap);
+                        imgPicContent.setImageBitmap(bitmap);
+                    }
+                });
                 break;
             case DrawingActivity.REQUEST_DRAWING:
                 if (resultCode == RESULT_OK) {
                     String drawPath = data.getStringExtra("path");
                     imgPath = drawPath;
                     Bitmap bitmapDraw;
-                    FileInputStream fileInputStream = null;
-                    try {
-                        File file = new File(drawPath);
-                        fileInputStream = new FileInputStream(file);
-                        bitmapDraw = BitmapFactory.decodeStream(fileInputStream);
-                        showPic(true);
-                        cacheBitmap = Bitmap.createBitmap(bitmapDraw);
-                        imgPicContent.setImageBitmap(bitmapDraw);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    } finally {
-                        if (null != fileInputStream) {
-                            try {
-                                fileInputStream.close();
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
+//                    FileInputStream fileInputStream = null;
+//                    try {
+                    bitmapDraw = Tools.compressBitmap(drawPath, 1024, 1034);
+//
+//                        File file = new File(drawPath);
+//                        fileInputStream = new FileInputStream(file);
+//                        bitmapDraw = BitmapFactory.decodeStream(fileInputStream);
+                    showPic(true);
+                    cacheBitmap = Bitmap.createBitmap(bitmapDraw);
+                    imgPicContent.setImageBitmap(bitmapDraw);
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                    } finally {
+//                        if (null != fileInputStream) {
+//                            try {
+//                                fileInputStream.close();
+//                            } catch (IOException e) {
+//                                e.printStackTrace();
+//                            }
+//                        }
+//                    }
                 }
                 break;
             case DraftActivity.GET_DRAFT:

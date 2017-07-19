@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Environment;
 import android.os.Handler;
@@ -34,6 +36,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -497,5 +500,21 @@ public class Tools {
         }
         context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
                 Uri.fromFile(new File(path))));
+    }
+
+    public static Bitmap compressBitmap(String path, int destWidth, int destHeight) {
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(path, options);
+        int outWidth = options.outWidth;
+        int outHeight = options.outHeight;
+        int inSampleSize = 1;
+        while (outHeight / inSampleSize > destHeight || outWidth / inSampleSize > destWidth) {
+            inSampleSize *= 2;
+        }
+        options.inJustDecodeBounds = false;
+        options.inSampleSize = inSampleSize;
+        options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+        return BitmapFactory.decodeFile(path, options);
     }
 }

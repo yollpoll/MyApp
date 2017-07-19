@@ -284,6 +284,7 @@ public class MainActivity extends BaseActivity {
     }
 
     private void initData() {
+        flag_key = true;
         mAnnouncement = Announcement.load();
 
         retrofit = Httptools.getInstance().getRetrofit();
@@ -473,6 +474,10 @@ public class MainActivity extends BaseActivity {
         // TODO Auto-generated method stub
         switch (keyCode) {
             case KeyEvent.KEYCODE_BACK:
+                if (drawerLayout.isDrawerOpen(Gravity.LEFT)) {
+                    drawerLayout.closeDrawer(Gravity.LEFT);
+                    break;
+                }
                 long secondTime = System.currentTimeMillis();
                 if (secondTime - firstTime > 2000) {                                         //如果两次按键时间间隔大于2秒，则不退出
                     ToastUtils.SnakeShowShort(mViewPager, "再按一次退出程序");
@@ -483,7 +488,7 @@ public class MainActivity extends BaseActivity {
                 }
                 break;
         }
-        return super.onKeyUp(keyCode, event);
+        return true;
     }
 
 

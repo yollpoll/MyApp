@@ -80,6 +80,7 @@ public class CollectionActivity extends BaseActivity implements SwipeRefreshLayo
     }
 
     private void initData() {
+        flag_key=true;
         initToolbar("订阅");
         uuid = MyApplication.getInstance().getUuId();
         mAdapter = new CollectionAdapter(list, onItemClickListener);
