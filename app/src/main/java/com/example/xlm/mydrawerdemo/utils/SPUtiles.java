@@ -2,22 +2,16 @@ package com.example.xlm.mydrawerdemo.utils;
 
 import android.text.TextUtils;
 
-import com.example.xlm.mydrawerdemo.Activity.MainActivity;
 import com.example.xlm.mydrawerdemo.base.MyApplication;
 import com.example.xlm.mydrawerdemo.bean.Announcement;
 import com.example.xlm.mydrawerdemo.bean.ChildForm;
-import com.example.xlm.mydrawerdemo.bean.Draft;
 import com.example.xlm.mydrawerdemo.bean.DraftWithPath;
 import com.example.xlm.mydrawerdemo.bean.Form;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by 鹏祺 on 2017/5/24.
@@ -31,6 +25,15 @@ public class SPUtiles {
     public static final String ANNOUNCEMENT = "announcement";
     public static final String FORMS = "forms";
     public static final String DRAFT = "draft";
+    public static final String HEAD_URL = "head_url";
+
+    public static void saveHeadUrl(String url) {
+        SharePreferencesUtils.putString(MyApplication.getInstance().getApplicationContext(), HEAD_URL, url);
+    }
+
+    public static String getHeadUrl() {
+        return SharePreferencesUtils.getString(MyApplication.getInstance().getApplicationContext(), HEAD_URL, "");
+    }
 
     public static void saveDrafts(List<DraftWithPath> list) {
         Gson gson = new Gson();

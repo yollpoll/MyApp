@@ -304,7 +304,7 @@ public class ChildArticleActivity extends BaseSwipeActivity implements View.OnCl
             @Override
             public void onResponse(Response<ChildArticle> response, Retrofit retrofit) {
                 childArticle = response.body();
-                if (isRefresh) {
+                if (isRefresh && page == 0) {
                     //在replay列表中加入本串的信息，作为第一个数据
                     data.clear();
                     ChildArticle temp = response.body();

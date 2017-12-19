@@ -1,19 +1,15 @@
 package com.example.xlm.mydrawerdemo.base;
 
-import android.app.Activity;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.PersistableBundle;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 
-import com.example.xlm.mydrawerdemo.Activity.ChoseForumActivity;
 import com.example.xlm.mydrawerdemo.R;
 import com.example.xlm.mydrawerdemo.bean.Article;
-import com.example.xlm.mydrawerdemo.utils.Tools;
+import com.example.xlm.mydrawerdemo.utils.SPUtiles;
 
 import de.greenrobot.event.EventBus;
 
@@ -28,6 +24,7 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         eventBus = EventBus.getDefault();
+        initHeadUrl();
     }
 
     protected void initToolbar(String title) {
@@ -45,6 +42,14 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
                 myFinish();
             }
         });
+    }
+
+    private void initHeadUrl() {
+        String headUrl = SPUtiles.getHeadUrl();
+        if (TextUtils.isEmpty(headUrl)) {
+            return;
+        }
+//        Port.HEAD_URL = headUrl;
     }
 
     @Override
@@ -76,7 +81,7 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK &&!flag_key) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && !flag_key) {
             myFinish();
             return true;
         } else {
