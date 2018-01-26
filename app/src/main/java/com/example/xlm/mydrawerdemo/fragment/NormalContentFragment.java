@@ -159,7 +159,7 @@ public class NormalContentFragment extends BaseFragment {
 
             @Override
             public void onImageClick(View view, int position) {
-                String url = Port.IMG_URL + data.get(position).getImg() + data.get(position).getExt();
+                String url = Port.getImg() + data.get(position).getImg() + data.get(position).getExt();
                 ImageActivity.gotoImageActivity(getActivity(), url, data.get(position).getImg() + data.get(position).getExt(), view);
             }
 

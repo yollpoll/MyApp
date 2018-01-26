@@ -1,6 +1,7 @@
 package com.example.xlm.mydrawerdemo.Activity;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.support.design.widget.CoordinatorLayout;
@@ -105,6 +106,11 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
+    }
+
+    public static void gotoMainActivity(Context context) {
+        Intent intent = new Intent(context, MainActivity.class);
+        context.startActivity(intent);
     }
 
     private void initView() {

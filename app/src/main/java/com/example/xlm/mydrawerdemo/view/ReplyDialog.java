@@ -2,32 +2,19 @@ package com.example.xlm.mydrawerdemo.view;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
-import android.support.v7.app.AlertDialog;
 import android.text.Html;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
-import com.bumptech.glide.request.Request;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.request.target.SizeReadyCallback;
-import com.bumptech.glide.request.target.Target;
 import com.example.xlm.mydrawerdemo.R;
 import com.example.xlm.mydrawerdemo.adapter.ChildArticleAdapter;
 import com.example.xlm.mydrawerdemo.base.MyApplication;
 import com.example.xlm.mydrawerdemo.bean.Reply;
 import com.example.xlm.mydrawerdemo.http.Port;
-import com.example.xlm.mydrawerdemo.utils.ToastUtils;
 import com.example.xlm.mydrawerdemo.utils.Tools;
 import com.example.xlm.mydrawerdemo.utils.TransFormContent;
 
@@ -90,7 +77,7 @@ public class ReplyDialog extends Dialog {
         } else {
             imgContent.setVisibility(View.VISIBLE);
             Glide.with(MyApplication.getInstance())
-                    .load(Port.IMG_THUMB_URL + reply.getImg() + reply.getExt())
+                    .load(Port.getThumbUrl() + reply.getImg() + reply.getExt())
                     .centerCrop()
                     .crossFade()
                     .error(R.mipmap.icon_yygq)

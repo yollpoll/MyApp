@@ -6,7 +6,6 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.Spanned;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -123,7 +122,7 @@ public class ArticleRecyclerAdapter extends RecyclerView.Adapter<ArticleRecycler
             }
             holder.sender.setText(article.getUserid());
             if (article.getReplies().size() > 0) {
-                holder.comment.setVisibility(View.VISIBLE);
+                holder.comment.setVisibility(View.GONE);
                 List<Spanned> replySpanneds = new ArrayList<>();
                 for (Reply r : article.getReplies()) {
                     replySpanneds.add(Html.fromHtml(r.getContent()));
@@ -152,7 +151,7 @@ public class ArticleRecyclerAdapter extends RecyclerView.Adapter<ArticleRecycler
             } else {
                 holder.imgContent.setVisibility(View.VISIBLE);
                 Glide.with(context)
-                        .load(Port.IMG_THUMB_URL + article.getImg() + article.getExt())
+                        .load(Port.getThumbUrl() + article.getImg() + article.getExt())
                         .centerCrop()
                         .crossFade()
                         .error(R.mipmap.icon_yygq)
@@ -166,7 +165,7 @@ public class ArticleRecyclerAdapter extends RecyclerView.Adapter<ArticleRecycler
 
             }
         }
-        holder.tvReplyCount.setText("replys: "+article.getReplyCount());
+        holder.tvReplyCount.setText("replys: " + article.getReplyCount());
     }
 
     @Override

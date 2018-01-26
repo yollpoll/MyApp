@@ -212,7 +212,7 @@ public class ChildArticleActivity extends BaseSwipeActivity implements View.OnCl
 
             @Override
             public void onImageClick(View view, int position) {
-                String url = Port.IMG_URL + data.get(position).getImg() + data.get(position).getExt();
+                String url = Port.getImg() + data.get(position).getImg() + data.get(position).getExt();
 //                Intent intent=new Intent(ChildArticleActivity.this,ImageActivity.class);
 //                intent.putExtra("url",url);
 //                ChildArticleActivity.this.startActivity(intent);

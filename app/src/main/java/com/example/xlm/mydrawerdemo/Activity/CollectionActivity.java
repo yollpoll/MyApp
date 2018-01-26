@@ -176,7 +176,7 @@ public class CollectionActivity extends BaseActivity implements SwipeRefreshLayo
 
         @Override
         public void onImageClick(View view, int position) {
-            String url = Port.IMG_URL + list.get(position).getImg() + list.get(position).getExt();
+            String url = Port.getImg() + list.get(position).getImg() + list.get(position).getExt();
             ImageActivity.gotoImageActivity(CollectionActivity.this, url, list.get(position).getImg() + list.get(position).getExt(), view);
         }
 

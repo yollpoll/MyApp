@@ -1,16 +1,13 @@
 package com.example.xlm.mydrawerdemo.adapter;
 
-import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.Spanned;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
@@ -21,11 +18,9 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.xlm.mydrawerdemo.R;
 import com.example.xlm.mydrawerdemo.bean.CollectionBean;
-import com.example.xlm.mydrawerdemo.bean.Reply;
 import com.example.xlm.mydrawerdemo.http.Port;
 import com.example.xlm.mydrawerdemo.utils.Tools;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -86,7 +81,7 @@ public class CollectionAdapter extends RecyclerView.Adapter<CollectionAdapter.Vi
             } else {
                 holder.imgContent.setVisibility(View.VISIBLE);
                 Glide.with(context)
-                        .load(Port.IMG_THUMB_URL + item.getImg() + item.getExt())
+                        .load(Port.getImg() + item.getImg() + item.getExt())
                         .centerCrop()
                         .crossFade()
                         .error(R.mipmap.icon_yygq)
