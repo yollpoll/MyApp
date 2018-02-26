@@ -4,40 +4,24 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.os.Parcel;
-import android.os.Parcelable;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
-import com.bumptech.glide.request.Request;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.request.target.Target;
 import com.example.xlm.mydrawerdemo.R;
-import com.example.xlm.mydrawerdemo.base.BaseActivity;
-import com.example.xlm.mydrawerdemo.base.BaseSwipeActivity;
-import com.example.xlm.mydrawerdemo.http.Port;
 import com.example.xlm.mydrawerdemo.utils.DownLoadImageThread;
 import com.example.xlm.mydrawerdemo.utils.PermissionUtils;
 import com.example.xlm.mydrawerdemo.utils.ToastUtils;
@@ -45,16 +29,11 @@ import com.example.xlm.mydrawerdemo.utils.Tools;
 import com.github.chrisbanes.photoview.PhotoView;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-
-import me.imid.swipebacklayout.lib.app.SwipeBackActivity;
 
 /**
  * Created by 鹏祺 on 2016/1/16.
  */
-public class ImageActivity extends BaseActivity {
+public class ImageActivity extends AppCompatActivity {
     private static final int REQUEST_WRITE_SD = 1;
     private String url;
     private PhotoView imgView;
@@ -172,6 +151,20 @@ public class ImageActivity extends BaseActivity {
                 }
             }
         });
+    }
+
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        switch (keyCode) {
+            case KeyEvent.KEYCODE_BACK:
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    ImageActivity.this.finishAfterTransition();
+                } else {
+                    ImageActivity.this.finish();
+                }
+                break;
+        }
+        return true;
     }
 
     private void loadImage() {
