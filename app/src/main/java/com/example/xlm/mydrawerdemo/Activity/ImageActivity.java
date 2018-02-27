@@ -17,6 +17,7 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
@@ -44,6 +45,7 @@ public class ImageActivity extends AppCompatActivity {
     private String mSharePath;
     private boolean isShareing;
     private RelativeLayout rlRoot;
+    private ProgressBar progressBar;
 
     public static void gotoImageActivity(Activity activity, Bitmap bitmap, View shareView) {
         ActivityOptionsCompat options = ActivityOptionsCompat
