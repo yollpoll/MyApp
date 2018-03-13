@@ -65,7 +65,7 @@
                 android:layout_width="25dp"
                 android:layout_height="25dp"
                 android:layout_marginLeft="16dp"
-                android:src="@mipmap/icon_set" />
+                android:src="@mipmap/icon_scan" />
 
             <TextView
                 android:id="@+id/tv_btn2"
@@ -74,7 +74,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="40dp"
                 android:layout_toRightOf="@+id/img_btn2"
-                android:text="设置"
+                android:text="扫码"
                 android:textSize="16sp"
 
                 />

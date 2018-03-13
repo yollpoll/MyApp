@@ -4,13 +4,13 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
-import android.os.Bundle;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
@@ -33,8 +33,6 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
-import com.example.xlm.mydrawerdemo.retrofitService.AnnouncementService;
-import com.example.xlm.mydrawerdemo.retrofitService.FormListService;
 import com.example.xlm.mydrawerdemo.Dao.DaoSession;
 import com.example.xlm.mydrawerdemo.R;
 import com.example.xlm.mydrawerdemo.adapter.ArticlePagerAdapter;
@@ -46,7 +44,13 @@ import com.example.xlm.mydrawerdemo.bean.Form;
 import com.example.xlm.mydrawerdemo.fragment.NormalContentFragment;
 import com.example.xlm.mydrawerdemo.http.Httptools;
 import com.example.xlm.mydrawerdemo.http.Port;
+import com.example.xlm.mydrawerdemo.retrofitService.AnnouncementService;
+import com.example.xlm.mydrawerdemo.retrofitService.FormListService;
+import com.example.xlm.mydrawerdemo.utils.SPUtiles;
 import com.example.xlm.mydrawerdemo.utils.ToastUtils;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -54,6 +58,7 @@ import java.util.List;
 
 import de.greenrobot.dao.query.Query;
 import de.greenrobot.dao.query.QueryBuilder;
+import io.github.xudaojie.qrcodelib.CaptureActivity;
 import retrofit.Call;
 import retrofit.Callback;
 import retrofit.Response;
@@ -61,7 +66,10 @@ import retrofit.Retrofit;
 
 
 public class MainActivity extends BaseActivity {
+    //打开扫描界面请求码
+    private static final int SCAN_QR = 12345;
     private Toolbar toolbar;
+    private RelativeLayout rlRoot;
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
     private ListView listView;
@@ -120,6 +128,7 @@ public class MainActivity extends BaseActivity {
         mViewPager = (ViewPager) findViewById(R.id.viewpager_articles);
         fbNew = (FloatingActionButton) findViewById(R.id.fb_new);
         cdlContent = (CoordinatorLayout) findViewById(R.id.cdl_content);
+        rlRoot = (RelativeLayout) findViewById(R.id.rl_root);
         detector.setOnDoubleTapListener(onDoubleTapListener);
         //使用手势监听仍然保留这个是为了保留点击时候的波纹效果
         fbNew.setOnClickListener(this);
@@ -470,6 +479,39 @@ public class MainActivity extends BaseActivity {
                 }
                 currentFragment.refresh();
                 break;
+            case SCAN_QR:
+//                //扫描结果回调
+//                if (resultCode == RESULT_OK) { //RESULT_OK = -1
+//                    Bundle bundle = data.getExtras();
+//                    String scanResult = bundle.getString("qr_scan_result");
+//                    //将扫描出的信息显示出来
+//                    Log.d("spq", "qr result>>>>>>>>>>>>>>>>" + scanResult);
+////                    setCookie(scanResult);
+//                }
+                if (resultCode == RESULT_OK) {
+                    String result = data.getStringExtra("result");
+//                    setCookie(result);
+                    JSONObject jsonCookie = null;
+                    Log.d("spq","QR result   "+result);
+                    try {
+                        jsonCookie = new JSONObject(result);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    if (null != jsonCookie) {
+                        String cookie = jsonCookie.optString("cookie");
+                        if (TextUtils.isEmpty(cookie)) {
+                            ToastUtils.SnakeShowShort(rlRoot, "获取cookie失败");
+                        } else {
+                            //设置cookie
+                            Log.d("spq", "cookie>  " + cookie);
+                            setCookie(cookie);
+                        }
+                    } else {
+                        ToastUtils.SnakeShowShort(rlRoot, "获取cookie失败");
+                    }
+                }
+                break;
         }
     }
 
@@ -507,7 +549,16 @@ public class MainActivity extends BaseActivity {
                 MainActivity.this.startActivityForResult(intent, START_CHOOSEFORUM);
                 break;
             case R.id.left_btn_layout2:
-                SetActivity.gotoSetActivity(MainActivity.this);
+//                SetActivity.gotoSetActivity(MainActivity.this);
+                //打开二维码扫描界面
+//                if (CommonUtil.isCameraCanUse()) {
+//                    Intent intentScan = new Intent(MainActivity.this, CaptureActivity.class);
+//                    startActivityForResult(intentScan, SCAN_QR);
+//                } else {
+//                    Toast.makeText(this, "请打开此应用的摄像头权限！", Toast.LENGTH_SHORT).show();
+//                }
+                Intent i = new Intent(MainActivity.this, CaptureActivity.class);
+                startActivityForResult(i, SCAN_QR);
                 break;
             case R.id.left_btn_layout3:
                 CollectionActivity.gitoCollectionActivity(MainActivity.this);
@@ -527,5 +578,10 @@ public class MainActivity extends BaseActivity {
             default:
                 break;
         }
+    }
+
+    private void setCookie(String cookie) {
+        SPUtiles.saveCookie(cookie);
+        ToastUtils.SnakeShowShort(rlRoot, "保存饼干成功");
     }
 }

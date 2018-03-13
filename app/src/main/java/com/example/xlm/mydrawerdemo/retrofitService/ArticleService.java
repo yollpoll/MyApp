@@ -16,6 +16,6 @@ public interface ArticleService {
     @GET(Port.GET_ARTICLE + "/page/{page}/id/{id}")
     Call<List<Article>> getArticleList(@Path("page") String page, @Path("id") String id);
 
-    @GET(Port.TIME_LINE)
-    Call<List<Article>> getTimeLine();
+    @GET(Port.TIME_LINE + "/page/{page}")
+    Call<List<Article>> getTimeLine(@Path("page") String page);
 }

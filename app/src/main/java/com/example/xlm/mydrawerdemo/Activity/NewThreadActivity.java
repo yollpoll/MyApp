@@ -2,7 +2,6 @@ package com.example.xlm.mydrawerdemo.Activity;
 
 import android.animation.ObjectAnimator;
 import android.app.Activity;
-import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -15,7 +14,6 @@ import android.provider.MediaStore;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.util.Pair;
-import android.support.v4.widget.ContentLoadingProgressBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
@@ -40,16 +38,16 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.example.xlm.mydrawerdemo.bean.Draft;
-import com.example.xlm.mydrawerdemo.bean.DraftWithPath;
-import com.example.xlm.mydrawerdemo.retrofitService.FormListService;
-import com.example.xlm.mydrawerdemo.retrofitService.NewThreadService;
 import com.example.xlm.mydrawerdemo.R;
 import com.example.xlm.mydrawerdemo.base.BaseActivity;
 import com.example.xlm.mydrawerdemo.bean.ChildForm;
+import com.example.xlm.mydrawerdemo.bean.Draft;
+import com.example.xlm.mydrawerdemo.bean.DraftWithPath;
 import com.example.xlm.mydrawerdemo.bean.Form;
 import com.example.xlm.mydrawerdemo.fragment.ChooseEmojiDialogFragment;
 import com.example.xlm.mydrawerdemo.http.Httptools;
+import com.example.xlm.mydrawerdemo.retrofitService.FormListService;
+import com.example.xlm.mydrawerdemo.retrofitService.NewThreadService;
 import com.example.xlm.mydrawerdemo.utils.Constant;
 import com.example.xlm.mydrawerdemo.utils.FileUtils;
 import com.example.xlm.mydrawerdemo.utils.RxTools;
@@ -66,13 +64,10 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -605,6 +600,7 @@ public class NewThreadActivity extends BaseActivity implements View.OnLongClickL
         RequestBody titleBody = Httptools.getInstance().getRequestBody(edtTitle.getText().toString());
         RequestBody emailBody = Httptools.getInstance().getRequestBody(edtEmail.getText().toString());
         RequestBody waterBody = Httptools.getInstance().getRequestBody(edtEmail.getText().toString());
+
         call = newThreadService.replyThread(restoBody, contentBody, nameBody, titleBody, emailBody, waterBody, requestBody);
         call.enqueue(new Callback<ResponseBody>() {
             @Override

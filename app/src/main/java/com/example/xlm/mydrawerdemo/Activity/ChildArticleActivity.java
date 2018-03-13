@@ -25,6 +25,7 @@ import android.view.WindowManager;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.example.xlm.mydrawerdemo.adapter.FooterAdapter;
 import com.example.xlm.mydrawerdemo.retrofitService.ChildArticleService;
 import com.example.xlm.mydrawerdemo.retrofitService.CollectionService;
 import com.example.xlm.mydrawerdemo.R;
@@ -62,7 +63,7 @@ public class ChildArticleActivity extends BaseSwipeActivity implements View.OnCl
     private ChildArticleAdapter adapter;
     private Boolean isLoadingMore = false, isRefresh = false;
     private Toolbar toolbarHead;
-    private int page = 0;
+    private int page = 1;
     private boolean isCollected;
     private List<String> ids;
     private ChildArticle childArticle;
@@ -203,7 +204,7 @@ public class ChildArticleActivity extends BaseSwipeActivity implements View.OnCl
         //初始化list
         linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        adapter = new ChildArticleAdapter(data, this);
+        adapter = new ChildArticleAdapter(data);
         adapter.setOnItemClickListener(new ChildArticleAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
@@ -250,7 +251,7 @@ public class ChildArticleActivity extends BaseSwipeActivity implements View.OnCl
                 //lastVisibleItem >= totalItemCount - 4 表示剩下4个item自动加载，各位自由选择
                 // dy>0 表示向下滑动
                 if (lastItemPosition >= totalItemPosition - 4 && dy > 0) {
-                    if (isLoadingMore) {
+                    if (isLoadingMore || adapter.getStatus() == FooterAdapter.FOOTER_TYPE_LOADING) {
                     } else {
                         loadPage();//这里多线程也要手动控制isLoadingMore
                     }
@@ -304,7 +305,7 @@ public class ChildArticleActivity extends BaseSwipeActivity implements View.OnCl
             @Override
             public void onResponse(Response<ChildArticle> response, Retrofit retrofit) {
                 childArticle = response.body();
-                if (isRefresh && page == 0) {
+                if (isRefresh && page == 1) {
                     //在replay列表中加入本串的信息，作为第一个数据
                     data.clear();
                     ChildArticle temp = response.body();
@@ -327,6 +328,7 @@ public class ChildArticleActivity extends BaseSwipeActivity implements View.OnCl
                     swipChildArticle.setRefreshing(false);
                 }
                 if (isLoadingMore) {
+                    adapter.setNormal();
                     //加载下一页不用和刷新一样处理
                     if (data.size() >= 2 && response.body().getReplies().size() >= 1) {
                         if (data.get(1).getId().equals(response.body().getReplies().get(0).getId())) {
@@ -349,7 +351,9 @@ public class ChildArticleActivity extends BaseSwipeActivity implements View.OnCl
 
             @Override
             public void onFailure(Throwable throwable) {
+                adapter.setNormal();
                 progressBar.setVisibility(View.GONE);
+                swipChildArticle.setRefreshing(false);
                 isRefresh = false;
                 isLoadingMore = false;
             }
@@ -371,7 +375,8 @@ public class ChildArticleActivity extends BaseSwipeActivity implements View.OnCl
      */
     private void refresh() {
         isRefresh = true;
-        page = 0;
+        swipChildArticle.setRefreshing(true);
+        page = 1;
         getData();
     }
 
@@ -379,6 +384,7 @@ public class ChildArticleActivity extends BaseSwipeActivity implements View.OnCl
     加载下一页
      */
     private void loadPage() {
+        adapter.setLoading();
         isLoadingMore = true;
         page++;
         getData();

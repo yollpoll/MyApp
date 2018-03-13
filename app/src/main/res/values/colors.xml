@@ -17,4 +17,14 @@
     <color name="lightGreen">#7cb342</color>
     <color name="rippleYellow">#FFF5A100</color>
     <color name="rippleGray">#80818181</color>
+
+    <!-- QR-->
+    <!-- QRCode scanner color begin -->
+    <color name="viewfinder_mask">#60000000</color>
+    <color name="result_view">#B0000000</color>
+    <color name="viewfinder_frame">#90FFFFFF</color>
+    <color name="result_point_color">#C0FFFF00</color>
+    <color name="laser_color">#0F0</color>
+    <color name="corner_color">#00FF00</color>
+    <!-- QRCode scanner color end -->
 </resources>

@@ -17,4 +17,9 @@
     <string name="sure_clear">确定要清空吗？？</string>
     <string name="explain_permission_save_cookie">保存饼干需要使用磁盘写入权限</string>
     <string name="result_permission_save_cookie">未获得权限，无法保存饼干</string>
+
+    <string name="encode_qrcode">生成二维码</string>
+    <string name="dencode_qrcode">扫描二维码</string>
+    <string name="code_text">请输入生成二维码的文本信息</string>
+    <string name="qrcodetext">这里显示扫描结果</string>
 </resources>

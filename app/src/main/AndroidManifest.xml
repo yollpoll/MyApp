@@ -5,6 +5,10 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"></uses-permission>
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"></uses-permission>
+    <uses-permission android:name="android.permission.VIBRATE" /> <!-- 震动权限 -->
+    <uses-permission android:name="android.permission.CAMERA" /> <!-- 摄像头权限 -->
+    <uses-feature android:name="android.hardware.camera.autofocus" /> <!-- 自动聚焦权限 -->
+    <uses-permission android:name="android.permission.FLASHLIGHT" />
 
     <application
         android:name=".base.MyApplication"
@@ -44,6 +48,11 @@
         <activity android:name=".Activity.WebActivity"></activity>
         <activity android:name=".Activity.AboutAuthorActivity" />
         <activity android:name=".Activity.DraftActivity"></activity>
+        <activity android:name="io.github.xudaojie.qrcodelib.CaptureActivity" />
+
+        <activity
+            android:name=".zxing.activity.CaptureActivity"
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" />
     </application>
 
 </manifest>

@@ -1,5 +1,7 @@
 package com.example.xlm.mydrawerdemo.bean;
 
+import android.graphics.Bitmap;
+
 import java.util.List;
 
 /**
@@ -18,7 +20,16 @@ public class Article {
     private String admin;//是否红名
     private String replyCount;
     private String fid;
+    private Bitmap imgCache;
     private List<Reply> replys;
+
+    public Bitmap getImgCache() {
+        return imgCache;
+    }
+
+    public void setImgCache(Bitmap imgCache) {
+        this.imgCache = imgCache;
+    }
 
     public String getId() {
         return id;

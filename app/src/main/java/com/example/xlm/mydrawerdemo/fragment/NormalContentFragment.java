@@ -15,18 +15,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
-import com.example.xlm.mydrawerdemo.retrofitService.ArticleService;
 import com.example.xlm.mydrawerdemo.Activity.ChildArticleActivity;
 import com.example.xlm.mydrawerdemo.Activity.ImageActivity;
 import com.example.xlm.mydrawerdemo.Activity.NewThreadActivity;
 import com.example.xlm.mydrawerdemo.R;
 import com.example.xlm.mydrawerdemo.adapter.ArticleRecyclerAdapter;
+import com.example.xlm.mydrawerdemo.adapter.FooterAdapter;
 import com.example.xlm.mydrawerdemo.base.BaseFragment;
 import com.example.xlm.mydrawerdemo.bean.Article;
 import com.example.xlm.mydrawerdemo.http.Httptools;
 import com.example.xlm.mydrawerdemo.http.Port;
+import com.example.xlm.mydrawerdemo.retrofitService.ArticleService;
 import com.example.xlm.mydrawerdemo.utils.Constant;
 import com.example.xlm.mydrawerdemo.utils.SpaceItemDecoration;
 import com.example.xlm.mydrawerdemo.utils.ToastUtils;
@@ -103,7 +103,7 @@ public class NormalContentFragment extends BaseFragment {
         moduleLayoutManager = new LinearLayoutManager(getActivity());
         moduleLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
 
-        adapterArticle = new ArticleRecyclerAdapter(data, getActivity());
+        adapterArticle = new ArticleRecyclerAdapter(data);
 
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
@@ -139,8 +139,8 @@ public class NormalContentFragment extends BaseFragment {
                 //lastVisibleItem >= totalItemCount - 4 表示剩下4个item自动加载，各位自由选择
                 // dy>0 表示向下滑动
                 if (lastVisibleItem >= totalItemCount - 4 && dy > 0) {
-                    if (isLoadingMore) {
-                        Toast.makeText(getActivity(), "加载中", Toast.LENGTH_SHORT).show();
+                    if (isLoadingMore || adapterArticle.getStatus() == FooterAdapter.FOOTER_TYPE_LOADING) {
+//                        Toast.makeText(getActivity(), "加载中", Toast.LENGTH_SHORT).show();
                     } else {
                         loadPage();//这里多线程也要手动控制isLoadingMore
                     }
@@ -213,6 +213,7 @@ public class NormalContentFragment extends BaseFragment {
     //加载下一页
     private void loadPage() {
         page++;
+        adapterArticle.setLoading();
         getData(true);
     }
 
@@ -227,7 +228,7 @@ public class NormalContentFragment extends BaseFragment {
         ArticleService articleService = retrofit.create(ArticleService.class);
         Call<List<Article>> articleCall;
         if (formId.equals(Constant.TIME_LINE)) {
-            articleCall = articleService.getTimeLine();
+            articleCall = articleService.getTimeLine(page+"");
         } else {
             articleCall = articleService.getArticleList(page + "", formId);
         }
@@ -235,6 +236,7 @@ public class NormalContentFragment extends BaseFragment {
             @Override
             public void onResponse(Response<List<Article>> response, Retrofit retrofit) {
                 mSwipRefreshLayout.setRefreshing(false);
+                adapterArticle.setNormal();
                 progressBar.setVisibility(View.GONE);
                 //是否是加载下一页,是就不清空
                 if (!isLoad) {
@@ -245,12 +247,15 @@ public class NormalContentFragment extends BaseFragment {
                 if (!isLoad) {
                     mLinearLayoutManager.smoothScrollToPosition(mRecyclerView, null, 0);
                 }
+                progressBar.setVisibility(View.GONE);
             }
 
             @Override
             public void onFailure(Throwable throwable) {
+                adapterArticle.setNormal();
                 mSwipRefreshLayout.setRefreshing(false);
                 ToastUtils.showShort("网络不通");
+                progressBar.setVisibility(View.GONE);
             }
         });
     }

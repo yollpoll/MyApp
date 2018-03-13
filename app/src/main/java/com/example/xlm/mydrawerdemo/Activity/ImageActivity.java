@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityOptionsCompat;
@@ -23,6 +24,7 @@ import android.widget.RelativeLayout;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.xlm.mydrawerdemo.R;
+import com.example.xlm.mydrawerdemo.glide.ProgressModelLoader;
 import com.example.xlm.mydrawerdemo.utils.DownLoadImageThread;
 import com.example.xlm.mydrawerdemo.utils.PermissionUtils;
 import com.example.xlm.mydrawerdemo.utils.ToastUtils;
@@ -30,6 +32,7 @@ import com.example.xlm.mydrawerdemo.utils.Tools;
 import com.github.chrisbanes.photoview.PhotoView;
 
 import java.io.File;
+import java.lang.ref.WeakReference;
 
 /**
  * Created by 鹏祺 on 2016/1/16.
@@ -39,19 +42,29 @@ public class ImageActivity extends AppCompatActivity {
     private String url;
     private PhotoView imgView;
     private static Bitmap mBitmap;
-    //    private ProgressBar mProgressBar;
+    private ProgressBar mProgressBar;
     private Toolbar mToolbar;
     private String imageName;
     private String mSharePath;
     private boolean isShareing;
     private RelativeLayout rlRoot;
-    private ProgressBar progressBar;
 
     public static void gotoImageActivity(Activity activity, Bitmap bitmap, View shareView) {
         ActivityOptionsCompat options = ActivityOptionsCompat
                 .makeSceneTransitionAnimation(activity, shareView, "img");
         mBitmap = bitmap;
         Intent intent = new Intent(activity, ImageActivity.class);
+        intent.putExtra("imageName", System.currentTimeMillis());
+        activity.startActivity(intent, options.toBundle());
+    }
+
+    //同时传bitmap和url
+    public static void gotoImageActivity(Activity activity, String url, String imageName, Bitmap bitmap, View shareView) {
+        ActivityOptionsCompat options = ActivityOptionsCompat
+                .makeSceneTransitionAnimation(activity, shareView, "img");
+        mBitmap = bitmap;
+        Intent intent = new Intent(activity, ImageActivity.class);
+        intent.putExtra("url", url);
         intent.putExtra("imageName", System.currentTimeMillis());
         activity.startActivity(intent, options.toBundle());
     }
@@ -172,12 +185,17 @@ public class ImageActivity extends AppCompatActivity {
     private void loadImage() {
         url = getIntent().getStringExtra("url");
         if (!TextUtils.isEmpty(url)) {
+//            if (null != mBitmap) {
+//                mProgressBar.setVisibility(View.GONE);
+//                imgView.setImageBitmap(mBitmap);
+//            }
             if (url.endsWith("gif")) {
-                Glide.with(this).load(url).asGif().diskCacheStrategy(DiskCacheStrategy.SOURCE).into(imgView);
+                Glide.with(this).using(new ProgressModelLoader(new ProgressHandler(ImageActivity.this, mProgressBar))).load(url).asGif().diskCacheStrategy(DiskCacheStrategy.SOURCE).into(imgView);
             } else {
-                Glide.with(this).load(url).into(imgView);
+                Glide.with(this).using(new ProgressModelLoader(new ProgressHandler(ImageActivity.this, mProgressBar))).load(url).into(imgView);
             }
         } else {
+            mProgressBar.setVisibility(View.GONE);
             imgView.setImageBitmap(mBitmap);
         }
     }
@@ -186,6 +204,7 @@ public class ImageActivity extends AppCompatActivity {
         imgView = (PhotoView) findViewById(R.id.img);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         rlRoot = (RelativeLayout) findViewById(R.id.rl_root);
+        mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
     }
 
     /**
@@ -267,4 +286,37 @@ public class ImageActivity extends AppCompatActivity {
             }
         }
     };
+
+    private static class ProgressHandler extends Handler {
+
+        private final WeakReference<Activity> mActivity;
+        private final ProgressBar progressBar;
+
+        public ProgressHandler(Activity activity, ProgressBar progressImageView) {
+            super(Looper.getMainLooper());
+            mActivity = new WeakReference<>(activity);
+            progressBar = progressImageView;
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            final Activity activity = mActivity.get();
+            if (activity != null) {
+                switch (msg.what) {
+                    case 1:
+                        int percent = msg.arg1 * 100 / msg.arg2;
+//                        progressBar.setProgress(percent);
+                        if (percent == 100) {
+                            progressBar.setVisibility(View.GONE);
+                        } else {
+                            progressBar.setVisibility(View.VISIBLE);
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+    }
 }

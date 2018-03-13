@@ -1,6 +1,8 @@
 package com.example.xlm.mydrawerdemo.Activity;
 
 import android.os.Bundle;
+import android.view.Window;
+import android.view.WindowManager;
 
 import com.example.xlm.mydrawerdemo.R;
 import com.example.xlm.mydrawerdemo.base.BaseActivity;
@@ -23,6 +25,10 @@ public class IndexActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        //全屏
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_index);
         getBackUpUrl();
     }
@@ -37,11 +43,13 @@ public class IndexActivity extends BaseActivity {
                 String backUrl = "https://nmbimg.fastmirror.org";
                 MyApplication.getInstance().setBackUpUrl(backUrl);
                 MainActivity.gotoMainActivity(IndexActivity.this);
+                IndexActivity.this.finish();
             }
 
             @Override
             public void onFailure(Throwable throwable) {
                 MainActivity.gotoMainActivity(IndexActivity.this);
+                IndexActivity.this.finish();
             }
         });
     }
