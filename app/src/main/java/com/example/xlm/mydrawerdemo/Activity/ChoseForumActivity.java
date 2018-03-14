@@ -11,6 +11,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.ProgressBar;
 
 import com.example.xlm.mydrawerdemo.retrofitService.FormListService;
 import com.example.xlm.mydrawerdemo.Dao.ChildFormDao;
@@ -49,6 +50,7 @@ public class ChoseForumActivity extends BaseActivity {
     private DaoSession daoSession;
     private ChildFormDao childFormDao;
     private Cursor cursor;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,6 +101,7 @@ public class ChoseForumActivity extends BaseActivity {
     private void initView() {
         recyclerForum = (RecyclerView) findViewById(R.id.recycler_forum);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        progressBar = (ProgressBar) findViewById(R.id.progressBar);
         initToolbar("板块设置");
     }
 
@@ -129,6 +132,7 @@ public class ChoseForumActivity extends BaseActivity {
         formsCall.enqueue(new Callback<List<Form>>() {
             @Override
             public void onResponse(Response<List<Form>> response, Retrofit retrofit) {
+                progressBar.setVisibility(View.GONE);
                 List<Form> forms = response.body();
                 Form.saveList(forms);
                 if (forms != null) {
@@ -148,7 +152,7 @@ public class ChoseForumActivity extends BaseActivity {
 
             @Override
             public void onFailure(Throwable throwable) {
-
+                progressBar.setVisibility(View.GONE);
             }
         });
     }

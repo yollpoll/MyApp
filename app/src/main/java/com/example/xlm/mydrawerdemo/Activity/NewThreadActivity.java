@@ -171,6 +171,7 @@ public class NewThreadActivity extends BaseActivity implements View.OnLongClickL
                             return;
                         cacheBitmap = Bitmap.createBitmap(bitmap);
                         imgPicContent.setImageBitmap(bitmap);
+                        imgPath = path;
                     }
                 });
 
@@ -199,6 +200,7 @@ public class NewThreadActivity extends BaseActivity implements View.OnLongClickL
                     @Override
                     public void callback(String path) {
                         showPic(true);
+                        imgPath = path;
                         cacheBitmap = Bitmap.createBitmap(bitmap);
                         imgPicContent.setImageBitmap(bitmap);
                     }
@@ -238,6 +240,7 @@ public class NewThreadActivity extends BaseActivity implements View.OnLongClickL
                 final String content = data.getStringExtra("content");
                 String picPath = data.getStringExtra("picPath");
                 String date = data.getStringExtra("date");
+                imgPath = picPath;
                 DraftWithPath draftWithPath = new DraftWithPath(date, content, picPath);
                 Draft.changePathToBitmap(draftWithPath, new RxTools.BitmapCallback() {
                     @Override

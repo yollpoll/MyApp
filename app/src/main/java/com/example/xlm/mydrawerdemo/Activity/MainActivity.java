@@ -16,6 +16,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Display;
 import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -141,13 +142,25 @@ public class MainActivity extends BaseActivity {
             return;
         final Dialog dialog = new Dialog(this);
         dialog.setContentView(R.layout.dialog_announcement);
+        WindowManager windowManager = getWindowManager();
+        Display display = windowManager.getDefaultDisplay();
+
         Window window = dialog.getWindow();
+        window.setGravity(Gravity.CENTER);
         WindowManager.LayoutParams layoutParams = window.getAttributes();
-        layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
-        layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        Log.d("spq",display.getHeight()+"...");
+        layoutParams.width = (int) (display.getWidth());
+        layoutParams.height = (int) (display.getHeight()*0.8);
         window.setAttributes(layoutParams);
         dialog.show();
         TextView tvAnnouncement = (TextView) dialog.findViewById(R.id.tv_announcement);
+        TextView tvOk = (TextView) dialog.findViewById(R.id.tv_ok);
+        tvOk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
         tvAnnouncement.setText(Html.fromHtml(mAnnouncement.getContent()));
     }
 
@@ -328,6 +341,7 @@ public class MainActivity extends BaseActivity {
         });
     }
 
+    //公告
     private void getAnnouncement() {
         Retrofit retrofitAnnouncement = Httptools.getInstance().getNoHeadRetrofit();
         AnnouncementService service = retrofitAnnouncement.create(AnnouncementService.class);
@@ -339,13 +353,12 @@ public class MainActivity extends BaseActivity {
                 if (null == mAnnouncement) {
                     response.body().save();
                     mAnnouncement = response.body();
-                    showAnnouncement();
                 }
                 if (response.body().getDate() > mAnnouncement.getDate()) {
                     response.body().save();
                     mAnnouncement = response.body();
-                    showAnnouncement();
                 }
+                showAnnouncement();
             }
 
             @Override
@@ -492,7 +505,7 @@ public class MainActivity extends BaseActivity {
                     String result = data.getStringExtra("result");
 //                    setCookie(result);
                     JSONObject jsonCookie = null;
-                    Log.d("spq","QR result   "+result);
+                    Log.d("spq", "QR result   " + result);
                     try {
                         jsonCookie = new JSONObject(result);
                     } catch (JSONException e) {

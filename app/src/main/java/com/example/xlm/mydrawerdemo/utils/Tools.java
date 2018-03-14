@@ -7,7 +7,6 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Environment;
 import android.os.Handler;
@@ -16,42 +15,28 @@ import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
 import android.text.Spanned;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.RelativeLayout;
 import android.widget.TextSwitcher;
-import android.widget.TextView;
-import android.widget.ViewSwitcher;
 
-import com.example.xlm.mydrawerdemo.Activity.DrawingActivity;
 import com.example.xlm.mydrawerdemo.R;
-import com.example.xlm.mydrawerdemo.view.SecretTextView;
-
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ExecutionException;
 
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
-
-import static com.example.xlm.mydrawerdemo.R.layout.alert_choose_photo;
 
 /**
  * Created by xlm on 2015/11/25.
@@ -502,6 +487,14 @@ public class Tools {
                 Uri.fromFile(new File(path))));
     }
 
+    /**
+     * 压缩图片
+     *
+     * @param path
+     * @param destWidth
+     * @param destHeight
+     * @return
+     */
     public static Bitmap compressBitmap(String path, int destWidth, int destHeight) {
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
