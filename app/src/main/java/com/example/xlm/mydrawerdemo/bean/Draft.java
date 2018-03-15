@@ -7,7 +7,6 @@ import com.example.xlm.mydrawerdemo.utils.RxTools;
 import com.example.xlm.mydrawerdemo.utils.SPUtiles;
 import com.example.xlm.mydrawerdemo.utils.Tools;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -85,7 +84,7 @@ public class Draft {
      * @param callback
      */
     public static void changeBitmapToPath(Draft draft, Tools.OnSaveImageCallback callback) {
-        Tools.saveImageToSdViaAsyncTask(draft.getPicture(), "draft_" + System.currentTimeMillis() + ".jpg", callback);
+        Tools.saveImageToSdViaAsyncTask(draft.getPicture(), "draft_" + System.currentTimeMillis() + ".png", callback);
     }
 
     /**

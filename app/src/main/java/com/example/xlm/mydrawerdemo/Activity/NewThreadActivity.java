@@ -497,15 +497,23 @@ public class NewThreadActivity extends BaseActivity implements View.OnLongClickL
 
     private ChooseEmojiDialogFragment.OnEmojiClickListener onEmojiClickListener = new ChooseEmojiDialogFragment.OnEmojiClickListener() {
         @Override
-        public void onClick(String word, int id, DialogFragment fragment) {
+        public void onClick(String word, final int id, DialogFragment fragment) {
             if (TextUtils.isEmpty(word)) {
                 fragment.dismiss();
                 //选择了图片
                 if (id == 0)
                     return;
                 cacheBitmap = Bitmap.createBitmap(BitmapFactory.decodeResource(getResources(), id));
-                imgPicContent.setImageResource(id);
-                showPic(false);
+                Tools.saveImageViaAsyncTask(NewThreadActivity.this, cacheBitmap, "temp.png", new Tools.OnSaveImageCallback() {
+                    @Override
+                    public void callback(String path) {
+                        imgPicContent.setImageResource(id);
+                        showPic(false);
+                        imgPath = path;
+                    }
+                });
+
+//                showPic(false);
             } else {
                 //选择了文字
                 edtContent.append(word);
@@ -543,7 +551,7 @@ public class NewThreadActivity extends BaseActivity implements View.OnLongClickL
         RequestBody nameBody = Httptools.getInstance().getRequestBody(edtName.getText().toString());
         RequestBody titleBody = Httptools.getInstance().getRequestBody(edtTitle.getText().toString());
         RequestBody emailBody = Httptools.getInstance().getRequestBody(edtEmail.getText().toString());
-        RequestBody waterBody = Httptools.getInstance().getRequestBody(edtEmail.getText().toString());
+        RequestBody waterBody = Httptools.getInstance().getRequestBody(water + "");
 
         call = newThreadService.newThread(tagIdBody, nameBody, titleBody, emailBody, contentBody, waterBody, requestBody);
         call.enqueue(new Callback<ResponseBody>() {

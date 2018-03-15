@@ -391,7 +391,7 @@ public class Tools {
         FileOutputStream fos = null;
         try {
             fos = new FileOutputStream(cacheImage);
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
             fos.flush();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -454,7 +454,7 @@ public class Tools {
         FileOutputStream fos = null;
         try {
             fos = new FileOutputStream(cacheImage);
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 80, fos);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
             fos.flush();
         } catch (FileNotFoundException e) {
             e.printStackTrace();

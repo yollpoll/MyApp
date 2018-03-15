@@ -14,7 +14,8 @@
         style="@style/BackGroundRipple"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingRight="10dp">
+        android:paddingRight="10dp"
+        >
 
         <TextView
             android:id="@+id/tv_username"
@@ -37,16 +38,26 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="10dp"
             android:layout_marginTop="10dp"
             android:gravity="right"
             android:textColor="@color/textGrey" />
+
+        <View
+            android:id="@+id/line"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@+id/tv_username"
+            android:layout_marginTop="10dp"
+            android:layout_alignParentRight="true"
+            android:visibility="gone"
+            android:layout_alignLeft="@+id/tv_username"
+            android:background="@color/player_grey" />
 
         <TextView
             android:id="@+id/tv_content"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/tv_username"
+            android:layout_below="@+id/line"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:layout_marginTop="10dp"
@@ -57,8 +68,8 @@
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:layout_below="@+id/tv_content"
-            android:scaleType="centerCrop"
-            android:layout_marginLeft="10dp" />
+            android:layout_marginLeft="10dp"
+            android:scaleType="centerCrop" />
 
         <View
             android:layout_width="match_parent"
