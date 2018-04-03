@@ -15,21 +15,47 @@
             android:id="@+id/img_cover"
             android:layout_width="250dp"
             android:layout_height="200dp"
-            android:scaleType="fitXY" />
+            android:scaleType="centerCrop" />
     </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
         android:orientation="vertical">
+        <RelativeLayout
+            android:id="@+id/rl_btn_setting"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?android:attr/selectableItemBackground"
+            android:gravity="left"
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp">
 
+            <ImageView
+                android:id="@+id/iv_setting"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginLeft="16dp"
+                android:src="@mipmap/icon_set" />
+
+            <TextView
+                android:id="@+id/tv_setting"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="40dp"
+                android:layout_toRightOf="@+id/iv_setting"
+                android:text="设置"
+                android:textSize="16sp" />
+        </RelativeLayout>
         <RelativeLayout
             android:id="@+id/left_btn_layout1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="80dp"
             android:background="?android:attr/selectableItemBackground"
             android:gravity="left"
+            android:layout_marginTop="10dp"
             android:paddingBottom="5dp"
             android:paddingTop="5dp">
 

@@ -37,6 +37,7 @@ import retrofit.Response;
 import retrofit.Retrofit;
 
 /**
+ * 旧版设置
  * Created by 鹏祺 on 2017/5/24.
  */
 

@@ -12,6 +12,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.TextUtils;
@@ -20,6 +21,7 @@ import android.view.Display;
 import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
@@ -74,7 +76,7 @@ public class MainActivity extends BaseActivity {
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
     private ListView listView;
-    private RelativeLayout left_menu1, left_menu2, left_menu3, left_menu4;
+    private RelativeLayout left_menu1, left_menu2, left_menu3, left_menu4,rlSetting;
     private TextView tvLeft1, tvLeft2, tvLeft3, tvLeft4;
     private DaoSession daoSession;
     private ArticlePagerAdapter pagerAdapter;
@@ -140,8 +142,15 @@ public class MainActivity extends BaseActivity {
     private void showAnnouncement() {
         if (null == mAnnouncement)
             return;
-        final Dialog dialog = new Dialog(this);
-        dialog.setContentView(R.layout.dialog_announcement);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        View view = LayoutInflater.from(this).inflate(R.layout.dialog_announcement, null);
+        builder.setView(view);
+        final AlertDialog dialog = builder.create();
+        dialog.show();
+
+//        final AlertDialog dialog = new AlertDialog(this);
+//        dialog.setContentView(R.layout.dialog_announcement);
+
         WindowManager windowManager = getWindowManager();
         Display display = windowManager.getDefaultDisplay();
 
@@ -152,7 +161,7 @@ public class MainActivity extends BaseActivity {
         layoutParams.width = (int) (display.getWidth());
         layoutParams.height = (int) (display.getHeight()*0.8);
         window.setAttributes(layoutParams);
-        dialog.show();
+//        dialog.show();
         TextView tvAnnouncement = (TextView) dialog.findViewById(R.id.tv_announcement);
         TextView tvOk = (TextView) dialog.findViewById(R.id.tv_ok);
         tvOk.setOnClickListener(new View.OnClickListener() {
@@ -258,6 +267,7 @@ public class MainActivity extends BaseActivity {
         left_menu2 = (RelativeLayout) findViewById(R.id.left_btn_layout2);
         left_menu3 = (RelativeLayout) findViewById(R.id.left_btn_layout3);
         left_menu4 = (RelativeLayout) findViewById(R.id.left_btn_layout4);
+        rlSetting= (RelativeLayout) findViewById(R.id.rl_btn_setting);
         tvLeft1 = (TextView) findViewById(R.id.tv_btn1);
         tvLeft2 = (TextView) findViewById(R.id.tv_btn2);
         tvLeft3 = (TextView) findViewById(R.id.tv_btn3);
@@ -284,6 +294,7 @@ public class MainActivity extends BaseActivity {
         left_menu2.setOnClickListener(this);
         left_menu3.setOnClickListener(this);
         left_menu4.setOnClickListener(this);
+        rlSetting.setOnClickListener(this);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer);
         ActionBarDrawerToggle mDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.open,
                 R.string.close);
@@ -587,6 +598,9 @@ public class MainActivity extends BaseActivity {
                 break;
             case R.id.fb_new:
 //                ToastUtils.SnakeShowShort(cdlContent, "本肥肥还没做这个功能,你在乱点什么啦(　^ω^)");
+                break;
+            case R.id.rl_btn_setting:
+                SettingActivity.gotoSettingActivity(MainActivity.this);
                 break;
             default:
                 break;

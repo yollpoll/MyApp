@@ -6,9 +6,9 @@ import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.TextView;
 
-import com.example.xlm.mydrawerdemo.Activity.NewThreadActivity;
 import com.example.xlm.mydrawerdemo.R;
 import com.example.xlm.mydrawerdemo.base.BaseDialogFragment;
 
@@ -35,6 +35,7 @@ public class ThreadMenuFragment extends BaseDialogFragment {
         } else {
             rootView = inflater.inflate(R.layout.dialog_click_child_thread, null);
         }
+        getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
         return rootView;
     }
 
