@@ -49,7 +49,7 @@ import com.example.xlm.mydrawerdemo.http.Httptools;
 import com.example.xlm.mydrawerdemo.http.Port;
 import com.example.xlm.mydrawerdemo.retrofitService.AnnouncementService;
 import com.example.xlm.mydrawerdemo.retrofitService.FormListService;
-import com.example.xlm.mydrawerdemo.utils.SPUtiles;
+import com.example.xlm.mydrawerdemo.utils.CookieUtils;
 import com.example.xlm.mydrawerdemo.utils.ToastUtils;
 
 import org.json.JSONException;
@@ -76,7 +76,7 @@ public class MainActivity extends BaseActivity {
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
     private ListView listView;
-    private RelativeLayout left_menu1, left_menu2, left_menu3, left_menu4,rlSetting;
+    private RelativeLayout left_menu1, left_menu2, left_menu3, left_menu4, rlSetting;
     private TextView tvLeft1, tvLeft2, tvLeft3, tvLeft4;
     private DaoSession daoSession;
     private ArticlePagerAdapter pagerAdapter;
@@ -157,9 +157,9 @@ public class MainActivity extends BaseActivity {
         Window window = dialog.getWindow();
         window.setGravity(Gravity.CENTER);
         WindowManager.LayoutParams layoutParams = window.getAttributes();
-        Log.d("spq",display.getHeight()+"...");
+        Log.d("spq", display.getHeight() + "...");
         layoutParams.width = (int) (display.getWidth());
-        layoutParams.height = (int) (display.getHeight()*0.8);
+        layoutParams.height = (int) (display.getHeight() * 0.8);
         window.setAttributes(layoutParams);
 //        dialog.show();
         TextView tvAnnouncement = (TextView) dialog.findViewById(R.id.tv_announcement);
@@ -267,7 +267,7 @@ public class MainActivity extends BaseActivity {
         left_menu2 = (RelativeLayout) findViewById(R.id.left_btn_layout2);
         left_menu3 = (RelativeLayout) findViewById(R.id.left_btn_layout3);
         left_menu4 = (RelativeLayout) findViewById(R.id.left_btn_layout4);
-        rlSetting= (RelativeLayout) findViewById(R.id.rl_btn_setting);
+        rlSetting = (RelativeLayout) findViewById(R.id.rl_btn_setting);
         tvLeft1 = (TextView) findViewById(R.id.tv_btn1);
         tvLeft2 = (TextView) findViewById(R.id.tv_btn2);
         tvLeft3 = (TextView) findViewById(R.id.tv_btn3);
@@ -608,7 +608,7 @@ public class MainActivity extends BaseActivity {
     }
 
     private void setCookie(String cookie) {
-        SPUtiles.saveCookie(cookie);
+        CookieUtils.saveCookie(cookie);
         ToastUtils.SnakeShowShort(rlRoot, "保存饼干成功");
     }
 }

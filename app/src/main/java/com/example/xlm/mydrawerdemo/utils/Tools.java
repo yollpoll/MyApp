@@ -447,10 +447,18 @@ public class Tools {
             return "";
         //替换/
         String img = imageName.replace("/", "_");
+        checkCacheDir();
         File cacheDir = new File(Environment.getExternalStorageDirectory() + Constant.SD_CACHE_DIR + Constant.IMG_CACHE);
         if (!cacheDir.exists())
             cacheDir.mkdir();
         File cacheImage = new File(cacheDir + "/" + img);
+        if (!cacheImage.exists()) {
+            try {
+                cacheImage.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
         FileOutputStream fos = null;
         try {
             fos = new FileOutputStream(cacheImage);
@@ -509,5 +517,21 @@ public class Tools {
         options.inSampleSize = inSampleSize;
         options.inPreferredConfig = Bitmap.Config.ARGB_8888;
         return BitmapFactory.decodeFile(path, options);
+    }
+
+    /**
+     * 检测缓存目录
+     */
+    public static void checkCacheDir() {
+        File cacheDir = new File(Environment.getExternalStorageDirectory() + Constant.SD_CACHE_DIR);
+        if (!cacheDir.exists()) {
+            Log.d("spq", "make cache");
+            cacheDir.mkdir();
+        }
+        File imgCache = new File(Environment.getExternalStorageDirectory() + Constant.SD_CACHE_DIR + Constant.IMG_CACHE);
+        if (!imgCache.exists()) {
+            Log.d("spq", "make imgCache");
+            imgCache.mkdir();
+        }
     }
 }

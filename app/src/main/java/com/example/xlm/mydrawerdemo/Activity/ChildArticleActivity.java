@@ -17,6 +17,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,11 +26,9 @@ import android.view.WindowManager;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import com.example.xlm.mydrawerdemo.adapter.FooterAdapter;
-import com.example.xlm.mydrawerdemo.retrofitService.ChildArticleService;
-import com.example.xlm.mydrawerdemo.retrofitService.CollectionService;
 import com.example.xlm.mydrawerdemo.R;
 import com.example.xlm.mydrawerdemo.adapter.ChildArticleAdapter;
+import com.example.xlm.mydrawerdemo.adapter.FooterAdapter;
 import com.example.xlm.mydrawerdemo.base.BaseSwipeActivity;
 import com.example.xlm.mydrawerdemo.base.MyApplication;
 import com.example.xlm.mydrawerdemo.bean.ChildArticle;
@@ -38,6 +37,8 @@ import com.example.xlm.mydrawerdemo.bean.Reply;
 import com.example.xlm.mydrawerdemo.fragment.ThreadMenuFragment;
 import com.example.xlm.mydrawerdemo.http.Httptools;
 import com.example.xlm.mydrawerdemo.http.Port;
+import com.example.xlm.mydrawerdemo.retrofitService.ChildArticleService;
+import com.example.xlm.mydrawerdemo.retrofitService.CollectionService;
 import com.example.xlm.mydrawerdemo.utils.ToastUtils;
 
 import java.util.ArrayList;
@@ -336,6 +337,10 @@ public class ChildArticleActivity extends BaseSwipeActivity implements View.OnCl
                             return;
                         }
                     }
+                    if (response.body().getReplies().size() <= 0) {
+                        page--;
+                        Log.d("spq", "pageNo>>>>>>>>>" + page);
+                    }
                     data.addAll(response.body().getReplies());
                     adapter.notifyItemRangeInserted(data.size() - response.body().getReplies().size(), data.size());
                 }
@@ -403,7 +408,7 @@ public class ChildArticleActivity extends BaseSwipeActivity implements View.OnCl
     private void choosePage() {
         if (null == childArticle)
             return;
-        final int allPage = (int) Math.ceil(((double) childArticle.getReplyCount()) / 19);//向上取整
+        final int allPage = (int) Math.ceil(((double) childArticle.getReplyCount()+1) / 20);//向上取整
         final Dialog dialog = new Dialog(this);
         dialog.setContentView(R.layout.dialog_choose_page);
         Window window = dialog.getWindow();
@@ -413,15 +418,15 @@ public class ChildArticleActivity extends BaseSwipeActivity implements View.OnCl
         window.setAttributes(layoutParams);
         dialog.show();
         final TextView tvChoosePage = (TextView) dialog.findViewById(R.id.tv_page);
-        tvChoosePage.setText("第" + (page + 1) + "页");
+        tvChoosePage.setText("第" + (page) + "页,共"+allPage+"页");
         SeekBar seekBar = (SeekBar) dialog.findViewById(R.id.seek_page);
-        seekBar.setMax(allPage);
-        seekBar.setProgress((page + 1));
+        seekBar.setMax(allPage-1);
+        seekBar.setProgress((page - 1));
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                page = progress - 1;
-                tvChoosePage.setText("第" + progress + "页");
+                page = progress + 1;
+                tvChoosePage.setText("第" + (progress + 1) + "页,共"+(allPage)+"页");
             }
 
             @Override

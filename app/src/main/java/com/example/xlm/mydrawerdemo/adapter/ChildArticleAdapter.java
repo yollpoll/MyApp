@@ -136,7 +136,7 @@ public class ChildArticleAdapter extends FooterAdapter<List<Reply>, BaseViewHold
 
     @Override
     protected void onBindContentViewHolder(final BaseViewHolder baseViewHolder, int position) {
-        final ChildArticleAdapter.ViewHolder holder= (ViewHolder) baseViewHolder;
+        final ChildArticleAdapter.ViewHolder holder = (ViewHolder) baseViewHolder;
         Reply item = list.get(position);
         if ("1".equals(item.getAdmin())) {
             holder.tvUsername.setTextColor(context.getResources().getColor(R.color.textRed));
@@ -147,7 +147,15 @@ public class ChildArticleAdapter extends FooterAdapter<List<Reply>, BaseViewHold
                 holder.tvUsername.setTextColor(context.getResources().getColor(R.color.textGrey));
             }
         }
-        holder.tvUsername.setText(item.getUserid());
+        String[] userId = item.getUserid().split("-");
+        String userIdStr = "";
+        for (int i = 0; i < userId.length; i++) {
+            if (i != 0) {
+                userId[i] = "<br>(" + userId[i] + ")";
+            }
+            userIdStr += userId[i];
+        }
+        holder.tvUsername.setText(Html.fromHtml(userIdStr));
         holder.tvId.setText("No." + item.getId());
         holder.tvTime.setText(Tools.replaceTime(item.getNow()));
         Log.i("spq", item.getContent());

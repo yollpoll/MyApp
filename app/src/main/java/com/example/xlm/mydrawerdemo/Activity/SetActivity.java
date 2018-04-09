@@ -21,6 +21,7 @@ import com.example.xlm.mydrawerdemo.fragment.FIleListFragment;
 import com.example.xlm.mydrawerdemo.http.GetCookieInterceptor;
 import com.example.xlm.mydrawerdemo.http.Httptools;
 import com.example.xlm.mydrawerdemo.utils.Constant;
+import com.example.xlm.mydrawerdemo.utils.CookieUtils;
 import com.example.xlm.mydrawerdemo.utils.FileUtils;
 import com.example.xlm.mydrawerdemo.utils.PermissionUtils;
 import com.example.xlm.mydrawerdemo.utils.SPUtiles;
@@ -179,7 +180,7 @@ public class SetActivity extends BaseActivity {
         @Override
         public void onClick(File file) {
             String cookie = FileUtils.readFromFile(file);
-            SPUtiles.saveCookie(cookie);
+            CookieUtils.saveCookie(cookie);
         }
     };
 

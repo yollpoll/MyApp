@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ll_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/ll_root"
     android:orientation="vertical">
 
     <include layout="@layout/toolbar" />
@@ -31,9 +31,68 @@
             android:text="显示饼干二维码"
             android:textSize="12sp" />
     </RelativeLayout>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/colorLine"
-        />
+        android:background="@color/colorLine" />
+
+    <RelativeLayout
+        android:id="@+id/rl_save_cookie"
+        style="@style/WhiteBgRipple"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:gravity="center_vertical"
+        android:paddingLeft="16dp">
+
+        <TextView
+            android:id="@+id/tv_save_cookie"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="保存饼干"
+            android:textColor="@color/ColorTextPrimary" />
+
+        <TextView
+            android:id="@+id/tv_save_cookie_qr"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_save_cookie"
+            android:layout_marginTop="5dp"
+            android:text="保存饼干二维码到本地"
+            android:textSize="12sp" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/colorLine" />
+
+    <RelativeLayout
+        android:id="@+id/rl_share_cookie"
+        style="@style/WhiteBgRipple"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:gravity="center_vertical"
+        android:paddingLeft="16dp">
+
+        <TextView
+            android:id="@+id/tv_share_cookie"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="分享饼干"
+            android:textColor="@color/ColorTextPrimary" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_share_cookie"
+            android:layout_marginTop="5dp"
+            android:text="分享饼干"
+            android:textSize="12sp" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/colorLine" />
 </LinearLayout>

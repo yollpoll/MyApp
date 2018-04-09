@@ -205,7 +205,16 @@ public class ArticleRecyclerAdapter extends FooterAdapter<List<Article>, BaseVie
                 //红名
                 holder.sender.setTextColor(context.getResources().getColor(R.color.textRed));
             }
-            holder.sender.setText(article.getUserid());
+            String[] userId = ("Id:" + article.getUserid()).split("-");
+            String userIdStr = "";
+            for (int i = 0; i < userId.length; i++) {
+                if (i != 0) {
+                    userId[i] = "<br>(" + userId[i] + ")";
+                }
+                userIdStr += userId[i];
+            }
+            holder.sender.setText(Html.fromHtml(userIdStr));
+//            holder.sender.setText(article.getUserid());
             if (article.getReplies().size() > 0) {
                 holder.comment.setVisibility(View.GONE);
                 List<Spanned> replySpanneds = new ArrayList<>();

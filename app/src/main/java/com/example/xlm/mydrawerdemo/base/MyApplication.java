@@ -6,6 +6,7 @@ import android.text.TextUtils;
 
 import com.example.xlm.mydrawerdemo.Dao.DaoMaster;
 import com.example.xlm.mydrawerdemo.Dao.DaoSession;
+import com.example.xlm.mydrawerdemo.utils.CookieUtils;
 import com.example.xlm.mydrawerdemo.utils.SPUtiles;
 
 import java.util.UUID;
@@ -71,7 +72,7 @@ public class MyApplication extends Application {
     }
 
     public void setCookie(String cookie) {
-        SPUtiles.saveCookie(cookie);
+        CookieUtils.saveCookie(cookie);
     }
 
     public void setBackUpUrl(String backUpUrl) {

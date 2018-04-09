@@ -1,18 +1,11 @@
 package com.example.xlm.mydrawerdemo.http;
 
-import android.text.TextUtils;
-
-import com.example.xlm.mydrawerdemo.utils.SPUtiles;
+import com.example.xlm.mydrawerdemo.utils.CookieUtils;
 import com.squareup.okhttp.Interceptor;
 import com.squareup.okhttp.Response;
 
 import java.io.IOException;
-import java.net.CookieHandler;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 import rx.Observable;
@@ -52,7 +45,7 @@ public class GetCookieInterceptor implements Interceptor {
             for (String key : cookieMap.keySet()) {
                 cookie += key + "=" + cookieMap.get(key) + ";";
             }
-            SPUtiles.saveCookie(cookie);
+            CookieUtils.saveCookie(cookie);
         }
         return originalResponse;
     }

@@ -1,7 +1,5 @@
 package com.example.xlm.mydrawerdemo.http;
 
-import android.util.Log;
-
 import com.example.xlm.mydrawerdemo.utils.SPUtiles;
 import com.squareup.okhttp.Interceptor;
 import com.squareup.okhttp.Request;
@@ -36,7 +34,7 @@ public class AddCookieInterceptor implements Interceptor {
 //        return response;
         Request.Builder builder = chain.request().newBuilder();
         String cookie = SPUtiles.getCookie();
-        Log.d("spq", "cookie>>  " + cookie);
+//        Log.d("spq", "cookie>>  " + cookie);
 //        HashMap<String, String> cookieMap = new HashMap<>();
 //        cookieMap.put("userhash", cookie);
         builder.addHeader("Cookie", "userhash="+cookie);

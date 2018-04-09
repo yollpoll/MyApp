@@ -19,8 +19,8 @@ android {
         applicationId "com.yollpoll.nimingban"
         minSdkVersion 19
         targetSdkVersion 23
-        versionCode 201803020
-        versionName "1.1.2"
+        versionCode 201804080
+        versionName "1.1.4"
     }
     buildTypes {
         release {
