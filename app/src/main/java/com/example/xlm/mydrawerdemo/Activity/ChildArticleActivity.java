@@ -11,6 +11,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.widget.ContentLoadingProgressBar;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -69,6 +70,13 @@ public class ChildArticleActivity extends BaseSwipeActivity implements View.OnCl
     private List<String> ids;
     private ChildArticle childArticle;
     private ContentLoadingProgressBar progressBar;
+
+    public static void gotoChildArticleActivity(Context context, String id, @Nullable String title) {
+        Intent intent = new Intent(context, ChildArticleActivity.class);
+        intent.putExtra("id", id);
+        intent.putExtra("title", title);
+        context.startActivity(intent);
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -306,6 +314,7 @@ public class ChildArticleActivity extends BaseSwipeActivity implements View.OnCl
             @Override
             public void onResponse(Response<ChildArticle> response, Retrofit retrofit) {
                 childArticle = response.body();
+                getSupportActionBar().setTitle(response.body().getTitle());
                 if (isRefresh && page == 1) {
                     //在replay列表中加入本串的信息，作为第一个数据
                     data.clear();
@@ -408,7 +417,7 @@ public class ChildArticleActivity extends BaseSwipeActivity implements View.OnCl
     private void choosePage() {
         if (null == childArticle)
             return;
-        final int allPage = (int) Math.ceil(((double) childArticle.getReplyCount()+1) / 20);//向上取整
+        final int allPage = (int) Math.ceil(((double) childArticle.getReplyCount() + 1) / 20);//向上取整
         final Dialog dialog = new Dialog(this);
         dialog.setContentView(R.layout.dialog_choose_page);
         Window window = dialog.getWindow();
@@ -418,15 +427,15 @@ public class ChildArticleActivity extends BaseSwipeActivity implements View.OnCl
         window.setAttributes(layoutParams);
         dialog.show();
         final TextView tvChoosePage = (TextView) dialog.findViewById(R.id.tv_page);
-        tvChoosePage.setText("第" + (page) + "页,共"+allPage+"页");
+        tvChoosePage.setText("第" + (page) + "页,共" + allPage + "页");
         SeekBar seekBar = (SeekBar) dialog.findViewById(R.id.seek_page);
-        seekBar.setMax(allPage-1);
+        seekBar.setMax(allPage - 1);
         seekBar.setProgress((page - 1));
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 page = progress + 1;
-                tvChoosePage.setText("第" + (progress + 1) + "页,共"+(allPage)+"页");
+                tvChoosePage.setText("第" + (progress + 1) + "页,共" + (allPage) + "页");
             }
 
             @Override

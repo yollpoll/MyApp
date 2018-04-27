@@ -5,12 +5,14 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
+import android.text.style.URLSpan;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.xlm.mydrawerdemo.view.ClickSpanMovementMethod;
+import com.example.xlm.mydrawerdemo.view.MyClickableSpan;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -20,9 +22,17 @@ import java.util.regex.Pattern;
  */
 public class TransFormContent {
     public static void trans(final Spanned content, TextView tv, final OnClickListener onClickListener) {
+        SpannableString spannableString = new SpannableString(content);
+        if (content.toString().startsWith("[AD]")) {
+            //广告
+            URLSpan[] urlSpans = spannableString.getSpans(0, content.length(), URLSpan.class);
+            if (urlSpans.length > 0) {
+                spannableString.setSpan(new MyClickableSpan(urlSpans[0].getURL()), spannableString.getSpanStart(urlSpans[0]),
+                        spannableString.getSpanEnd(urlSpans[0]), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
+        }else {
         Pattern pattern = Pattern.compile(">>.*");
         final Matcher matcher = pattern.matcher(content);
-        SpannableString spannableString = new SpannableString(content);
         while (matcher.find()) {
             final String group = matcher.group();
             Log.d("spq", "group>>>>>>>>>>>>>>>" + group);
@@ -37,6 +47,9 @@ public class TransFormContent {
             }
 
         }
+        }
+
+
         tv.setText(spannableString);
         tv.setLinkTextColor(Color.parseColor("#7cb342"));
         //使用自定义的MovementMethod,解决子view不能把事件传递给父view的问题
