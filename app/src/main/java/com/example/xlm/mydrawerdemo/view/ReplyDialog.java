@@ -1,15 +1,18 @@
 package com.example.xlm.mydrawerdemo.view;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.text.Html;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.example.xlm.mydrawerdemo.Activity.ImageActivity;
 import com.example.xlm.mydrawerdemo.R;
 import com.example.xlm.mydrawerdemo.adapter.ChildArticleAdapter;
 import com.example.xlm.mydrawerdemo.base.MyApplication;
@@ -32,6 +35,8 @@ public class ReplyDialog extends Dialog {
 
     public ReplyDialog(Context context, int themeResId) {
         super(context, themeResId);
+        this.mContext=context;
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
     }
 
     protected ReplyDialog(Context context, boolean cancelable, OnCancelListener cancelListener) {
@@ -40,13 +45,15 @@ public class ReplyDialog extends Dialog {
 
     public static ReplyDialog getInstance(Context context) {
         if (instance == null) {
-            instance = new ReplyDialog(context);
+            instance = new ReplyDialog(context, R.style.NoTitleDialog);
+
         }
         return instance;
     }
 
     public void show(final Reply reply) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.layout_dialog_reply, null);
+        // 去掉对话框顶部栏
         setContentView(view);
         this.setCanceledOnTouchOutside(true);
 
@@ -57,10 +64,19 @@ public class ReplyDialog extends Dialog {
         final ImageView imgContent = (ImageView) view.findViewById(R.id.img_content);
         if ("1".equals(reply.getAdmin())) {
             tvName.setTextColor(mContext.getResources().getColor(R.color.textRed));
+            tvName.setText(reply.getUserid());
         } else {
+            String[] userId = reply.getUserid().split("-");
+            String userIdStr = "";
+            for (int i = 0; i < userId.length; i++) {
+                if (i != 0) {
+                    userId[i] = "<br>(" + userId[i] + ")";
+                }
+                userIdStr += userId[i];
+            }
+            tvName.setText(Html.fromHtml(userIdStr));
             tvName.setTextColor(mContext.getResources().getColor(R.color.textGrey));
         }
-        tvName.setText(reply.getUserid());
         tvId.setText("No." + reply.getId());
         tvTime.setText(Tools.replaceTime(reply.getNow()));
         TransFormContent.trans(Html.fromHtml(reply.getContent()), tvContent, new TransFormContent.OnClickListener() {
@@ -82,6 +98,13 @@ public class ReplyDialog extends Dialog {
                     .crossFade()
                     .error(R.mipmap.icon_yygq)
                     .into(imgContent);
+            imgContent.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String url = Port.getImg() + reply.getImg() + reply.getExt();
+                    ImageActivity.gotoImageActivity((Activity) mContext, url, reply.getImg() + reply.getExt(), v);
+                }
+            });
         }
 
         if (null != this && !this.isShowing()) {

@@ -264,7 +264,7 @@ public class ChildArticleAdapter extends FooterAdapter<List<Reply>, BaseViewHold
 
     public static Reply getRelay(String id) {
         for (Reply reply : list) {
-            if (("No." + reply.getId()).equals(id)) {
+            if ((">>No." + reply.getId()).equals(id)) {
                 return reply;
             }
         }
