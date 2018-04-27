@@ -166,6 +166,9 @@ public class ChildArticleAdapter extends FooterAdapter<List<Reply>, BaseViewHold
                 Reply reply = getRelay(s);
                 if (null != reply) {
                     new ReplyDialog(getContext()).show(reply);
+                } else {
+                    //串里没有，直接跳转
+//                    ChildArticleActivity.gotoChildArticleActivity(context, s.substring(5, s.length() - 1), null);
                 }
             }
         });

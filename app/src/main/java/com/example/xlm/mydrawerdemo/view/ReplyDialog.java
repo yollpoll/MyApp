@@ -85,6 +85,9 @@ public class ReplyDialog extends Dialog {
                 Reply reply = ChildArticleAdapter.getRelay(s);
                 if (null != reply) {
                     ReplyDialog.getInstance(getContext()).show(reply);
+                }else {
+                    //串里没有，直接跳转
+//                    ChildArticleActivity.gotoChildArticleActivity(mContext, s.substring(5, s.length() - 1), null);
                 }
             }
         });
