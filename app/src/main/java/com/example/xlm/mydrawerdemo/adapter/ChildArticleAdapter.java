@@ -26,7 +26,7 @@ import java.util.List;
  * Created by 鹏祺 on 2016/1/16.
  */
 public class ChildArticleAdapter extends FooterAdapter<List<Reply>, BaseViewHolder> {
-    private static List<Reply> list;
+    private List<Reply> list;
     private Context context;
     private OnItemClickListener onItemClickListener;
 
@@ -163,9 +163,9 @@ public class ChildArticleAdapter extends FooterAdapter<List<Reply>, BaseViewHold
         TransFormContent.trans(Html.fromHtml(item.getContent()), holder.tvContent, new TransFormContent.OnClickListener() {
             @Override
             public void onClick(String s) {
-                Reply reply = getRelay(s);
+                Reply reply = getRelay(s,list);
                 if (null != reply) {
-                    new ReplyDialog(getContext()).show(reply);
+                    new ReplyDialog(getContext()).show(reply,list);
                 } else {
                     //串里没有，直接跳转
 //                    ChildArticleActivity.gotoChildArticleActivity(context, s.substring(5, s.length() - 1), null);
@@ -249,7 +249,7 @@ public class ChildArticleAdapter extends FooterAdapter<List<Reply>, BaseViewHold
         return list.size();
     }
 
-    public static class ViewHolder extends BaseViewHolder {
+    public class ViewHolder extends BaseViewHolder {
         TextView tvUsername, tvId, tvTime, tvContent;
         ImageView imgContent;
         private CardView layoutItem;
@@ -265,8 +265,8 @@ public class ChildArticleAdapter extends FooterAdapter<List<Reply>, BaseViewHold
         }
     }
 
-    public static Reply getRelay(String id) {
-        for (Reply reply : list) {
+    public static Reply getRelay(String id, List<Reply> data) {
+        for (Reply reply : data) {
             if ((">>No." + reply.getId()).equals(id)) {
                 return reply;
             }

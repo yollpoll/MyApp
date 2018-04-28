@@ -310,6 +310,7 @@ public class ChildArticleActivity extends BaseSwipeActivity implements View.OnCl
     private void getData() {
         ChildArticleService childArticleService = retrofit.create(ChildArticleService.class);
         Call<ChildArticle> call = childArticleService.getArticleList(page, articleId);
+        Log.d("spq", "articleId" + articleId + "   page" + page);
         call.enqueue(new Callback<ChildArticle>() {
             @Override
             public void onResponse(Response<ChildArticle> response, Retrofit retrofit) {
@@ -373,6 +374,7 @@ public class ChildArticleActivity extends BaseSwipeActivity implements View.OnCl
             }
         });
     }
+
 
     /**
      * 跳轉到具體一頁,page参数全局已经赋值

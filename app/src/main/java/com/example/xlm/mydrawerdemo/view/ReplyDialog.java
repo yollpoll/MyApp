@@ -21,6 +21,8 @@ import com.example.xlm.mydrawerdemo.http.Port;
 import com.example.xlm.mydrawerdemo.utils.Tools;
 import com.example.xlm.mydrawerdemo.utils.TransFormContent;
 
+import java.util.List;
+
 /**
  * Created by 鹏祺 on 2016/9/2.
  */
@@ -51,7 +53,7 @@ public class ReplyDialog extends Dialog {
         return instance;
     }
 
-    public void show(final Reply reply) {
+    public void show(final Reply reply, final List<Reply> list) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.layout_dialog_reply, null);
         // 去掉对话框顶部栏
         setContentView(view);
@@ -82,9 +84,9 @@ public class ReplyDialog extends Dialog {
         TransFormContent.trans(Html.fromHtml(reply.getContent()), tvContent, new TransFormContent.OnClickListener() {
             @Override
             public void onClick(String s) {
-                Reply reply = ChildArticleAdapter.getRelay(s);
+                Reply reply = ChildArticleAdapter.getRelay(s,list);
                 if (null != reply) {
-                    ReplyDialog.getInstance(getContext()).show(reply);
+                    ReplyDialog.getInstance(getContext()).show(reply,list);
                 }else {
                     //串里没有，直接跳转
 //                    ChildArticleActivity.gotoChildArticleActivity(mContext, s.substring(5, s.length() - 1), null);
