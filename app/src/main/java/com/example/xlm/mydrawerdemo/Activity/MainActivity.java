@@ -18,12 +18,11 @@ import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Display;
-import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MotionEvent;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -100,7 +99,23 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_new:
+                NewThreadActivity.gotoNewThreadActivity(MainActivity.this, currentTagName, currentTagId);
+                return true;
+            case R.id.action_rule:
+                showFourmMsg();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+
+        }
     }
 
     @Override
@@ -132,11 +147,10 @@ public class MainActivity extends BaseActivity {
         fbNew = (FloatingActionButton) findViewById(R.id.fb_new);
         cdlContent = (CoordinatorLayout) findViewById(R.id.cdl_content);
         rlRoot = (RelativeLayout) findViewById(R.id.rl_root);
-        detector.setOnDoubleTapListener(onDoubleTapListener);
+//        detector.setOnDoubleTapListener(onDoubleTapListener);
         //使用手势监听仍然保留这个是为了保留点击时候的波纹效果
         fbNew.setOnClickListener(this);
-        fbNew.setOnTouchListener(onTouchListener);
-//        initFloatingActionButton();
+//        fbNew.setOnTouchListener(onTouchListener);
     }
 
     private void showAnnouncement() {
@@ -173,80 +187,83 @@ public class MainActivity extends BaseActivity {
         tvAnnouncement.setText(Html.fromHtml(mAnnouncement.getContent()));
     }
 
-    private View.OnTouchListener onTouchListener = new View.OnTouchListener() {
-        @Override
-        public boolean onTouch(View v, MotionEvent event) {
-            return detector.onTouchEvent(event);
-        }
-    };
-    //手势事件处理
-    private GestureDetector detector = new GestureDetector(new GestureDetector.OnGestureListener() {
-        @Override
-        public boolean onDown(MotionEvent e) {
-            return false;
-        }
-
-        @Override
-        public void onShowPress(MotionEvent e) {
-
-        }
-
-        @Override
-        public boolean onSingleTapUp(MotionEvent e) {
-            return false;
-        }
-
-        @Override
-        public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-            return false;
-        }
-
-        @Override
-        public void onLongPress(MotionEvent e) {
-            showFourmMsg();
-        }
-
-        @Override
-        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-            NewThreadActivity.gotoNewThreadActivity(MainActivity.this, currentTagName, currentTagId);
-            return true;
-        }
-    });
-
-    //双击事件
-    private GestureDetector.OnDoubleTapListener onDoubleTapListener = new GestureDetector.OnDoubleTapListener() {
-        @Override
-        public boolean onSingleTapConfirmed(MotionEvent e) {
-            if (TextUtils.isEmpty(currentTagName))
-                return false;
-            if (TextUtils.isEmpty(currentTagId))
-                return false;
-            NewThreadActivity.gotoNewThreadActivity(MainActivity.this, currentTagName, currentTagId);
-            return false;
-        }
-
-        @Override
-        public boolean onDoubleTap(MotionEvent e) {
-            if (null == currentFragment) {
-                if (listFragment.size() > 0) {
-                    currentFragment = (NormalContentFragment) listFragment.get(0);
-                } else {
-                    return false;
-                }
-            }
-            currentFragment.refresh();
-            return false;
-        }
-
-        @Override
-        public boolean onDoubleTapEvent(MotionEvent e) {
-            return false;
-        }
-    };
+//    private View.OnTouchListener onTouchListener = new View.OnTouchListener() {
+//        @Override
+//        public boolean onTouch(View v, MotionEvent event) {
+//            return detector.onTouchEvent(event);
+//        }
+//    };
+//    //手势事件处理
+//    private GestureDetector detector = new GestureDetector(new GestureDetector.OnGestureListener() {
+//        @Override
+//        public boolean onDown(MotionEvent e) {
+//            return false;
+//        }
+//
+//        @Override
+//        public void onShowPress(MotionEvent e) {
+//
+//        }
+//
+//        @Override
+//        public boolean onSingleTapUp(MotionEvent e) {
+//            return false;
+//        }
+//
+//        @Override
+//        public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+//            return false;
+//        }
+//
+//        @Override
+//        public void onLongPress(MotionEvent e) {
+//            showFourmMsg();
+//        }
+//
+//        @Override
+//        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+//            NewThreadActivity.gotoNewThreadActivity(MainActivity.this, currentTagName, currentTagId);
+//            return true;
+//        }
+//    });
+//
+//    //双击事件
+//    private GestureDetector.OnDoubleTapListener onDoubleTapListener = new GestureDetector.OnDoubleTapListener() {
+//        @Override
+//        public boolean onSingleTapConfirmed(MotionEvent e) {
+//            if (TextUtils.isEmpty(currentTagName))
+//                return false;
+//            if (TextUtils.isEmpty(currentTagId))
+//                return false;
+//            NewThreadActivity.gotoNewThreadActivity(MainActivity.this, currentTagName, currentTagId);
+//            return false;
+//        }
+//
+//        @Override
+//        public boolean onDoubleTap(MotionEvent e) {
+//            if (null == currentFragment) {
+//                if (listFragment.size() > 0) {
+//                    currentFragment = (NormalContentFragment) listFragment.get(0);
+//                } else {
+//                    return false;
+//                }
+//            }
+//            currentFragment.refresh();
+//            return false;
+//        }
+//
+//        @Override
+//        public boolean onDoubleTapEvent(MotionEvent e) {
+//            return false;
+//        }
+//    };
 
     private void showFourmMsg() {
-        if (null == currentForum)
-            return;
+        if (null == currentFragment) {
+            if (listFragment.size() > 0) {
+                currentFragment = (NormalContentFragment) listFragment.get(0);
+            }
+        }
         final Dialog dialog = new Dialog(this);
         dialog.setContentView(R.layout.dialog_announcement);
         Window window = dialog.getWindow();
@@ -597,7 +614,12 @@ public class MainActivity extends BaseActivity {
                 ImageActivity.gotoImageActivity(MainActivity.this, coverBitmap, imgCover);
                 break;
             case R.id.fb_new:
-//                ToastUtils.SnakeShowShort(cdlContent, "本肥肥还没做这个功能,你在乱点什么啦(　^ω^)");
+                if (null == currentFragment) {
+                    if (listFragment.size() > 0) {
+                        currentFragment = (NormalContentFragment) listFragment.get(0);
+                    }
+                }
+                currentFragment.refresh();
                 break;
             case R.id.rl_btn_setting:
                 SettingActivity.gotoSettingActivity(MainActivity.this);

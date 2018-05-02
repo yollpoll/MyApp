@@ -24,6 +24,7 @@
         <item name="android:windowIsTranslucent">true</item>
         <!-- SearchView -->
         <item name="searchViewStyle">@style/MySearchViewStyle</item>
+        <item name="android:actionMenuTextColor">@android:color/white</item>
 
         <!--返回键样式-->
         <item name="drawerArrowStyle">@style/AppTheme.DrawerArrowToggle</item>

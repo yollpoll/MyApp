@@ -13,6 +13,7 @@
         <item name="android:windowActionModeOverlay">true</item>
         <item name="android:actionOverflowButtonStyle">@style/menuOverflow</item>
         <item name="android:actionModeBackground">@color/colorPrimary</item>
+        <item name="android:actionMenuTextColor">@android:color/white</item>
         <item name="actionModeBackground">@color/colorPrimary</item>
         <!-- 窗口的背景颜色 -->
         <item name="android:windowBackground">@color/white</item>

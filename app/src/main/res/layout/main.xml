@@ -62,7 +62,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
-                android:src="@mipmap/icon_new"
+                android:src="@mipmap/icon_refresh"
                 app:fabSize="normal"
                 app:layout_anchor="@+id/viewpager_articles"
                 app:layout_anchorGravity="bottom|right"
