@@ -3,11 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimary">
+    >
 
     <android.support.v7.widget.AppCompatImageView
-        android:layout_width="300dp"
-        android:layout_height="200dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_centerInParent="true"
-        app:srcCompat="@drawable/icon_acfun" />
+        android:id="@+id/iv_bg"
+        android:scaleType="centerCrop"
+        android:src="@mipmap/icon_fat"
+        />
 </RelativeLayout>

@@ -1,8 +1,15 @@
 package com.example.xlm.mydrawerdemo.Activity;
 
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.widget.AppCompatImageView;
+import android.transition.Transition;
+import android.transition.TransitionInflater;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.DecelerateInterpolator;
+import android.view.animation.ScaleAnimation;
 
 import com.example.xlm.mydrawerdemo.R;
 import com.example.xlm.mydrawerdemo.base.BaseActivity;
@@ -22,15 +29,65 @@ import retrofit.Retrofit;
  */
 
 public class IndexActivity extends BaseActivity {
+    private AppCompatImageView ivBg;
+    private boolean ifFinish = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        initActivityAnima();
+        setContentView(R.layout.activity_index);
+        getBackUpUrl();
+        initView();
+        initData();
+    }
+
+    private void initActivityAnima() {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         //全屏
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setContentView(R.layout.activity_index);
-        getBackUpUrl();
+        getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
+        Transition explode = TransitionInflater.from(this).inflateTransition(R.transition.index_activity_transition);
+        //第一次进入时使用
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            //退出时使用
+            getWindow().setExitTransition(explode);
+        }
+    }
+    private void initView() {
+        ivBg = (AppCompatImageView) findViewById(R.id.iv_bg);
+    }
+
+    private void initData() {
+        //进行缩放动画
+        ScaleAnimation scaleAnimation = new ScaleAnimation(1.4f, 1.0f, 1.4f, 1.0f,
+                Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+        scaleAnimation.setDuration(1000);
+        scaleAnimation.setInterpolator(new DecelerateInterpolator());
+        //动画播放完成后保持形状
+        scaleAnimation.setFillAfter(true);
+        scaleAnimation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+                //可以在这里先进行某些操作
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                if (ifFinish) {
+                    gotoMain();
+                } else {
+                    ifFinish = true;
+                }
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+        ivBg.startAnimation(scaleAnimation);
     }
 
     private void getBackUpUrl() {
@@ -42,8 +99,11 @@ public class IndexActivity extends BaseActivity {
             public void onResponse(Response<List<String>> response, Retrofit retrofit) {
                 String backUrl = "https://nmbimg.fastmirror.org";
                 MyApplication.getInstance().setBackUpUrl(backUrl);
-                MainActivity.gotoMainActivity(IndexActivity.this);
-                IndexActivity.this.finish();
+                if (ifFinish) {
+                    gotoMain();
+                } else {
+                    ifFinish = true;
+                }
             }
 
             @Override
@@ -52,5 +112,10 @@ public class IndexActivity extends BaseActivity {
                 IndexActivity.this.finish();
             }
         });
+    }
+
+    private void gotoMain() {
+        this.finish();
+        MainActivity.gotoMainActivity(IndexActivity.this);
     }
 }

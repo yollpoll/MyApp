@@ -26,6 +26,7 @@ public class SPUtiles {
     public static final String FORMS = "forms";
     public static final String DRAFT = "draft";
     public static final String HEAD_URL = "head_url";
+    public static final String SHOW_ANNOUNCEMENT = "1";
 
     public static void saveHeadUrl(String url) {
         SharePreferencesUtils.putString(MyApplication.getInstance().getApplicationContext(), HEAD_URL, url);
@@ -33,6 +34,14 @@ public class SPUtiles {
 
     public static String getHeadUrl() {
         return SharePreferencesUtils.getString(MyApplication.getInstance().getApplicationContext(), HEAD_URL, "");
+    }
+
+    public static String getShowAnnouncement() {
+        return SharePreferencesUtils.getString(MyApplication.getInstance().getApplicationContext(), SHOW_ANNOUNCEMENT, "1");
+    }
+
+    public static void saveShowAnnouncement(String isShow) {
+        SharePreferencesUtils.putString(MyApplication.getInstance().getApplicationContext(), SHOW_ANNOUNCEMENT, isShow);
     }
 
     public static void saveDrafts(List<DraftWithPath> list) {

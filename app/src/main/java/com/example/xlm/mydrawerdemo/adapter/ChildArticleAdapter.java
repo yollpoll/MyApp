@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.example.xlm.mydrawerdemo.Activity.ChildArticleActivity;
 import com.example.xlm.mydrawerdemo.R;
 import com.example.xlm.mydrawerdemo.base.BaseViewHolder;
 import com.example.xlm.mydrawerdemo.bean.Reply;
@@ -168,7 +169,7 @@ public class ChildArticleAdapter extends FooterAdapter<List<Reply>, BaseViewHold
                     new ReplyDialog(getContext()).show(reply,list);
                 } else {
                     //串里没有，直接跳转
-//                    ChildArticleActivity.gotoChildArticleActivity(context, s.substring(5, s.length() - 1), null);
+                    ChildArticleActivity.gotoChildArticleActivity(context, s.substring(5, s.length() - 1), null);
                 }
             }
         });

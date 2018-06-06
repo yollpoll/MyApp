@@ -22,7 +22,9 @@
         <activity
             android:name=".Activity.MainActivity"
             android:theme="@style/mainActivityStyle"></activity>
-        <activity android:name=".Activity.IndexActivity">
+        <activity android:name=".Activity.IndexActivity"
+            android:theme="@style/SplashActivity"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

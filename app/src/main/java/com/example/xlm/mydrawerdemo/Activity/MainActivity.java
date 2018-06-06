@@ -1,9 +1,11 @@
 package com.example.xlm.mydrawerdemo.Activity;
 
+import android.app.Activity;
+import android.app.ActivityOptions;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -16,6 +18,8 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.TextUtils;
+import android.transition.Transition;
+import android.transition.TransitionInflater;
 import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
@@ -49,7 +53,10 @@ import com.example.xlm.mydrawerdemo.http.Port;
 import com.example.xlm.mydrawerdemo.retrofitService.AnnouncementService;
 import com.example.xlm.mydrawerdemo.retrofitService.FormListService;
 import com.example.xlm.mydrawerdemo.utils.CookieUtils;
+import com.example.xlm.mydrawerdemo.utils.DialogUtils;
+import com.example.xlm.mydrawerdemo.utils.SPUtiles;
 import com.example.xlm.mydrawerdemo.utils.ToastUtils;
+import com.example.xlm.mydrawerdemo.utils.Tools;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -121,11 +128,21 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        initActivityAnima();
         setContentView(R.layout.main);
         initView();
         initData();
         notifyTab();
         getAnnouncement();
+    }
+
+    private void initActivityAnima() {
+        getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
+        Transition explode = TransitionInflater.from(this).inflateTransition(R.transition.main_activity_transition);
+        //第一次进入时使用
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().setEnterTransition(explode);
+        }
     }
 
     //
@@ -134,9 +151,13 @@ public class MainActivity extends BaseActivity {
         super.onResume();
     }
 
-    public static void gotoMainActivity(Context context) {
+    public static void gotoMainActivity(Activity context) {
         Intent intent = new Intent(context, MainActivity.class);
-        context.startActivity(intent);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            context.startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(context).toBundle());
+        } else {
+            context.startActivity(intent);
+        }
     }
 
     private void initView() {
@@ -156,31 +177,44 @@ public class MainActivity extends BaseActivity {
     private void showAnnouncement() {
         if (null == mAnnouncement)
             return;
+//        final AlertDialog dialog = DialogUtils.showDialog(this, R.layout.dialog_announcement);
+//        WindowManager windowManager = getWindowManager();
+//        Display display = windowManager.getDefaultDisplay();
+//        Window window = dialog.getWindow();
+//        window.setGravity(Gravity.CENTER);
+//        DialogUtils.setDialog(this, dialog, (int) (display.getHeight() * 0.8)
+//                , (int) (display.getHeight() * 0.8));
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         View view = LayoutInflater.from(this).inflate(R.layout.dialog_announcement, null);
         builder.setView(view);
         final AlertDialog dialog = builder.create();
         dialog.show();
 
-//        final AlertDialog dialog = new AlertDialog(this);
-//        dialog.setContentView(R.layout.dialog_announcement);
-
-        WindowManager windowManager = getWindowManager();
-        Display display = windowManager.getDefaultDisplay();
 
         Window window = dialog.getWindow();
         window.setGravity(Gravity.CENTER);
+        WindowManager windowManager = getWindowManager();
+        Display display = windowManager.getDefaultDisplay();
         WindowManager.LayoutParams layoutParams = window.getAttributes();
         Log.d("spq", display.getHeight() + "...");
         layoutParams.width = (int) (display.getWidth());
         layoutParams.height = (int) (display.getHeight() * 0.8);
         window.setAttributes(layoutParams);
-//        dialog.show();
+
         TextView tvAnnouncement = (TextView) dialog.findViewById(R.id.tv_announcement);
+        TextView tvNoShow = (TextView) dialog.findViewById(R.id.tv_no_show);
         TextView tvOk = (TextView) dialog.findViewById(R.id.tv_ok);
         tvOk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        tvNoShow.setVisibility(View.VISIBLE);
+        tvNoShow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SPUtiles.saveShowAnnouncement("0");
                 dialog.dismiss();
             }
         });
@@ -259,22 +293,26 @@ public class MainActivity extends BaseActivity {
 //    };
 
     private void showFourmMsg() {
-        if (null == currentFragment) {
-            if (listFragment.size() > 0) {
-                currentFragment = (NormalContentFragment) listFragment.get(0);
+        if (null == currentForum) {
+            if (listTab.size() > 0) {
+                currentForum = listTab.get(0);
+            } else {
+                return;
             }
         }
-        final Dialog dialog = new Dialog(this);
-        dialog.setContentView(R.layout.dialog_announcement);
-        Window window = dialog.getWindow();
-        WindowManager.LayoutParams layoutParams = window.getAttributes();
-        layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
-        layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
-        window.setAttributes(layoutParams);
-        dialog.show();
+        final Dialog dialog = DialogUtils.showDialog(this, R.layout.dialog_announcement);
+        DialogUtils.setDialog(this, dialog, WindowManager.LayoutParams.MATCH_PARENT,
+                Tools.calculateDpToPx(500, this));
         TextView tvAnnouncement = (TextView) dialog.findViewById(R.id.tv_announcement);
         TextView tvTitle = (TextView) dialog.findViewById(R.id.tv_title);
         tvTitle.setText("版规");
+        TextView tvOk = (TextView) dialog.findViewById(R.id.tv_ok);
+        tvOk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
         tvAnnouncement.setText(Html.fromHtml(currentForum.getMsg()));
     }
 
@@ -385,8 +423,12 @@ public class MainActivity extends BaseActivity {
                 if (response.body().getDate() > mAnnouncement.getDate()) {
                     response.body().save();
                     mAnnouncement = response.body();
+                    showAnnouncement();
+                    return;
                 }
-                showAnnouncement();
+                if ("1".equals(SPUtiles.getShowAnnouncement())) {
+                    showAnnouncement();
+                }
             }
 
             @Override
@@ -573,7 +615,7 @@ public class MainActivity extends BaseActivity {
                     firstTime = secondTime;//更新firstTime
                     return true;
                 } else {                                                    //两次按键小于2秒时，退出应用
-                    System.exit(0);
+                    MainActivity.this.finish();
                 }
                 break;
         }

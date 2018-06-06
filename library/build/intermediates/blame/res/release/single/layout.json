@@ -1,15 +1,15 @@
 [
     {
-        "merged": "C:\\Android\\workspace\\MyApp\\library\\build\\intermediates\\res\\merged\\release\\layout\\abc_activity_chooser_view_list_item.xml",
-        "source": "C:\\Users\\鹏祺\\.android\\build-cache\\611b4e83d2e6ef8ef67c180c881f33fa5e07d09d\\output\\res\\layout\\abc_activity_chooser_view_list_item.xml"
+        "merged": "C:\\Android\\workspace\\MyApp\\library\\build\\intermediates\\res\\merged\\release\\layout\\abc_dialog_title_material.xml",
+        "source": "C:\\Users\\鹏祺\\.android\\build-cache\\611b4e83d2e6ef8ef67c180c881f33fa5e07d09d\\output\\res\\layout\\abc_dialog_title_material.xml"
     },
     {
         "merged": "C:\\Android\\workspace\\MyApp\\library\\build\\intermediates\\res\\merged\\release\\layout\\select_dialog_item_material.xml",
         "source": "C:\\Users\\鹏祺\\.android\\build-cache\\611b4e83d2e6ef8ef67c180c881f33fa5e07d09d\\output\\res\\layout\\select_dialog_item_material.xml"
     },
     {
-        "merged": "C:\\Android\\workspace\\MyApp\\library\\build\\intermediates\\res\\merged\\release\\layout\\abc_dialog_title_material.xml",
-        "source": "C:\\Users\\鹏祺\\.android\\build-cache\\611b4e83d2e6ef8ef67c180c881f33fa5e07d09d\\output\\res\\layout\\abc_dialog_title_material.xml"
+        "merged": "C:\\Android\\workspace\\MyApp\\library\\build\\intermediates\\res\\merged\\release\\layout\\abc_activity_chooser_view_list_item.xml",
+        "source": "C:\\Users\\鹏祺\\.android\\build-cache\\611b4e83d2e6ef8ef67c180c881f33fa5e07d09d\\output\\res\\layout\\abc_activity_chooser_view_list_item.xml"
     },
     {
         "merged": "C:\\Android\\workspace\\MyApp\\library\\build\\intermediates\\res\\merged\\release\\layout\\notification_template_part_chronometer.xml",

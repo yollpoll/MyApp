@@ -48,7 +48,6 @@ public class DialogUtils {
         Window window = dialog.getWindow();
         window.setGravity(Gravity.CENTER);
         WindowManager.LayoutParams layoutParams = window.getAttributes();
-        Log.d("spq", display.getHeight() + "...");
         layoutParams.width = width;
         layoutParams.height = height;
         window.setAttributes(layoutParams);

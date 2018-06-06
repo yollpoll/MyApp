@@ -161,7 +161,7 @@ public class NewThreadActivity extends BaseActivity implements View.OnLongClickL
                 }
                 Uri uri = data.getData();
                 path = FileUtils.getPathByUri(uri, this);
-                bitmap = Tools.compressBitmap(path, 1024, 1024);
+                bitmap = Tools.compressBitmap(path, 2048, 2048);
                 progressBarPic.setVisibility(View.VISIBLE);
                 Tools.saveImageViaAsyncTask(this, bitmap, "temp.jpg", new Tools.OnSaveImageCallback() {
                     @Override
@@ -193,7 +193,7 @@ public class NewThreadActivity extends BaseActivity implements View.OnLongClickL
                     break;
                 }
                 path = FileUtils.getPathByUri(Tools.imgUri, this);
-                bitmap = Tools.compressBitmap(path, 1024, 1024);
+                bitmap = Tools.compressBitmap(path, 2048, 2048);
 //                    bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(Tools.imgUri));
                 progressBarPic.setVisibility(View.VISIBLE);
                 Tools.saveImageViaAsyncTask(this, bitmap, "temp.jpg", new Tools.OnSaveImageCallback() {
@@ -213,7 +213,7 @@ public class NewThreadActivity extends BaseActivity implements View.OnLongClickL
                     Bitmap bitmapDraw;
 //                    FileInputStream fileInputStream = null;
 //                    try {
-                    bitmapDraw = Tools.compressBitmap(drawPath, 1024, 1034);
+                    bitmapDraw = Tools.compressBitmap(drawPath, 2048, 2048);
 //
 //                        File file = new File(drawPath);
 //                        fileInputStream = new FileInputStream(file);
