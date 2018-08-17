@@ -14,6 +14,7 @@ import android.view.animation.ScaleAnimation;
 import com.example.xlm.mydrawerdemo.R;
 import com.example.xlm.mydrawerdemo.base.BaseActivity;
 import com.example.xlm.mydrawerdemo.base.MyApplication;
+import com.example.xlm.mydrawerdemo.bean.ImgCdn;
 import com.example.xlm.mydrawerdemo.http.Httptools;
 import com.example.xlm.mydrawerdemo.retrofitService.BackupUrlService;
 
@@ -55,6 +56,7 @@ public class IndexActivity extends BaseActivity {
             getWindow().setExitTransition(explode);
         }
     }
+
     private void initView() {
         ivBg = (AppCompatImageView) findViewById(R.id.iv_bg);
     }
@@ -93,12 +95,32 @@ public class IndexActivity extends BaseActivity {
     private void getBackUpUrl() {
         Retrofit retrofit = Httptools.getInstance().getRetrofit();
         BackupUrlService service = retrofit.create(BackupUrlService.class);
-        Call<List<String>> call = service.getBackUpUrl();
-        call.enqueue(new Callback<List<String>>() {
+//        Call<List<String>> call = service.getBackUpUrl();
+//        call.enqueue(new Callback<List<String>>() {
+//            @Override
+//            public void onResponse(Response<List<String>> response, Retrofit retrofit) {
+////                String backUrl = "https://nmbimg.fastmirror.org";
+//                String backUrl = response.body().get(0);
+//                MyApplication.getInstance().setBackUpUrl(backUrl);
+//                if (ifFinish) {
+//                    gotoMain();
+//                } else {
+//                    ifFinish = true;
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Throwable throwable) {
+//                MainActivity.gotoMainActivity(IndexActivity.this);
+//                IndexActivity.this.finish();
+//            }
+//        });
+        Call<List<ImgCdn>> call = service.getCdns();
+        call.enqueue(new Callback<List<ImgCdn>>() {
             @Override
-            public void onResponse(Response<List<String>> response, Retrofit retrofit) {
-                String backUrl = "https://nmbimg.fastmirror.org";
-                MyApplication.getInstance().setBackUpUrl(backUrl);
+            public void onResponse(Response<List<ImgCdn>> response, Retrofit retrofit) {
+                String cdnUrl = response.body().get(0).getUrl();
+                MyApplication.getInstance().setBackUpUrl(cdnUrl);
                 if (ifFinish) {
                     gotoMain();
                 } else {

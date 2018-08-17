@@ -298,6 +298,7 @@ public class Tools {
         return (int) (padding_in_dp * scale + 0.5f);
     }
 
+
     public static final int PIC_FROM_PHOTO = 11;
     public static final int PIC_FROM_CAMERA = 12;
     public static final int CROP_PHOTO = 13;

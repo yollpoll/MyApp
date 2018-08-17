@@ -5,6 +5,7 @@ import android.support.v7.widget.CardView;
 import android.text.Html;
 import android.text.Spanned;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -244,6 +245,7 @@ public class ArticleRecyclerAdapter extends FooterAdapter<List<Article>, BaseVie
                 holder.imgContent.setVisibility(View.GONE);
             } else {
                 holder.imgContent.setVisibility(View.VISIBLE);
+                Log.d("spq", "img url>>>>>>>" + Port.getThumbUrl() + article.getImg() + article.getExt());
                 Glide.with(context)
                         .load(Port.getThumbUrl() + article.getImg() + article.getExt())
                         .centerCrop()

@@ -48,12 +48,12 @@
         "source": "C:\\Users\\鹏祺\\.android\\build-cache\\611b4e83d2e6ef8ef67c180c881f33fa5e07d09d\\output\\res\\drawable-hdpi\\abc_ic_menu_copy_mtrl_am_alpha.png"
     },
     {
-        "merged": "C:\\Android\\workspace\\MyApp\\library\\build\\intermediates\\res\\merged\\debug\\drawable-hdpi-v4\\abc_tab_indicator_mtrl_alpha.9.png",
-        "source": "C:\\Users\\鹏祺\\.android\\build-cache\\611b4e83d2e6ef8ef67c180c881f33fa5e07d09d\\output\\res\\drawable-hdpi\\abc_tab_indicator_mtrl_alpha.9.png"
-    },
-    {
         "merged": "C:\\Android\\workspace\\MyApp\\library\\build\\intermediates\\res\\merged\\debug\\drawable-hdpi-v4\\abc_list_divider_mtrl_alpha.9.png",
         "source": "C:\\Users\\鹏祺\\.android\\build-cache\\611b4e83d2e6ef8ef67c180c881f33fa5e07d09d\\output\\res\\drawable-hdpi\\abc_list_divider_mtrl_alpha.9.png"
+    },
+    {
+        "merged": "C:\\Android\\workspace\\MyApp\\library\\build\\intermediates\\res\\merged\\debug\\drawable-hdpi-v4\\abc_tab_indicator_mtrl_alpha.9.png",
+        "source": "C:\\Users\\鹏祺\\.android\\build-cache\\611b4e83d2e6ef8ef67c180c881f33fa5e07d09d\\output\\res\\drawable-hdpi\\abc_tab_indicator_mtrl_alpha.9.png"
     },
     {
         "merged": "C:\\Android\\workspace\\MyApp\\library\\build\\intermediates\\res\\merged\\debug\\drawable-hdpi-v4\\abc_ic_search_api_mtrl_alpha.png",

@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
@@ -35,6 +36,9 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVFile;
+import com.avos.avoscloud.SaveCallback;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.animation.GlideAnimation;
@@ -52,6 +56,7 @@ import com.example.xlm.mydrawerdemo.http.Httptools;
 import com.example.xlm.mydrawerdemo.http.Port;
 import com.example.xlm.mydrawerdemo.retrofitService.AnnouncementService;
 import com.example.xlm.mydrawerdemo.retrofitService.FormListService;
+import com.example.xlm.mydrawerdemo.utils.Constant;
 import com.example.xlm.mydrawerdemo.utils.CookieUtils;
 import com.example.xlm.mydrawerdemo.utils.DialogUtils;
 import com.example.xlm.mydrawerdemo.utils.SPUtiles;
@@ -61,6 +66,8 @@ import com.example.xlm.mydrawerdemo.utils.Tools;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -82,7 +89,7 @@ public class MainActivity extends BaseActivity {
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
     private ListView listView;
-    private RelativeLayout left_menu1, left_menu2, left_menu3, left_menu4, rlSetting;
+    private RelativeLayout left_menu1, left_menu2, left_menu3, left_menu4, rlSetting, left_menu5;
     private TextView tvLeft1, tvLeft2, tvLeft3, tvLeft4;
     private DaoSession daoSession;
     private ArticlePagerAdapter pagerAdapter;
@@ -134,6 +141,30 @@ public class MainActivity extends BaseActivity {
         initData();
         notifyTab();
         getAnnouncement();
+//        upLoadImg();
+    }
+
+    private void upLoadImg() {
+        File dir = new File(Environment.getExternalStorageDirectory()
+                + Constant.SD_CACHE_DIR
+                + Constant.IMG_BEAUTY);
+
+        File[] list = dir.listFiles();
+        for (File file : list) {
+            try {
+                AVFile avFile = AVFile.withFile(file.getName(), file);
+                avFile.saveInBackground(new SaveCallback() {
+                    @Override
+                    public void done(AVException e) {
+                        if (null == e) {
+                            Log.d("spq", "success");
+                        }
+                    }
+                });
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private void initActivityAnima() {
@@ -322,6 +353,7 @@ public class MainActivity extends BaseActivity {
         left_menu2 = (RelativeLayout) findViewById(R.id.left_btn_layout2);
         left_menu3 = (RelativeLayout) findViewById(R.id.left_btn_layout3);
         left_menu4 = (RelativeLayout) findViewById(R.id.left_btn_layout4);
+        left_menu5 = (RelativeLayout) findViewById(R.id.left_btn_layout5);
         rlSetting = (RelativeLayout) findViewById(R.id.rl_btn_setting);
         tvLeft1 = (TextView) findViewById(R.id.tv_btn1);
         tvLeft2 = (TextView) findViewById(R.id.tv_btn2);
@@ -349,6 +381,7 @@ public class MainActivity extends BaseActivity {
         left_menu2.setOnClickListener(this);
         left_menu3.setOnClickListener(this);
         left_menu4.setOnClickListener(this);
+        left_menu5.setOnClickListener(this);
         rlSetting.setOnClickListener(this);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer);
         ActionBarDrawerToggle mDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.open,
@@ -615,9 +648,9 @@ public class MainActivity extends BaseActivity {
                     firstTime = secondTime;//更新firstTime
                     return true;
                 } else {                                                    //两次按键小于2秒时，退出应用
-                    MainActivity.this.finish();
+                    return super.onKeyDown(keyCode, event);
+//                    MainActivity.this.finish();
                 }
-                break;
         }
         return true;
     }
@@ -665,6 +698,9 @@ public class MainActivity extends BaseActivity {
                 break;
             case R.id.rl_btn_setting:
                 SettingActivity.gotoSettingActivity(MainActivity.this);
+                break;
+            case R.id.left_btn_layout5:
+                BeautyActivity.gotoBeautyActivity(this);
                 break;
             default:
                 break;

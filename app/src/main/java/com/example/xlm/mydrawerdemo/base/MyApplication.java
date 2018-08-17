@@ -4,6 +4,7 @@ import android.app.Application;
 import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
 
+import com.avos.avoscloud.AVOSCloud;
 import com.example.xlm.mydrawerdemo.Dao.DaoMaster;
 import com.example.xlm.mydrawerdemo.Dao.DaoSession;
 import com.example.xlm.mydrawerdemo.utils.CookieUtils;
@@ -15,6 +16,8 @@ import java.util.UUID;
  * Created by xlm on 2016/1/15.
  */
 public class MyApplication extends Application {
+    private static final String LEANCLOUD_ID = "hwPRyCJ5HNgpimGyGtNvBBeh-gzGzoHsz";
+    private static final String LEANCLOUD_KEY = "oExivdVYRGlrbeYW56bSlfRv";
     private DaoMaster daoMaster;
     private DaoSession daoSession;
     private SQLiteDatabase db;
@@ -36,6 +39,10 @@ public class MyApplication extends Application {
         instance = this;
         setupDatabase();
         createUuid();
+        // 初始化参数依次为 this, AppId, AppKey
+        AVOSCloud.initialize(this, LEANCLOUD_ID, LEANCLOUD_KEY);
+        // 放在 SDK 初始化语句 AVOSCloud.initialize() 后面，只需要调用一次即可
+        AVOSCloud.setDebugLogEnabled(true);
     }
 
     public static MyApplication getInstance() {

@@ -1,5 +1,6 @@
 package com.example.xlm.mydrawerdemo.retrofitService;
 
+import com.example.xlm.mydrawerdemo.bean.ImgCdn;
 import com.example.xlm.mydrawerdemo.http.Port;
 
 import java.util.List;
@@ -14,4 +15,7 @@ import retrofit.http.GET;
 public interface BackupUrlService {
     @GET(Port.BACKUP_URL)
     Call<List<String>> getBackUpUrl();
+
+    @GET(Port.CDN_URL)
+    Call<List<ImgCdn>> getCdns();
 }

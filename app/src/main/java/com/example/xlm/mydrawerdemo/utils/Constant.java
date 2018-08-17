@@ -11,6 +11,7 @@ public class Constant {
     public static final String SD_CACHE_DIR = "/feizhaidao";
     public static final String COOKIE = "cookie";
     public static final String IMG_CACHE = "/img";
+    public static final String IMG_BEAUTY = "/beauty";//祭品
     public static final String NEW_THREAD_RESPONSE_PATH = "/new_thread.html";
     public static final int TAG_ZHIBANSHI_ID = 18;
     public static final String TAG_ZHIBANSHI_NAME = "值班室";

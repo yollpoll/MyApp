@@ -9,6 +9,7 @@ public class Port {
     public static final String MAIN_HEAD_URL = "http://adnmb.com";//显式的主url
     public static final String HEAD_URL = "http://adnmb1.com/";//隐性url暂时写死,应该动态获取
     public static final String BACKUP_URL = HEAD_URL + "Api/backupUrl";//重定向获取根url
+    public static final String CDN_URL = HEAD_URL + "Api/getCdnPath";//图片CDN地址
     public static final String COVER = "http://cover.acfunwiki.org/cover.php";
     public static final String ANNOUNCEMENT = "http://cover.acfunwiki.org/nmb-notice.json";  //公告
     public static final String IMG_THUMB_URL = "/thumb/";
