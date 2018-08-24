@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.xlm.mydrawerdemo.Activity.ChildArticleActivity;
 import com.example.xlm.mydrawerdemo.R;
+import com.example.xlm.mydrawerdemo.adapter.ViewHolder.NoMoreHolder;
 import com.example.xlm.mydrawerdemo.base.BaseViewHolder;
 import com.example.xlm.mydrawerdemo.bean.Reply;
 import com.example.xlm.mydrawerdemo.http.Port;
@@ -30,6 +31,7 @@ public class ChildArticleAdapter extends FooterAdapter<List<Reply>, BaseViewHold
     private List<Reply> list;
     private Context context;
     private OnItemClickListener onItemClickListener;
+    private OnNoMoreCliclListener onNoMoreCliclListener;
 
     public ChildArticleAdapter(List<Reply> list) {
         super(list);
@@ -38,6 +40,10 @@ public class ChildArticleAdapter extends FooterAdapter<List<Reply>, BaseViewHold
 
     public List<Reply> getList() {
         return list;
+    }
+
+    public void setOnNoMoreCliclListener(OnNoMoreCliclListener onNoMoreCliclListener) {
+        this.onNoMoreCliclListener = onNoMoreCliclListener;
     }
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
@@ -64,76 +70,6 @@ public class ChildArticleAdapter extends FooterAdapter<List<Reply>, BaseViewHold
         void onLongClick(View view, int position);
     }
 
-//    @Override
-//    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-//        context = parent.getContext();
-//        View view = LayoutInflater.from(context).inflate(R.layout.item_recycler_childarticle, parent, false);
-//        ViewHolder holder = new ViewHolder(view);
-//        return holder;
-//    }
-
-//    @Override
-//    public void onBindViewHolder(final ViewHolder holder, int position) {
-//        Reply item = list.get(position);
-//        if ("1".equals(item.getAdmin())) {
-//            holder.tvUsername.setTextColor(context.getResources().getColor(R.color.textRed));
-//        } else {
-//            if (list.size() > 0 && item.getUserid().equals(list.get(0).getUserid())) {
-//                holder.tvUsername.setTextColor(Color.parseColor("#7cb342"));
-//            } else {
-//                holder.tvUsername.setTextColor(context.getResources().getColor(R.color.textGrey));
-//            }
-//        }
-//        holder.tvUsername.setText(item.getUserid());
-//        holder.tvId.setText("No." + item.getId());
-//        holder.tvTime.setText(Tools.replaceTime(item.getNow()));
-//        Log.i("spq", item.getContent());
-////        holder.tvContent.setText(Html.fromHtml(item.getContent()));
-//        TransFormContent.trans(Html.fromHtml(item.getContent()), holder.tvContent, new TransFormContent.OnClickListener() {
-//            @Override
-//            public void onClick(String s) {
-//                Reply reply = getRelay(s);
-//                if (null != reply) {
-//                    new ReplyDialog(getContext()).show(reply);
-//                }
-//            }
-//        });
-//        if (onItemClickListener != null) {
-//            holder.layoutItem.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    onItemClickListener.onItemClick(v, holder.getAdapterPosition());
-//                }
-//            });
-//        }
-//        if (null != onItemClickListener) {
-//            holder.layoutItem.setOnLongClickListener(new View.OnLongClickListener() {
-//                @Override
-//                public boolean onLongClick(View v) {
-//                    onItemClickListener.onLongClick(v, holder.getAdapterPosition());
-//                    return true;
-//                }
-//            });
-//        }
-//        if ("".equals(item.getImg())) {
-//            holder.imgContent.setVisibility(View.GONE);
-//        } else {
-//            holder.imgContent.setVisibility(View.VISIBLE);
-//            Glide.with(context)
-//                    .load(Port.getThumbUrl() + item.getImg() + item.getExt())
-//                    .centerCrop()
-//                    .crossFade()
-//                    .error(R.mipmap.icon_yygq)
-//                    .into(holder.imgContent);
-//
-//            holder.imgContent.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    onItemClickListener.onImageClick(v, holder.getAdapterPosition());
-//                }
-//            });
-//        }
-//    }
 
     @Override
     protected void onBindContentViewHolder(final BaseViewHolder baseViewHolder, int position) {
@@ -161,12 +97,12 @@ public class ChildArticleAdapter extends FooterAdapter<List<Reply>, BaseViewHold
         holder.tvTime.setText(Tools.replaceTime(item.getNow()));
         Log.i("spq", item.getContent());
 //        holder.tvContent.setText(Html.fromHtml(item.getContent()));
-        TransFormContent.trans(Html.fromHtml(item.getContent()), holder.tvContent, new TransFormContent.OnClickListener() {
+        TransFormContent.trans(item.getId(),Html.fromHtml(item.getContent()), holder.tvContent, new TransFormContent.OnClickListener() {
             @Override
             public void onClick(String s) {
-                Reply reply = getRelay(s,list);
+                Reply reply = getRelay(s, list);
                 if (null != reply) {
-                    new ReplyDialog(getContext()).show(reply,list);
+                    new ReplyDialog(getContext()).show(reply, list);
                 } else {
                     //串里没有，直接跳转
                     ChildArticleActivity.gotoChildArticleActivity(context, s.substring(5, s.length() - 1), null);
@@ -212,7 +148,24 @@ public class ChildArticleAdapter extends FooterAdapter<List<Reply>, BaseViewHold
 
     @Override
     protected void onBindFooterViewHolder(BaseViewHolder holder, int position) {
-
+        NoMoreHolder holder1 = (NoMoreHolder) holder;
+        switch (getStatus()) {
+            case FOOTER_TYPE_NOMORE:
+                holder1.tvNoMore.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (null != onNoMoreCliclListener)
+                            onNoMoreCliclListener.onClick();
+                    }
+                });
+                holder1.tvNoMore.setVisibility(View.VISIBLE);
+                holder1.progressBar.setVisibility(View.GONE);
+                break;
+            case FOOTER_TYPE_LOADING:
+                holder1.progressBar.setVisibility(View.VISIBLE);
+                holder1.tvNoMore.setVisibility(View.GONE);
+                break;
+        }
     }
 
     @Override
@@ -225,9 +178,10 @@ public class ChildArticleAdapter extends FooterAdapter<List<Reply>, BaseViewHold
 
     @Override
     protected BaseViewHolder onCreateFooterViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.footer_adapter, parent, false);
-        return new BaseViewHolder(view);
+        View viewNomore = LayoutInflater.from(parent.getContext()).inflate(R.layout.footer_adapter, parent, false);
+        return new NoMoreHolder(viewNomore);
     }
+
 
     public void addAll(List<Reply> data) {
         if (data == null)
@@ -264,7 +218,9 @@ public class ChildArticleAdapter extends FooterAdapter<List<Reply>, BaseViewHold
             layoutItem = (CardView) itemView.findViewById(R.id.layout_item);
             imgContent = (ImageView) itemView.findViewById(R.id.img_content);
         }
+
     }
+
 
     public static Reply getRelay(String id, List<Reply> data) {
         for (Reply reply : data) {

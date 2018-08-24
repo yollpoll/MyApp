@@ -30,6 +30,7 @@ import android.widget.TextView;
 import com.example.xlm.mydrawerdemo.R;
 import com.example.xlm.mydrawerdemo.adapter.ChildArticleAdapter;
 import com.example.xlm.mydrawerdemo.adapter.FooterAdapter;
+import com.example.xlm.mydrawerdemo.adapter.OnNoMoreCliclListener;
 import com.example.xlm.mydrawerdemo.base.BaseSwipeActivity;
 import com.example.xlm.mydrawerdemo.base.MyApplication;
 import com.example.xlm.mydrawerdemo.bean.ChildArticle;
@@ -63,7 +64,7 @@ public class ChildArticleActivity extends BaseSwipeActivity implements View.OnCl
     private RecyclerView recyclerChildArticle;
     private LinearLayoutManager linearLayoutManager;
     private ChildArticleAdapter adapter;
-    private Boolean isLoadingMore = false, isRefresh = false;
+    private Boolean isLoadingMore = false, isRefresh = false, isNoMore = false;
     private Toolbar toolbarHead;
     private int page = 1;
     private boolean isCollected;
@@ -234,6 +235,7 @@ public class ChildArticleActivity extends BaseSwipeActivity implements View.OnCl
                 showMenu(position);
             }
         });
+        adapter.setOnNoMoreCliclListener(onNoMoreCliclListener);
         recyclerChildArticle.setLayoutManager(linearLayoutManager);
         recyclerChildArticle.setAdapter(adapter);
         recyclerChildArticle.setHasFixedSize(false);
@@ -260,7 +262,8 @@ public class ChildArticleActivity extends BaseSwipeActivity implements View.OnCl
                 //lastVisibleItem >= totalItemCount - 4 表示剩下4个item自动加载，各位自由选择
                 // dy>0 表示向下滑动
                 if (lastItemPosition >= totalItemPosition - 4 && dy > 0) {
-                    if (isLoadingMore || adapter.getStatus() == FooterAdapter.FOOTER_TYPE_LOADING) {
+                    if (isLoadingMore || adapter.getStatus() == FooterAdapter.FOOTER_TYPE_LOADING
+                            || adapter.getStatus() == FooterAdapter.FOOTER_TYPE_NOMORE) {
                     } else {
                         loadPage();//这里多线程也要手动控制isLoadingMore
                     }
@@ -315,8 +318,9 @@ public class ChildArticleActivity extends BaseSwipeActivity implements View.OnCl
             @Override
             public void onResponse(Response<ChildArticle> response, Retrofit retrofit) {
                 childArticle = response.body();
+                adapter.setNormal();
                 getSupportActionBar().setTitle(response.body().getTitle());
-                                            if (isRefresh && page == 1) {
+                if (isRefresh && page == 1) {
                     //在replay列表中加入本串的信息，作为第一个数据
                     data.clear();
                     ChildArticle temp = response.body();
@@ -341,16 +345,24 @@ public class ChildArticleActivity extends BaseSwipeActivity implements View.OnCl
                 if (isLoadingMore) {
                     adapter.setNormal();
                     //加载下一页不用和刷新一样处理
-                    if (data.size() >= 2 && response.body().getReplies().size() >= 1) {
-                        if (data.get(1).getId().equals(response.body().getReplies().get(0).getId())) {
-                            //过滤掉重复的数据防止重复加载最后一页
-                            return;
+                    List<Reply> replies = new ArrayList<>();
+                    replies.addAll(response.body().getReplies());
+                    Iterator iterator = replies.iterator();
+                    while (iterator.hasNext()) {
+                        if (((Reply) iterator.next()).getId().equalsIgnoreCase("9999999")) {
+                            iterator.remove();
                         }
                     }
-                    if (response.body().getReplies().size() <= 0) {
+                    if (replies.size() == 0) {
+                        //过滤掉重复的数据防止重复加载最后一页
+                        adapter.setNomore();
                         page--;
-                        Log.d("spq", "pageNo>>>>>>>>>" + page);
+                        return;
                     }
+//                    if (response.body().getReplies().size() <= 0) {
+//                        page--;
+//                        Log.d("spq", "pageNo>>>>>>>>>" + page);
+//                    }
                     data.addAll(response.body().getReplies());
                     adapter.notifyItemRangeInserted(data.size() - response.body().getReplies().size(), data.size());
                 }
@@ -457,6 +469,13 @@ public class ChildArticleActivity extends BaseSwipeActivity implements View.OnCl
             }
         });
     }
+
+    private OnNoMoreCliclListener onNoMoreCliclListener = new OnNoMoreCliclListener() {
+        @Override
+        public void onClick() {
+
+        }
+    };
 
     @Override
     public void onBackPressed() {

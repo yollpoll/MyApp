@@ -196,7 +196,7 @@ public class ArticleRecyclerAdapter extends FooterAdapter<List<Article>, BaseVie
         if (article != null) {
             Spanned contentSpanned = Html.fromHtml(article.getContent());
 //            holder.content.setText(contentSpanned);
-            TransFormContent.trans(contentSpanned, holder.content, null);
+            TransFormContent.trans(null,contentSpanned, holder.content, null);
             holder.time.setText(Tools.replaceTime(article.getNow()));
             holder.id.setText("No." + article.getId());
             if ("0".equals(article.getAdmin())) {

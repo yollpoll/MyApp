@@ -82,7 +82,7 @@ public class ReplyDialog extends Dialog {
         }
         tvId.setText("No." + reply.getId());
         tvTime.setText(Tools.replaceTime(reply.getNow()));
-        TransFormContent.trans(Html.fromHtml(reply.getContent()), tvContent, new TransFormContent.OnClickListener() {
+        TransFormContent.trans(reply.getId(),Html.fromHtml(reply.getContent()), tvContent, new TransFormContent.OnClickListener() {
             @Override
             public void onClick(String s) {
                 Reply reply = ChildArticleAdapter.getRelay(s,list);

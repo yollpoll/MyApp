@@ -75,7 +75,8 @@ public abstract class FooterAdapter<DATA extends List, VH extends RecyclerView.V
     public void setNomore() {
         if (mFooterStatus != 2) {
             mFooterStatus = 2;
-            notifyItemInserted(data.size());
+            data.add(objectFooter);
+            notifyItemInserted(data.size()-1);
         }
     }
 

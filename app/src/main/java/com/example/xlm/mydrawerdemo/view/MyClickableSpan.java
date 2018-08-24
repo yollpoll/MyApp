@@ -1,6 +1,8 @@
 package com.example.xlm.mydrawerdemo.view;
 
+import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.text.TextPaint;
 import android.text.style.ClickableSpan;
 import android.view.View;
@@ -23,8 +25,16 @@ public class MyClickableSpan extends ClickableSpan {
     public void onClick(View widget) {
         if (url.split("/").length < 3)
             ToastUtils.showShort("地址出错");
-        String id = url.split("/")[2];
-        ChildArticleActivity.gotoChildArticleActivity(widget.getContext(), id, null);
+        String[] content = url.split("/");
+        String id = content[content.length - 1];
+        if (url.contains("adnmb.com")) {
+            //串跳转
+            ChildArticleActivity.gotoChildArticleActivity(widget.getContext(), id, null);
+        } else {
+            Uri uri = Uri.parse(url);
+            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+            widget.getContext().startActivity(intent);
+        }
     }
 
     @Override
