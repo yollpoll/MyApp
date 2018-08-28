@@ -38,14 +38,6 @@ import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
 import com.oguzdev.circularfloatingactionmenu.library.SubActionButton;
 
 import java.io.FileNotFoundException;
-import java.util.HashMap;
-import java.util.Map;
-
-import rx.Observable;
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.schedulers.Schedulers;
 
 /**
  * Created by 鹏祺 on 2017/6/19.
@@ -311,28 +303,36 @@ public class DrawingActivity extends BaseActivity implements View.OnLongClickLis
      * 用rxJava实行异步
      */
     private void save() {
-        Observable.create(new Observable.OnSubscribe<Map<String, String>>() {
+//        Observable.create(new Observable.OnSubscribe<Map<String, String>>() {
+//            @Override
+//            public void call(Subscriber<? super Map<String, String>> subscriber) {
+//                String path;
+//                String fileName = "draw_" + System.currentTimeMillis() + ".jpg";
+//                path = Tools.saveImageToSd(mDrawView.getBitmapCache(), fileName);
+//                Map<String, String> params = new HashMap<String, String>();
+//                params.put("path", path);
+//                params.put("fileName", fileName);
+//                subscriber.onNext(params);
+//                subscriber.onCompleted();
+//            }
+//        })
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(new Action1<Map<String, String>>() {
+//                    @Override
+//                    public void call(Map<String, String> s) {
+//                        Tools.updatePhoto(DrawingActivity.this, s.get("path"), s.get("fileName"));
+//                        ToastUtils.SnakeShowShort(rlRoot, "保存成功");
+//                    }
+//                });
+        final String fileName = "draw_" + System.currentTimeMillis() + ".jpg";
+        Tools.saveImageToSdViaAsyncTask(mDrawView.getBitmapCache(), fileName, new Tools.OnSaveImageCallback() {
             @Override
-            public void call(Subscriber<? super Map<String, String>> subscriber) {
-                String path;
-                String fileName = "draw_" + System.currentTimeMillis() + ".jpg";
-                path = Tools.saveImageToSd(mDrawView.getBitmapCache(), fileName);
-                Map<String, String> params = new HashMap<String, String>();
-                params.put("path", path);
-                params.put("fileName", fileName);
-                subscriber.onNext(params);
-                subscriber.onCompleted();
+            public void callback(String path) {
+                Tools.updatePhoto(DrawingActivity.this, path, fileName);
+                ToastUtils.SnakeShowShort(rlRoot, "保存成功");
             }
-        })
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<Map<String, String>>() {
-                    @Override
-                    public void call(Map<String, String> s) {
-                        Tools.updatePhoto(DrawingActivity.this, s.get("path"), s.get("fileName"));
-                        ToastUtils.SnakeShowShort(rlRoot, "保存成功");
-                    }
-                });
+        });
     }
 
     private void setBackground() {

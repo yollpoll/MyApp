@@ -11,4 +11,9 @@
         android:icon="@mipmap/icon_save_img"
         android:title="save"
         app:showAsAction="always"/>
+    <item
+        android:id="@+id/menu_beauty"
+        android:icon="@mipmap/icon_sex_white"
+        android:title="祭品"
+        app:showAsAction="always"/>
 </menu>

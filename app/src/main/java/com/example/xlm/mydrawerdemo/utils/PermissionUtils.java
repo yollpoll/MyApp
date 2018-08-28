@@ -77,7 +77,7 @@ public class PermissionUtils {
     }
 
     /**
-     * 权限申请通过
+     * 权限申请已经通过了的情况
      */
     public interface OnPermissionGet {
         void onGet();

@@ -1,6 +1,7 @@
 package com.example.xlm.mydrawerdemo.Activity;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -18,6 +19,8 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
@@ -25,6 +28,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.xlm.mydrawerdemo.R;
 import com.example.xlm.mydrawerdemo.glide.ProgressModelLoader;
+import com.example.xlm.mydrawerdemo.utils.Constant;
+import com.example.xlm.mydrawerdemo.utils.DialogUtils;
 import com.example.xlm.mydrawerdemo.utils.DownLoadImageThread;
 import com.example.xlm.mydrawerdemo.utils.PermissionUtils;
 import com.example.xlm.mydrawerdemo.utils.ToastUtils;
@@ -103,7 +108,7 @@ public class ImageActivity extends AppCompatActivity {
         switch (requestCode) {
             case REQUEST_WRITE_SD:
                 if (PermissionUtils.changeRequestResult(grantResults)) {
-                    onDown(url);
+                    onDown(url, imageName,Constant.IMG_CACHE);
                 } else {
                     ToastUtils.SnakeShowShort(rlRoot, "获取权限失败，无法 保存/分享");
                 }
@@ -130,6 +135,10 @@ public class ImageActivity extends AppCompatActivity {
                 PermissionUtils.checkAndRequestPermission(ImageActivity.this, PermissionUtils.WRITE_EXTERNAL_STORAGE,
                         REQUEST_WRITE_SD, onExplainPermission, onPermissionGet);
 //                onDown(url);
+                return true;
+            case R.id.menu_beauty:
+                PermissionUtils.checkAndRequestPermission(ImageActivity.this, PermissionUtils.WRITE_EXTERNAL_STORAGE,
+                        REQUEST_WRITE_SD, onExplainPermission, onBeautyGet);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -210,7 +219,7 @@ public class ImageActivity extends AppCompatActivity {
     /**
      * @param url
      */
-    private void onDown(String url) {
+    private void onDown(String url, String imgName,String path) {
         //下载图片
         final DownloadHandler handler = new DownloadHandler();
         DownLoadImageThread downLoadImageThread = new DownLoadImageThread(url, this, new DownLoadImageThread.ImageDownCallback() {
@@ -239,8 +248,38 @@ public class ImageActivity extends AppCompatActivity {
             public void onDownFailed() {
                 handler.sendEmptyMessage(DownLoadImageThread.DOWN_FAILED);
             }
-        }, imageName);
+        }, imgName, path);
         new Thread(downLoadImageThread).start();
+    }
+
+    //保存祭品到本地,输入祭品名
+    private void saveBeauty(final String url) {
+        final Dialog dialog = DialogUtils.showDialog(this, R.layout.dialog_save_beauty);
+        final EditText edtBeautyName = (EditText) dialog.findViewById(R.id.edt_beauty);
+        Button btnOk = (Button) dialog.findViewById(R.id.btn_ok);
+        Button btnCancel = (Button) dialog.findViewById(R.id.btn_cancel);
+
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        btnOk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (TextUtils.isEmpty(edtBeautyName.getText().toString())) {
+                    ToastUtils.showShort("请输入祭品名");
+                } else {
+                    confirmSaveBeauty(edtBeautyName.getText().toString(), url);
+                    dialog.dismiss();
+                }
+            }
+        });
+    }
+
+    private void confirmSaveBeauty(String beautyName, String url) {
+        onDown(url, beautyName+".png",Constant.IMG_BEAUTY);
     }
 
     //处理下载好图片
@@ -262,7 +301,7 @@ public class ImageActivity extends AppCompatActivity {
                                 , "", path, ImageActivity.this);
                         isShareing = false;
                     } else {
-                        ToastUtils.showShort("保存成功");
+                        ToastUtils.showShort("保存成功在目录:"+msg.getData().getString("path"));
                         Tools.updatePhoto(ImageActivity.this, path, imageName.replace("/", "_"));
                     }
                     break;
@@ -272,10 +311,16 @@ public class ImageActivity extends AppCompatActivity {
         }
     }
 
+    private PermissionUtils.OnPermissionGet onBeautyGet = new PermissionUtils.OnPermissionGet() {
+        @Override
+        public void onGet() {
+            saveBeauty(url);
+        }
+    };
     private PermissionUtils.OnPermissionGet onPermissionGet = new PermissionUtils.OnPermissionGet() {
         @Override
         public void onGet() {
-            onDown(url);
+            onDown(url, imageName,Constant.IMG_CACHE);
         }
     };
     private PermissionUtils.OnExplainPermission onExplainPermission = new PermissionUtils.OnExplainPermission() {

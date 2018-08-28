@@ -1,19 +1,12 @@
 package com.example.xlm.mydrawerdemo.utils;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
-import android.net.Uri;
-import android.os.Environment;
-import android.provider.MediaStore;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.Target;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 
 /**
  * Created by 鹏祺 on 2017/5/18.
@@ -29,13 +22,15 @@ public class DownLoadImageThread implements Runnable {
     private ImageDownCallback callback;
     private File downFile;
     private String imageName;
+    private String path;
 
     public DownLoadImageThread(String url, Context context, ImageDownCallback callback,
-                               String imageName) {
+                               String imageName, String path) {
         this.url = url;
         this.imageName = imageName;
         this.context = context;
         this.callback = callback;
+        this.path = path;
     }
 
     @Override
@@ -50,7 +45,7 @@ public class DownLoadImageThread implements Runnable {
                     .get();
             if (bitmap != null) {
                 //保存图片，文件名跟随图片名
-                fileName = Tools.saveImageToSd(bitmap, imageName);
+                fileName = Tools.saveImageToSd(bitmap, imageName, path);
                 downFile = new File(fileName);
             }
         } catch (Exception e) {

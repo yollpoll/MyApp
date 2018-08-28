@@ -16,7 +16,7 @@ import android.view.WindowManager;
  * Created by 鹏祺 on 2018/4/3.
  */
 
-public class DialogUtils {
+public class    DialogUtils {
     /**
      * 生成一个Alertdialog
      *

@@ -423,7 +423,7 @@ public class Tools {
         Observable.create(new Observable.OnSubscribe<String>() {
             @Override
             public void call(Subscriber<? super String> subscriber) {
-                subscriber.onNext(saveImageToSd(bitmap, imageName));
+                subscriber.onNext(saveImageToSd(bitmap, imageName, Constant.IMG_CACHE));
                 subscriber.onCompleted();
             }
         })
@@ -442,14 +442,15 @@ public class Tools {
      * 这个方法应当写在子线程
      *
      * @param bitmap
+     * @param path   地址，应该用constant里面的常量
      */
-    public static String saveImageToSd(Bitmap bitmap, String imageName) {
+    public static String saveImageToSd(Bitmap bitmap, String imageName, String path) {
         if (null == bitmap)
             return "";
         //替换/
         String img = imageName.replace("/", "_");
         checkCacheDir();
-        File cacheDir = new File(Environment.getExternalStorageDirectory() + Constant.SD_CACHE_DIR + Constant.IMG_CACHE);
+        File cacheDir = new File(Environment.getExternalStorageDirectory() + Constant.SD_CACHE_DIR + path);
         if (!cacheDir.exists())
             cacheDir.mkdir();
         File cacheImage = new File(cacheDir + "/" + img);
